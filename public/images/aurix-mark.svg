@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" fill="none" role="img" aria-label="Aurix mark">
   <defs>
     <radialGradient id="g1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(24 22) rotate(55) scale(54 54)">
-      <stop stop-color="#2563EB"/>
-      <stop offset="0.55" stop-color="#14B8A6"/>
+      <stop stop-color="#FF3D00"/>
+      <stop offset="0.55" stop-color="#FFD400"/>
       <stop offset="1" stop-color="#0B1020"/>
     </radialGradient>
     <filter id="glow" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB">
