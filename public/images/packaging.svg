@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="520" viewBox="0 0 840 520" fill="none" role="img" aria-label="Packaging preview">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="840" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1020"/>
+      <stop offset="1" stop-color="#07051A"/>
+    </linearGradient>
+    <linearGradient id="acc" x1="280" y1="160" x2="610" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#14B8A6"/>
+    </linearGradient>
+  </defs>
+  <rect width="840" height="520" rx="34" fill="url(#bg)"/>
+  <rect x="74" y="74" width="692" height="372" rx="28" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.14)"/>
+
+  <rect x="132" y="144" width="230" height="260" rx="26" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.14)"/>
+  <rect x="156" y="176" width="134" height="12" rx="6" fill="rgba(255,255,255,0.18)"/>
+  <rect x="156" y="202" width="178" height="10" rx="5" fill="rgba(255,255,255,0.12)"/>
+  <rect x="156" y="248" width="182" height="96" rx="18" fill="url(#acc)" opacity="0.22" stroke="rgba(255,255,255,0.12)"/>
+  <circle cx="248" cy="296" r="26" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.18)"/>
+
+  <rect x="408" y="176" width="304" height="208" rx="28" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.10)"/>
+  <path d="M456 212h210" stroke="rgba(255,255,255,0.18)" stroke-width="10" stroke-linecap="round"/>
+  <path d="M456 248h182" stroke="rgba(255,255,255,0.12)" stroke-width="10" stroke-linecap="round"/>
+  <path d="M456 284h140" stroke="rgba(255,255,255,0.10)" stroke-width="10" stroke-linecap="round"/>
+  <rect x="456" y="328" width="138" height="36" rx="18" fill="rgba(20,184,166,0.14)" stroke="rgba(20,184,166,0.38)"/>
+</svg>

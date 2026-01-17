@@ -15,18 +15,19 @@
         <div class="page">
             <header class="site-header">
                 <div class="container nav">
-                    <a class="brand" href="#top" aria-label="Aurix home">
-                        <span class="brand-mark"></span>
-                        Aurix
+                    <a class="brand" href="#top" aria-label="Aurix home" data-cursor="Home" data-magnetic>
+                        <img class="brand-mark" src="/images/aurix-mark.svg" alt="" width="28" height="28" aria-hidden="true">
+                        <span class="brand-name">Aurix</span>
                     </a>
                     <nav class="nav-links" aria-label="Primary">
-                        <a href="#work">Work</a>
-                        <a href="#services">Services</a>
-                        <a href="#process">Process</a>
-                        <a href="#insights">Insights</a>
+                        <a href="#work" data-magnetic>Work</a>
+                        <a href="#services" data-magnetic>Services</a>
+                        <a href="#branding" data-magnetic>Branding</a>
+                        <a href="#process" data-magnetic>Process</a>
+                        <a href="#insights" data-magnetic>Insights</a>
                     </nav>
                     <div class="nav-actions">
-                        <a class="btn btn-secondary" href="#contact">Start a project</a>
+                        <a class="btn btn-secondary" href="#contact" data-cursor="Start" data-magnetic>Start a project</a>
                     </div>
                 </div>
             </header>
@@ -35,13 +36,13 @@
                 <section class="hero">
                     <div class="container hero-grid">
                         <div class="hero-copy">
-                            <p class="hero-kicker reveal" style="--delay: 0.05s;">Next Generation</p>
-                            <h1 class="hero-title reveal" style="--delay: 0.15s;">Aurix</h1>
-                            <p class="hero-subtitle reveal" style="--delay: 0.22s;">Multipurpose brand studio for East Africa</p>
-                            <p class="hero-lead reveal" style="--delay: 0.3s;">From Nairobi startups to Mombasa hospitality groups, we build brand systems that move fast and stay consistent across every touchpoint.</p>
+                            <p class="hero-kicker reveal" style="--delay: 0.05s;">Aurix Branding Studio</p>
+                            <h1 class="hero-title reveal" style="--delay: 0.15s;">Build a brand people trust.</h1>
+                            <p class="hero-subtitle reveal" style="--delay: 0.22s;">Strategy-led identity, packaging, and digital design for ambitious teams across East Africa.</p>
+                            <p class="hero-lead reveal" style="--delay: 0.3s;">We translate your story into a cohesive system - visuals, messaging, and UI - so every touchpoint feels premium and consistent.</p>
                             <div class="hero-actions reveal" style="--delay: 0.35s;">
-                                <a class="btn" href="#contact">Book a brand sprint</a>
-                                <a class="btn btn-ghost" href="#work">View recent work</a>
+                                <a class="btn" href="#contact" data-cursor="Book" data-magnetic>Book a discovery call</a>
+                                <a class="btn btn-ghost" href="#work" data-cursor="View" data-magnetic>See case studies</a>
                             </div>
                             <div class="hero-stats reveal" style="--delay: 0.45s;">
                                 <div>
@@ -59,25 +60,9 @@
                             </div>
                         </div>
                         <div class="hero-visual reveal" style="--delay: 0.2s;">
-                            <div class="hero-card">
-                                <div class="card-title">Aurix Brand Sprint</div>
-                                <p>Strategy, identity, and rollout aligned in 10 focused working days.</p>
-                                <ul>
-                                    <li>Positioning workshop</li>
-                                    <li>Visual system + logo suite</li>
-                                    <li>Launch toolkit</li>
-                                </ul>
-                            </div>
-                            <div class="hero-panel">
-                                <div class="panel-label">Featured client</div>
-                                <div class="panel-title">Lengo Logistics</div>
-                                <p>Rebrand for a 30-truck fleet expanding between Nairobi and Eldoret.</p>
-                                <div class="panel-metrics">
-                                    <span>+42% recall</span>
-                                    <span>3 new depots</span>
-                                </div>
-                            </div>
-                            <div class="hero-badge">KSh-friendly retainers</div>
+                            <img class="hero-image" src="/images/hero-showcase.svg" alt="Aurix brand system preview" loading="eager">
+                            <div class="hero-chip hero-chip-top" aria-hidden="true">Strategy • Identity • Packaging • Digital</div>
+                            <div class="hero-chip hero-chip-bottom" aria-hidden="true">Brand kits delivered in 6-8 weeks</div>
                         </div>
                     </div>
                 </section>
@@ -100,27 +85,87 @@
                         <div class="section-head">
                             <div>
                                 <p class="eyebrow reveal" style="--delay: 0.1s;">Services</p>
-                                <h2 class="section-title reveal" style="--delay: 0.2s;">Everything you need to launch, scale, and stay consistent.</h2>
+                                <h2 class="section-title reveal" style="--delay: 0.2s;">A full-stack brand team, without the overhead.</h2>
                             </div>
-                            <p class="section-lead reveal" style="--delay: 0.3s;">We partner with founders who want clarity and energy in their story. Every engagement includes clear timelines, local market insight, and sharp execution.</p>
+                            <p class="section-lead reveal" style="--delay: 0.3s;">Clear strategy, a tight visual system, and delivery-ready files your team can use immediately - from print to product.</p>
                         </div>
                         <div class="cards-grid">
                             <article class="card reveal" style="--delay: 0.1s;">
+                                <img class="card-icon" src="/images/icons/strategy.svg" alt="" aria-hidden="true" loading="lazy">
                                 <h3>Brand strategy</h3>
                                 <p>Positioning, messaging, and differentiation tuned for Kenyan audiences.</p>
+                                <ul class="card-list">
+                                    <li>Workshop + research</li>
+                                    <li>Messaging &amp; tone</li>
+                                    <li>Go-to-market story</li>
+                                </ul>
                             </article>
                             <article class="card reveal" style="--delay: 0.2s;">
+                                <img class="card-icon" src="/images/icons/identity.svg" alt="" aria-hidden="true" loading="lazy">
                                 <h3>Visual identity</h3>
                                 <p>Logo systems, typography, and colors that translate from billboards to apps.</p>
+                                <ul class="card-list">
+                                    <li>Logo suite</li>
+                                    <li>Typography &amp; palette</li>
+                                    <li>Brand guidelines</li>
+                                </ul>
                             </article>
                             <article class="card reveal" style="--delay: 0.3s;">
+                                <img class="card-icon" src="/images/icons/packaging.svg" alt="" aria-hidden="true" loading="lazy">
                                 <h3>Packaging + retail</h3>
                                 <p>Packaging, wayfinding, and in-store brand cues that drive shelf presence.</p>
+                                <ul class="card-list">
+                                    <li>Packaging system</li>
+                                    <li>Print-ready files</li>
+                                    <li>Retail rollout kit</li>
+                                </ul>
                             </article>
                             <article class="card reveal" style="--delay: 0.4s;">
+                                <img class="card-icon" src="/images/icons/digital.svg" alt="" aria-hidden="true" loading="lazy">
                                 <h3>Digital experiences</h3>
                                 <p>Web and product design for experiences that feel seamless on mobile.</p>
+                                <ul class="card-list">
+                                    <li>Website UI</li>
+                                    <li>Design systems</li>
+                                    <li>Handoff + QA</li>
+                                </ul>
                             </article>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="branding" class="section gallery">
+                    <div class="container">
+                        <div class="section-head">
+                            <div>
+                                <p class="eyebrow reveal" style="--delay: 0.1s;">Branding assets</p>
+                                <h2 class="section-title reveal" style="--delay: 0.2s;">A system you can deploy everywhere.</h2>
+                            </div>
+                            <p class="section-lead reveal" style="--delay: 0.3s;">We deliver clean files and a consistent visual language - ready for social, packaging, signage, and digital UI.</p>
+                        </div>
+
+                        <div class="gallery-grid">
+                            <figure class="gallery-item reveal" style="--delay: 0.1s;">
+                                <img class="gallery-image" src="/images/brand-kit.svg" alt="Brand kit layout preview" loading="lazy">
+                                <figcaption>
+                                    <h3>Brand kit</h3>
+                                    <p>Guidelines, templates, and usage rules.</p>
+                                </figcaption>
+                            </figure>
+                            <figure class="gallery-item reveal" style="--delay: 0.2s;">
+                                <img class="gallery-image" src="/images/packaging.svg" alt="Packaging layout preview" loading="lazy">
+                                <figcaption>
+                                    <h3>Packaging</h3>
+                                    <p>Print-ready systems with shelf impact.</p>
+                                </figcaption>
+                            </figure>
+                            <figure class="gallery-item reveal" style="--delay: 0.3s;">
+                                <img class="gallery-image" src="/images/web-ui.svg" alt="Web UI layout preview" loading="lazy">
+                                <figcaption>
+                                    <h3>Web UI</h3>
+                                    <p>Modern interfaces built for mobile.</p>
+                                </figcaption>
+                            </figure>
                         </div>
                     </div>
                 </section>
@@ -137,6 +182,7 @@
                         <div class="case-grid">
                             <article class="case-card reveal" style="--delay: 0.1s;">
                                 <div class="case-meta">Retail / Nairobi</div>
+                                <img class="case-thumb" src="/images/work/kifaru.svg" alt="" aria-hidden="true" loading="lazy">
                                 <h3>Kifaru Outdoor Gear</h3>
                                 <p>Unified brand system for new stores and ecommerce rollout.</p>
                                 <div class="case-metrics">
@@ -146,6 +192,7 @@
                             </article>
                             <article class="case-card reveal" style="--delay: 0.2s;">
                                 <div class="case-meta">Fintech / Kisumu</div>
+                                <img class="case-thumb" src="/images/work/pesalink.svg" alt="" aria-hidden="true" loading="lazy">
                                 <h3>PesaLink Partners</h3>
                                 <p>Brand refresh and app UI for a youth-first wallet.</p>
                                 <div class="case-metrics">
@@ -155,6 +202,7 @@
                             </article>
                             <article class="case-card reveal" style="--delay: 0.3s;">
                                 <div class="case-meta">Hospitality / Mombasa</div>
+                                <img class="case-thumb" src="/images/work/coastal.svg" alt="" aria-hidden="true" loading="lazy">
                                 <h3>Coastal Haven Resorts</h3>
                                 <p>Repositioned luxury boutique stays to international travelers.</p>
                                 <div class="case-metrics">
@@ -283,8 +331,8 @@
                 <div class="container footer-grid">
                     <div>
                         <a class="brand" href="#top">
-                            <span class="brand-mark"></span>
-                            Aurix
+                            <img class="brand-mark" src="/images/aurix-mark.svg" alt="" width="28" height="28" aria-hidden="true">
+                            <span class="brand-name">Aurix</span>
                         </a>
                         <p>Brand systems built for Kenyan growth teams and founders.</p>
                     </div>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="520" viewBox="0 0 840 520" fill="none" role="img" aria-label="Kifaru Outdoor Gear case study image">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="840" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1020"/>
+      <stop offset="1" stop-color="#07051A"/>
+    </linearGradient>
+    <linearGradient id="acc" x1="120" y1="130" x2="720" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#14B8A6"/>
+    </linearGradient>
+  </defs>
+  <rect width="840" height="520" rx="34" fill="url(#bg)"/>
+  <rect x="70" y="90" width="700" height="340" rx="30" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.14)"/>
+  <path d="M150 320c36-78 74-124 114-138 34-12 72 8 114 60 38 47 70 66 94 58 26-9 56-54 90-136 60 32 104 88 132 168" stroke="url(#acc)" stroke-width="10" stroke-linecap="round" opacity="0.55"/>
+  <rect x="120" y="140" width="240" height="14" rx="7" fill="rgba(255,255,255,0.26)"/>
+  <rect x="120" y="170" width="340" height="10" rx="5" fill="rgba(255,255,255,0.12)"/>
+  <rect x="120" y="380" width="170" height="38" rx="19" fill="rgba(37,99,235,0.16)" stroke="rgba(37,99,235,0.40)"/>
+</svg>

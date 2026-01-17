@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="520" viewBox="0 0 840 520" fill="none" role="img" aria-label="Coastal Haven Resorts case study image">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="840" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1020"/>
+      <stop offset="1" stop-color="#07051A"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(610 170) rotate(25) scale(240 190)">
+      <stop stop-color="rgba(20,184,166,0.26)"/>
+      <stop offset="1" stop-color="rgba(20,184,166,0)"/>
+    </radialGradient>
+  </defs>
+  <rect width="840" height="520" rx="34" fill="url(#bg)"/>
+  <rect width="840" height="520" rx="34" fill="url(#sun)"/>
+  <rect x="86" y="96" width="668" height="328" rx="30" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.14)"/>
+  <path d="M140 350c80-70 160-96 240-78 66 15 126 58 180 130 38-36 72-58 100-66 30-9 64-2 102 22" stroke="rgba(37,99,235,0.55)" stroke-width="10" stroke-linecap="round"/>
+  <path d="M150 248h260" stroke="rgba(255,255,255,0.18)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M150 286h210" stroke="rgba(255,255,255,0.12)" stroke-width="12" stroke-linecap="round"/>
+  <rect x="150" y="142" width="180" height="14" rx="7" fill="rgba(255,255,255,0.26)"/>
+</svg>
