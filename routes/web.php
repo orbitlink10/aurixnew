@@ -32,6 +32,11 @@ Route::get('/blog/{slug}', function (string $slug) {
     return view('blog.show', compact('post', 'readingTime'));
 })->name('public.blog.show');
 
+// Backward compatibility for old URLs
+Route::get('/blog-posts/{slug}', function (string $slug) {
+    return redirect()->route('public.blog.show', ['slug' => $slug], 301);
+});
+
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
