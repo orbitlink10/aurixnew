@@ -25,7 +25,7 @@ Route::get('/', function () {
     return view('welcome', compact('slides'));
 });
 
-Route::get('/blog-posts/{slug}', function (string $slug) {
+Route::get('/blog/{slug}', function (string $slug) {
     $post = BlogPost::where('slug', $slug)->where('status', 'published')->firstOrFail();
     $wordCount = str_word_count(strip_tags($post->body ?? ''));
     $readingTime = max(1, (int) ceil($wordCount / 200));

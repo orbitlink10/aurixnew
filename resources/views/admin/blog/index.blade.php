@@ -41,7 +41,7 @@
                         <td class="py-2 text-slate-700">{{ $post->view_count }}</td>
                         <td class="py-2 text-right space-x-3">
                             @if($post->status === 'published')
-                                <a class="text-emerald-600 font-semibold" target="_blank" href="{{ url('/blog-posts/'.$post->slug) }}">View</a>
+                                <a class="text-emerald-600 font-semibold" target="_blank" href="{{ url('/blog/'.$post->slug) }}">View</a>
                             @endif
                             <a class="text-sky-600 font-semibold" href="{{ route('admin.blog-posts.edit', $post) }}">Edit</a>
                             <form action="{{ route('admin.blog-posts.destroy', $post) }}" method="POST" class="inline">
