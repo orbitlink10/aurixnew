@@ -10,6 +10,16 @@
         <link href="https://fonts.bunny.net/css?family=space-grotesk:400,500,600,700|fraunces:500,600,700" rel="stylesheet" />
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <style>
+            .slider-shell { position: relative; overflow: hidden; border-radius: 24px; box-shadow: 0 18px 40px rgba(15,23,42,0.16); }
+            .slider-track { display: flex; transition: transform 0.7s ease; }
+            .slide { min-width: 100%; position: relative; }
+            .slide img { width: 100%; height: 360px; object-fit: cover; display: block; }
+            .slide-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15,23,42,0.55) 0%, rgba(15,23,42,0.05) 70%); color: #fff; padding: 32px; display: flex; flex-direction: column; justify-content: flex-end; }
+            .slide-dots { position: absolute; bottom: 14px; right: 18px; display: flex; gap: 8px; }
+            .slide-dots button { width: 10px; height: 10px; border-radius: 999px; border: none; background: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.2s; }
+            .slide-dots button.active { width: 24px; background: #22d3ee; }
+        </style>
     </head>
     <body>
         <div class="page">
@@ -33,6 +43,38 @@
             </header>
 
             <main id="top">
+                @if(isset($slides) && $slides->count())
+                <section class="section" style="padding-top:24px;">
+                    <div class="container">
+                        <div class="slider-shell" x-data="{ current: 0, total: {{ $slides->count() }} }" x-init="setInterval(()=>{ current = (current+1)%total; }, 2000)">
+                            <div class="slider-track" :style="`transform: translateX(-${current * 100}%);`">
+                                @foreach($slides as $slide)
+                                    <div class="slide">
+                                        <img src="{{ asset('storage/'.$slide->image_path) }}" alt="{{ $slide->title ?? 'Slide' }}">
+                                        <div class="slide-overlay">
+                                            @if($slide->title)
+                                                <p class="eyebrow" style="color:#a5f3fc;">{{ $slide->title }}</p>
+                                            @endif
+                                            @if($slide->caption)
+                                                <h3 class="section-title" style="color:#fff; margin: 4px 0 8px;">{{ $slide->caption }}</h3>
+                                            @endif
+                                            @if($slide->button_text && $slide->button_url)
+                                                <a href="{{ $slide->button_url }}" class="btn" style="align-self:flex-start;">{{ $slide->button_text }}</a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div class="slide-dots">
+                                @foreach($slides as $index => $slide)
+                                    <button :class="current === {{ $index }} ? 'active' : ''" @click="current={{ $index }}"></button>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                @endif
+
                 <section class="hero">
                     <div class="container hero-grid">
                         <div class="hero-copy">
@@ -352,5 +394,6 @@
                 </div>
             </footer>
         </div>
+        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     </body>
 </html>

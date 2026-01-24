@@ -17,9 +17,11 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Models\SliderImage;
 
 Route::get('/', function () {
-    return view('welcome');
+    $slides = SliderImage::where('is_active', true)->orderBy('sort_order')->orderByDesc('created_at')->get();
+    return view('welcome', compact('slides'));
 });
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

@@ -27,11 +27,13 @@
             <div class="px-4 py-4 text-xs uppercase text-slate-400">Menu</div>
             <nav class="px-3 space-y-1 text-sm flex-1">
                 <a class="nav-link {{ request()->is('admin') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboards</a>
+                <a class="nav-link" href="{{ url('/') }}" target="_blank">Home</a>
                 <a class="nav-link" href="{{ route('admin.services.index') }}">Services</a>
                 <a class="nav-link" href="{{ route('admin.packages.index') }}">Packages</a>
                 <a class="nav-link" href="{{ route('admin.leads.index') }}">Leads</a>
                 <a class="nav-link" href="{{ route('admin.orders.index') }}">Orders</a>
                 <a class="nav-link" href="{{ route('admin.blog-posts.index') }}">Blog</a>
+                <a class="nav-link" href="{{ route('admin.slider-images.index') }}">Slider Images</a>
                 <a class="nav-link" href="{{ route('admin.reports.index') }}">Reports</a>
                 <a class="nav-link" href="{{ route('admin.users.index') }}">Users</a>
             </nav>
