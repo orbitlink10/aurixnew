@@ -27,7 +27,9 @@ Route::get('/', function () {
 
 Route::get('/blog-posts/{slug}', function (string $slug) {
     $post = BlogPost::where('slug', $slug)->where('status', 'published')->firstOrFail();
-    return view('blog.show', compact('post'));
+    $wordCount = str_word_count(strip_tags($post->body ?? ''));
+    $readingTime = max(1, (int) ceil($wordCount / 200));
+    return view('blog.show', compact('post', 'readingTime'));
 })->name('public.blog.show');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
