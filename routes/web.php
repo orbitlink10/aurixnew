@@ -18,11 +18,17 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Models\SliderImage;
+use App\Models\BlogPost;
 
 Route::get('/', function () {
     $slides = SliderImage::where('is_active', true)->orderBy('sort_order')->orderByDesc('created_at')->get();
     return view('welcome', compact('slides'));
 });
+
+Route::get('/blog-posts/{slug}', function (string $slug) {
+    $post = BlogPost::where('slug', $slug)->where('status', 'published')->firstOrFail();
+    return view('blog.show', compact('post'));
+})->name('public.blog.show');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
