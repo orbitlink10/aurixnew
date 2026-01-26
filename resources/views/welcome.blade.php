@@ -50,7 +50,9 @@
                             <div class="slider-track" :style="`transform: translateX(-${current * 100}%);`">
                                 @foreach($slides as $slide)
                                     <div class="slide">
-                                        <img src="{{ asset('storage/'.$slide->image_path) }}" alt="{{ $slide->title ?? 'Slide' }}">
+                                        @if($slide->image_url)
+                                            <img src="{{ $slide->image_url }}" alt="{{ $slide->title ?? 'Slide' }}">
+                                        @endif
                                         <div class="slide-overlay">
                                             @if($slide->title)
                                                 <p class="eyebrow" style="color:#a5f3fc;">{{ $slide->title }}</p>

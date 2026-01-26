@@ -48,9 +48,11 @@
                 <label class="text-sm font-semibold text-slate-800">Image {{ isset($sliderImage) ? '(leave blank to keep current)' : '' }}</label>
                 <input type="file" name="image" class="w-full bg-white border border-slate-200 rounded px-3 py-2">
                 @isset($sliderImage)
-                    <div class="mt-2">
-                        <img src="{{ asset('storage/'.$sliderImage->image_path) }}" alt="" class="h-20 rounded border border-slate-200">
-                    </div>
+                    @if($sliderImage->image_url)
+                        <div class="mt-2">
+                            <img src="{{ $sliderImage->image_url }}" alt="" class="h-20 rounded border border-slate-200 object-cover">
+                        </div>
+                    @endif
                 @endisset
             </div>
             <button class="px-5 py-2 rounded bg-sky-600 text-white font-semibold hover:bg-sky-500" type="submit">
@@ -64,7 +66,11 @@
         <div class="space-y-3">
             @forelse($slides as $slide)
                 <div class="flex items-center gap-3 border border-slate-200 rounded p-2">
-                    <img src="{{ asset('storage/'.$slide->image_path) }}" alt="" class="h-14 w-20 object-cover rounded">
+                    @if($slide->image_url)
+                        <img src="{{ $slide->image_url }}" alt="" class="h-14 w-20 object-cover rounded">
+                    @else
+                        <div class="h-14 w-20 rounded bg-slate-100 flex items-center justify-center text-xs text-slate-400">No image</div>
+                    @endif
                     <div class="flex-1">
                         <div class="font-semibold text-slate-900">{{ $slide->title ?? 'Untitled' }}</div>
                         <div class="text-xs text-slate-500">Order: {{ $slide->sort_order }} | {{ $slide->is_active ? 'Active' : 'Hidden' }}</div>

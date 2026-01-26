@@ -47,6 +47,19 @@ return [
             'report' => false,
         ],
 
+        /*
+         * Publicly served uploads (no symlink required).
+         * Useful for hosts that forbid following storage symlinks.
+         */
+        'uploads' => [
+            'driver' => 'local',
+            'root' => public_path('uploads'),
+            'url' => rtrim(env('APP_URL'), '/').'/uploads',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

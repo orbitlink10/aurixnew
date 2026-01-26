@@ -47,7 +47,8 @@ class SliderImageController extends Controller
             'sort_order' => ['nullable', 'integer'],
         ]);
 
-        $path = $request->file('image')->store('slider', 'public');
+        // Save directly to public/uploads to avoid broken links on hosts without symlink support
+        $path = $request->file('image')->store('slider', 'uploads');
 
         SliderImage::create([
             'title' => $data['title'] ?? null,
@@ -97,9 +98,10 @@ class SliderImageController extends Controller
 
         if ($request->hasFile('image')) {
             if ($sliderImage->image_path) {
-                Storage::disk('public')->delete($sliderImage->image_path);
+                Storage::disk('uploads')->delete($sliderImage->image_path);
+                Storage::disk('public')->delete($sliderImage->image_path); // legacy clean-up
             }
-            $data['image_path'] = $request->file('image')->store('slider', 'public');
+            $data['image_path'] = $request->file('image')->store('slider', 'uploads');
         }
 
         $data['is_active'] = $request->boolean('is_active', true);
@@ -114,7 +116,8 @@ class SliderImageController extends Controller
     public function destroy(SliderImage $sliderImage)
     {
         if ($sliderImage->image_path) {
-            Storage::disk('public')->delete($sliderImage->image_path);
+            Storage::disk('uploads')->delete($sliderImage->image_path);
+            Storage::disk('public')->delete($sliderImage->image_path); // legacy clean-up
         }
         $sliderImage->delete();
 
