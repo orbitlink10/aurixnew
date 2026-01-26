@@ -26,117 +26,6 @@ function initRevealOnScroll() {
     items.forEach((el) => observer.observe(el));
 }
 
-function initCursor() {
-    const finePointer = window.matchMedia?.('(pointer: fine)')?.matches ?? false;
-    if (!finePointer || prefersReducedMotion) return;
-
-    const cursor = document.createElement('div');
-    cursor.className = 'cursor';
-
-    const ring = document.createElement('div');
-    ring.className = 'cursor-ring';
-
-    const label = document.createElement('div');
-    label.className = 'cursor-label';
-
-    document.body.append(cursor, ring, label);
-    document.body.classList.add('has-cursor');
-
-    let targetX = -100;
-    let targetY = -100;
-    let dotX = targetX;
-    let dotY = targetY;
-    let ringX = targetX;
-    let ringY = targetY;
-
-    const dotOffset = 5;
-    const ringOffset = 23;
-
-    const setPos = () => {
-        dotX += (targetX - dotX) * 0.25;
-        dotY += (targetY - dotY) * 0.25;
-        ringX += (targetX - ringX) * 0.14;
-        ringY += (targetY - ringY) * 0.14;
-
-        cursor.style.setProperty('--cx', `${dotX - dotOffset}px`);
-        cursor.style.setProperty('--cy', `${dotY - dotOffset}px`);
-        ring.style.setProperty('--cx', `${ringX - ringOffset}px`);
-        ring.style.setProperty('--cy', `${ringY - ringOffset}px`);
-        label.style.setProperty('--lx', `${ringX + 18}px`);
-        label.style.setProperty('--ly', `${ringY + 18}px`);
-
-        requestAnimationFrame(setPos);
-    };
-
-    requestAnimationFrame(setPos);
-
-    window.addEventListener(
-        'mousemove',
-        (event) => {
-            targetX = event.clientX;
-            targetY = event.clientY;
-        },
-        { passive: true },
-    );
-
-    document.addEventListener(
-        'mouseout',
-        (event) => {
-            if (event.relatedTarget) return;
-            document.body.classList.remove('has-cursor', 'cursor-active');
-        },
-        { passive: true },
-    );
-
-    document.addEventListener(
-        'mouseover',
-        () => {
-            document.body.classList.add('has-cursor');
-        },
-        { passive: true },
-    );
-
-    const interactiveSelector = 'a, button, [role="button"], input, textarea, select, .btn';
-
-    const getLabel = (element) => {
-        if (element.dataset.cursor) return element.dataset.cursor;
-        if (element.matches('input, textarea, select')) return 'Type';
-
-        const aria = element.getAttribute('aria-label');
-        if (aria) return aria;
-
-        const text = (element.textContent ?? '').trim().replace(/\s+/g, ' ');
-        if (text) return text.split(' ').slice(0, 2).join(' ');
-
-        return element.matches('a') ? 'Open' : 'Go';
-    };
-
-    document.addEventListener(
-        'pointerover',
-        (event) => {
-            if (event.pointerType && event.pointerType !== 'mouse') return;
-            const target = event.target instanceof Element ? event.target.closest(interactiveSelector) : null;
-            if (!target) return;
-            label.textContent = getLabel(target);
-            document.body.classList.add('cursor-active');
-        },
-        true,
-    );
-
-    document.addEventListener(
-        'pointerout',
-        (event) => {
-            if (event.pointerType && event.pointerType !== 'mouse') return;
-            const from = event.target instanceof Element ? event.target.closest(interactiveSelector) : null;
-            if (!from) return;
-            const to = event.relatedTarget instanceof Element ? event.relatedTarget.closest(interactiveSelector) : null;
-            if (to) return;
-            document.body.classList.remove('cursor-active');
-        },
-        true,
-    );
-}
-
 function initMagneticHover() {
     const finePointer = window.matchMedia?.('(pointer: fine)')?.matches ?? false;
     if (!finePointer || prefersReducedMotion) return;
@@ -232,7 +121,6 @@ function initHeroTilt() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initRevealOnScroll();
-    initCursor();
     initMagneticHover();
     initHeroTilt();
 });
