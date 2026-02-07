@@ -21,14 +21,16 @@
     <div class="min-h-screen flex">
         {{-- Sidebar --}}
         <aside class="w-64 bg-slate-900 text-white flex flex-col">
-            <div class="h-16 flex items-center px-5 text-2xl font-bold tracking-tight border-b border-slate-800">
+            <a href="{{ url('/') }}" class="h-16 flex items-center px-5 text-2xl font-bold tracking-tight border-b border-slate-800 hover:text-sky-300 transition-colors" aria-label="Go to homepage">
                 AURIX
-            </div>
+            </a>
             <div class="px-4 py-4 text-xs uppercase text-slate-400">Menu</div>
             <nav class="px-3 space-y-1 text-sm flex-1">
                 <a class="nav-link {{ request()->is('admin') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboards</a>
+                <a class="nav-link {{ request()->routeIs('admin.home-page-content.*') ? 'active' : '' }}" href="{{ route('admin.home-page-content.index') }}">Home Page Content.</a>
                 <a class="nav-link" href="{{ url('/') }}" target="_blank">Home</a>
                 <a class="nav-link" href="{{ route('admin.services.index') }}">Services</a>
+                <a class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">Products</a>
                 <a class="nav-link" href="{{ route('admin.packages.index') }}">Packages</a>
                 <a class="nav-link" href="{{ route('admin.leads.index') }}">Leads</a>
                 <a class="nav-link" href="{{ route('admin.orders.index') }}">Orders</a>

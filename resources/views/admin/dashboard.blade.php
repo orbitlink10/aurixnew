@@ -6,10 +6,13 @@
         <h1 class="text-3xl page-title mb-2">Executive Overview</h1>
         <p class="text-slate-500">Performance at a glance: revenue, pipeline, and engagement.</p>
     </div>
-    <span class="inline-flex items-center gap-2 px-3 py-2 rounded-full glass shadow-sm">
-        <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-        <span class="text-sm text-slate-700 font-semibold">All systems operational</span>
-    </span>
+    <div class="flex items-center gap-2">
+        <a href="{{ route('admin.home-page-content.index') }}" class="px-4 py-2 rounded bg-sky-600 text-white text-sm font-semibold hover:bg-sky-500">Home Page Content.</a>
+        <span class="inline-flex items-center gap-2 px-3 py-2 rounded-full glass shadow-sm">
+            <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+            <span class="text-sm text-slate-700 font-semibold">All systems operational</span>
+        </span>
+    </div>
 </div>
 
 <div class="grid md:grid-cols-4 gap-4">

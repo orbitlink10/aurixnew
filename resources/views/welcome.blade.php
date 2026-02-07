@@ -103,13 +103,42 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="hero-visual reveal" style="--delay: 0.2s;">
-                            <img class="hero-image" src="/images/hero-showcase.svg" alt="Aurix brand system preview" loading="eager">
+                        @php
+                            $heroMotionImages = (isset($heroImageUrls) && count($heroImageUrls)) ? $heroImageUrls : ['/images/hero-showcase.svg'];
+                        @endphp
+                        <div class="hero-visual reveal" style="--delay: 0.2s;" x-data='{"current":0,"images":@json($heroMotionImages)}' x-init="if (images.length > 1) { setInterval(() => { current = (current + 1) % images.length; }, 3000); }">
+                            <img class="hero-image" :src="images[current]" alt="Aurix brand system preview" loading="eager">
                             <div class="hero-chip hero-chip-top" aria-hidden="true">Strategy • Identity • Packaging • Digital</div>
                             <div class="hero-chip hero-chip-bottom" aria-hidden="true">Brand kits delivered in 6-8 weeks</div>
                         </div>
                     </div>
                 </section>
+
+                @if(isset($workCategories) && $workCategories->count())
+                <section class="design-categories">
+                    <div class="container">
+                        <div class="design-categories-head">
+                            <h2>Design categories</h2>
+                            <a href="#work" class="design-categories-link">View all categories <span aria-hidden="true">↗</span></a>
+                        </div>
+                        <div class="design-categories-list">
+                            @foreach($workCategories as $category)
+                                <article class="design-category">
+                                    <div class="design-category-image-wrap">
+                                        @if($category->image_url)
+                                            <img class="design-category-image" src="{{ $category->image_url }}" alt="{{ $category->name }}" loading="lazy">
+                                        @else
+                                            <div class="design-category-image design-category-image-fallback" aria-hidden="true"></div>
+                                        @endif
+                                    </div>
+                                    <h3>{{ $category->name }}</h3>
+                                    <p>{{ $category->item_count }} {{ $category->item_count == 1 ? 'item' : 'items' }}</p>
+                                </article>
+                            @endforeach
+                        </div>
+                    </div>
+                </section>
+                @endif
 
                 <section class="trusted">
                     <div class="container">
@@ -134,46 +163,71 @@
                             <p class="section-lead reveal" style="--delay: 0.3s;">Clear strategy, a tight visual system, and delivery-ready files your team can use immediately - from print to product.</p>
                         </div>
                         <div class="cards-grid">
-                            <article class="card reveal" style="--delay: 0.1s;">
-                                <img class="card-icon" src="/images/icons/strategy.svg" alt="" aria-hidden="true" loading="lazy">
-                                <h3>Brand strategy</h3>
-                                <p>Positioning, messaging, and differentiation tuned for Kenyan audiences.</p>
-                                <ul class="card-list">
-                                    <li>Workshop + research</li>
-                                    <li>Messaging &amp; tone</li>
-                                    <li>Go-to-market story</li>
-                                </ul>
-                            </article>
-                            <article class="card reveal" style="--delay: 0.2s;">
-                                <img class="card-icon" src="/images/icons/identity.svg" alt="" aria-hidden="true" loading="lazy">
-                                <h3>Visual identity</h3>
-                                <p>Logo systems, typography, and colors that translate from billboards to apps.</p>
-                                <ul class="card-list">
-                                    <li>Logo suite</li>
-                                    <li>Typography &amp; palette</li>
-                                    <li>Brand guidelines</li>
-                                </ul>
-                            </article>
-                            <article class="card reveal" style="--delay: 0.3s;">
-                                <img class="card-icon" src="/images/icons/packaging.svg" alt="" aria-hidden="true" loading="lazy">
-                                <h3>Packaging + retail</h3>
-                                <p>Packaging, wayfinding, and in-store brand cues that drive shelf presence.</p>
-                                <ul class="card-list">
-                                    <li>Packaging system</li>
-                                    <li>Print-ready files</li>
-                                    <li>Retail rollout kit</li>
-                                </ul>
-                            </article>
-                            <article class="card reveal" style="--delay: 0.4s;">
-                                <img class="card-icon" src="/images/icons/digital.svg" alt="" aria-hidden="true" loading="lazy">
-                                <h3>Digital experiences</h3>
-                                <p>Web and product design for experiences that feel seamless on mobile.</p>
-                                <ul class="card-list">
-                                    <li>Website UI</li>
-                                    <li>Design systems</li>
-                                    <li>Handoff + QA</li>
-                                </ul>
-                            </article>
+                            @if(isset($services) && $services->count())
+                                @foreach($services as $index => $service)
+                                    @php
+                                        $descriptionLines = collect(preg_split('/\r\n|\r|\n/', (string) ($service->description ?? '')))
+                                            ->map(fn ($line) => trim($line))
+                                            ->filter()
+                                            ->values();
+                                        $lead = $descriptionLines->first() ?? 'Service description coming soon.';
+                                        $highlights = $descriptionLines->slice(1, 3);
+                                    @endphp
+                                    <article class="card reveal" style="--delay: {{ number_format(0.1 + (($index % 4) * 0.1), 1) }}s;">
+                                        <img class="card-icon" src="{{ $service->image_url ?? '/images/icons/strategy.svg' }}" alt="{{ $service->name }} icon" loading="lazy">
+                                        <h3>{{ $service->name }}</h3>
+                                        <p>{{ $lead }}</p>
+                                        @if($highlights->count())
+                                            <ul class="card-list">
+                                                @foreach($highlights as $highlight)
+                                                    <li>{{ $highlight }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </article>
+                                @endforeach
+                            @else
+                                <article class="card reveal" style="--delay: 0.1s;">
+                                    <img class="card-icon" src="/images/icons/strategy.svg" alt="" aria-hidden="true" loading="lazy">
+                                    <h3>Brand strategy</h3>
+                                    <p>Positioning, messaging, and differentiation tuned for Kenyan audiences.</p>
+                                    <ul class="card-list">
+                                        <li>Workshop + research</li>
+                                        <li>Messaging &amp; tone</li>
+                                        <li>Go-to-market story</li>
+                                    </ul>
+                                </article>
+                                <article class="card reveal" style="--delay: 0.2s;">
+                                    <img class="card-icon" src="/images/icons/identity.svg" alt="" aria-hidden="true" loading="lazy">
+                                    <h3>Visual identity</h3>
+                                    <p>Logo systems, typography, and colors that translate from billboards to apps.</p>
+                                    <ul class="card-list">
+                                        <li>Logo suite</li>
+                                        <li>Typography &amp; palette</li>
+                                        <li>Brand guidelines</li>
+                                    </ul>
+                                </article>
+                                <article class="card reveal" style="--delay: 0.3s;">
+                                    <img class="card-icon" src="/images/icons/packaging.svg" alt="" aria-hidden="true" loading="lazy">
+                                    <h3>Packaging + retail</h3>
+                                    <p>Packaging, wayfinding, and in-store brand cues that drive shelf presence.</p>
+                                    <ul class="card-list">
+                                        <li>Packaging system</li>
+                                        <li>Print-ready files</li>
+                                        <li>Retail rollout kit</li>
+                                    </ul>
+                                </article>
+                                <article class="card reveal" style="--delay: 0.4s;">
+                                    <img class="card-icon" src="/images/icons/digital.svg" alt="" aria-hidden="true" loading="lazy">
+                                    <h3>Digital experiences</h3>
+                                    <p>Web and product design for experiences that feel seamless on mobile.</p>
+                                    <ul class="card-list">
+                                        <li>Website UI</li>
+                                        <li>Design systems</li>
+                                        <li>Handoff + QA</li>
+                                    </ul>
+                                </article>
+                            @endif
                         </div>
                     </div>
                 </section>

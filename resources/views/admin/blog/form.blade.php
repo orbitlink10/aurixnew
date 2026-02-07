@@ -69,7 +69,7 @@
         </div>
         <div class="mt-4">
             <label class="block text-sm font-semibold text-slate-800 mb-1">Body</label>
-            <textarea name="body" rows="8" class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-slate-900" required>{{ old('body', $post->body ?? '') }}</textarea>
+            <textarea id="blog-body-editor" name="body" rows="8" class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-slate-900" required>{{ old('body', $post->body ?? '') }}</textarea>
         </div>
         <div class="mt-4 flex items-center gap-3">
             <button class="px-5 py-2 rounded bg-sky-600 text-white font-semibold hover:bg-sky-500" type="submit">
@@ -79,4 +79,22 @@
         </div>
     </form>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/tinymce@7/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    if (typeof tinymce !== 'undefined') {
+        tinymce.init({
+            selector: '#blog-body-editor',
+            height: 420,
+            license_key: 'gpl',
+            menubar: 'file edit view insert format tools table',
+            plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table wordcount',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image media | code fullscreen',
+            toolbar_mode: 'wrap',
+            branding: false,
+            promotion: false,
+            convert_urls: false
+        });
+    }
+</script>
 @endsection

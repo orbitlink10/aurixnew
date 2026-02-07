@@ -2,44 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
-class Service extends Model
+class WorkCategory extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
-        'slug',
-        'description',
+        'item_count',
         'image_path',
-        'base_price',
+        'sort_order',
         'is_active',
     ];
 
     protected $casts = [
+        'item_count' => 'integer',
+        'sort_order' => 'integer',
         'is_active' => 'boolean',
-        'base_price' => 'decimal:2',
     ];
 
     protected $appends = ['image_url'];
-
-    public function packages()
-    {
-        return $this->hasMany(Package::class);
-    }
-
-    public function leads()
-    {
-        return $this->hasMany(Lead::class);
-    }
-
-    public function orderItems()
-    {
-        return $this->hasMany(OrderItem::class);
-    }
 
     public function getImageUrlAttribute(): ?string
     {

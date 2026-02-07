@@ -80,7 +80,7 @@
                         <form action="{{ route('admin.slider-images.destroy', $slide) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button class="text-rose-500 text-sm" onclick="return confirm('Delete this slide?')">Delete</button>
+                            <button type="submit" class="px-3 py-1 rounded bg-rose-600 text-white text-xs font-semibold hover:bg-rose-500" onclick="return confirm('Delete this slide?')">Delete</button>
                         </form>
                     </div>
                 </div>

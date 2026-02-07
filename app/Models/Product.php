@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
-class Service extends Model
+class Product extends Model
 {
     use HasFactory;
 
@@ -14,32 +14,17 @@ class Service extends Model
         'name',
         'slug',
         'description',
+        'price',
         'image_path',
-        'base_price',
         'is_active',
     ];
 
     protected $casts = [
+        'price' => 'decimal:2',
         'is_active' => 'boolean',
-        'base_price' => 'decimal:2',
     ];
 
     protected $appends = ['image_url'];
-
-    public function packages()
-    {
-        return $this->hasMany(Package::class);
-    }
-
-    public function leads()
-    {
-        return $this->hasMany(Lead::class);
-    }
-
-    public function orderItems()
-    {
-        return $this->hasMany(OrderItem::class);
-    }
 
     public function getImageUrlAttribute(): ?string
     {
