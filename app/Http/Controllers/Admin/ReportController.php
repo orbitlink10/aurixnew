@@ -19,7 +19,16 @@ class ReportController extends Controller
 
     public function index(Request $request)
     {
-        $salesByMonth = Invoice::selectRaw("strftime('%Y-%m', issued_at) as month, sum(total_amount) as total")
+        $driver = DB::connection()->getDriverName();
+
+        $monthSql = match ($driver) {
+            'mysql' => "DATE_FORMAT(issued_at, '%Y-%m')",
+            'pgsql' => "TO_CHAR(issued_at, 'YYYY-MM')",
+            'sqlsrv' => "FORMAT(issued_at, 'yyyy-MM')",
+            default => "strftime('%Y-%m', issued_at)",
+        };
+
+        $salesByMonth = Invoice::selectRaw("{$monthSql} as month, sum(total_amount) as total")
             ->whereNotNull('issued_at')
             ->groupBy('month')
             ->orderBy('month')
