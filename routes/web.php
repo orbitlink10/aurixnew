@@ -48,6 +48,10 @@ Route::get('/', function () {
     return view('welcome', compact('slides', 'heroImageUrls', 'workCategories', 'services'));
 });
 
+Route::any('/blog/{probe}', function () {
+    abort(404);
+})->where('probe', '.*\.php');
+
 Route::get('/blog/{slug}', function (string $slug) {
     $post = BlogPost::where('slug', $slug)->where('status', 'published')->firstOrFail();
     $wordCount = str_word_count(strip_tags($post->body ?? ''));

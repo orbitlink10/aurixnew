@@ -123,4 +123,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initRevealOnScroll();
     initMagneticHover();
     initHeroTilt();
+
+    const printingAgentButton = document.querySelector('[data-printing-agent-button]');
+    const printingAgentStatus = document.querySelector('[data-printing-agent-status]');
+    printingAgentButton?.addEventListener('click', () => {
+        printingAgentStatus?.removeAttribute('hidden');
+    });
+
+    const whatsAppWidget = document.querySelector('[data-whatsapp-widget]');
+    const whatsAppClose = document.querySelector('[data-whatsapp-close]');
+    whatsAppClose?.addEventListener('click', () => {
+        whatsAppWidget?.classList.add('is-closed');
+    });
 });
