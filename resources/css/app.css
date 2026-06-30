@@ -10,14 +10,14 @@
 }
 
 :root {
-    --np-red: #b10f1e;
-    --np-red-bright: #ff3347;
-    --np-blue: #061a33;
-    --np-ink: #111111;
-    --np-muted: #5f6368;
-    --np-line: #d9d9d9;
-    --np-soft: #f4f4f4;
-    --np-card: #ffffff;
+    --aurix-red: #b10f1e;
+    --aurix-red-bright: #ff3347;
+    --aurix-blue: #061a33;
+    --aurix-ink: #111111;
+    --aurix-muted: #5f6368;
+    --aurix-line: #d9d9d9;
+    --aurix-soft: #f4f4f4;
+    --aurix-card: #ffffff;
 }
 
 *,
@@ -30,11 +30,11 @@ html {
     scroll-behavior: smooth;
 }
 
-body.np-page {
+body.aurix-page {
     margin: 0;
     min-width: 320px;
-    background: var(--np-soft);
-    color: var(--np-ink);
+    background: var(--aurix-soft);
+    color: var(--aurix-ink);
     font-family: 'Inter', sans-serif;
 }
 
@@ -59,21 +59,21 @@ textarea {
     font: inherit;
 }
 
-.np-wrap,
+.aurix-wrap,
 .home-wrap,
 .top-picks-inner {
     width: min(1240px, calc(100% - 32px));
     margin: 0 auto;
 }
 
-.np-top-strip {
-    background: var(--np-blue);
+.aurix-top-strip {
+    background: var(--aurix-blue);
     color: #fff;
     font-size: 13px;
     font-weight: 700;
 }
 
-.np-top-strip .np-wrap {
+.aurix-top-strip .aurix-wrap {
     display: flex;
     min-height: 36px;
     align-items: center;
@@ -81,21 +81,21 @@ textarea {
     gap: 24px;
 }
 
-.np-top-strip a {
+.aurix-top-strip a {
     color: #fff;
     text-decoration: underline;
 }
 
-.np-header {
+.aurix-header {
     position: sticky;
     top: 0;
     z-index: 40;
-    border-bottom: 1px solid var(--np-line);
+    border-bottom: 1px solid var(--aurix-line);
     background: #fff;
-    color: var(--np-red);
+    color: var(--aurix-red);
 }
 
-.np-header-main {
+.aurix-header-main {
     display: grid;
     grid-template-columns: 190px auto minmax(240px, 1fr) auto;
     gap: 18px;
@@ -103,12 +103,22 @@ textarea {
     padding: 16px 0;
 }
 
-.np-brand img {
+.aurix-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--aurix-blue);
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1.05;
+}
+
+.aurix-brand img {
     max-height: 64px;
     object-fit: contain;
 }
 
-.np-what-trigger {
+.aurix-what-trigger {
     display: inline-flex;
     min-height: 46px;
     align-items: center;
@@ -118,17 +128,17 @@ textarea {
     border-radius: 8px;
     background: #f8f8f8;
     padding: 0 16px;
-    color: var(--np-red);
+    color: var(--aurix-red);
     font-weight: 900;
     cursor: pointer;
     white-space: nowrap;
 }
 
-.np-search {
+.aurix-search {
     position: relative;
 }
 
-.np-search input {
+.aurix-search input {
     width: 100%;
     height: 48px;
     border: 0;
@@ -140,7 +150,7 @@ textarea {
     font-size: 16px;
 }
 
-.np-search button {
+.aurix-search button {
     position: absolute;
     right: 10px;
     top: 50%;
@@ -155,12 +165,12 @@ textarea {
     cursor: pointer;
 }
 
-.np-search svg {
+.aurix-search svg {
     width: 28px;
     height: 28px;
 }
 
-.np-header-actions {
+.aurix-header-actions {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -172,25 +182,25 @@ textarea {
     white-space: nowrap;
 }
 
-.np-quick-btn {
+.aurix-quick-btn {
     display: inline-flex;
     min-height: 40px;
     align-items: center;
     justify-content: center;
     border-radius: 8px;
-    background: var(--np-red);
+    background: var(--aurix-red);
     padding: 0 16px;
     color: #fff;
 }
 
-.np-category-nav {
+.aurix-category-nav {
     position: relative;
     z-index: 30;
     border-bottom: 1px solid #d8d8d8;
     background: #f3f3f3;
 }
 
-.np-category-nav .np-wrap {
+.aurix-category-nav .aurix-wrap {
     display: flex;
     gap: 26px;
     overflow-x: auto;
@@ -211,7 +221,7 @@ textarea {
 .pet-promo-background {
     position: absolute;
     inset: 0;
-    background: var(--np-blue);
+    background: var(--aurix-blue);
 }
 
 .pet-promo-dog {
@@ -254,7 +264,7 @@ textarea {
 }
 
 .pet-promo-content h1 span {
-    color: var(--np-red-bright);
+    color: var(--aurix-red-bright);
 }
 
 .pet-promo-subtitle {
@@ -278,7 +288,7 @@ textarea {
     justify-content: center;
     margin-top: 30px;
     border-radius: 999px;
-    background: var(--np-red);
+    background: var(--aurix-red);
     color: #fff;
     font-size: 15px;
 }
@@ -443,7 +453,7 @@ textarea {
     display: -webkit-box;
     margin: 6px 0 0;
     overflow: hidden;
-    color: var(--np-muted);
+    color: var(--aurix-muted);
     font-size: 13px;
     line-height: 1.35;
     -webkit-box-orient: vertical;
@@ -608,13 +618,13 @@ textarea {
     margin-bottom: 28px;
     overflow: hidden;
     border-radius: 46px;
-    background: var(--np-blue);
+    background: var(--aurix-blue);
     padding: 18px clamp(24px, 3vw, 42px);
     color: #fff;
 }
 
 .bulk-banner strong {
-    color: var(--np-red-bright);
+    color: var(--aurix-red-bright);
     font-size: clamp(1.6rem, 3vw, 3rem);
     font-weight: 900;
     text-transform: uppercase;
@@ -636,7 +646,7 @@ textarea {
     min-height: 44px;
     align-items: center;
     border-radius: 999px;
-    background: var(--np-red);
+    background: var(--aurix-red);
     padding: 0 20px;
     color: #fff;
     white-space: nowrap;
@@ -669,14 +679,14 @@ textarea {
 }
 
 .quote-section {
-    background: var(--np-soft);
+    background: var(--aurix-soft);
     padding: 40px 16px;
 }
 
 .quote-card {
     max-width: 1024px;
     margin: 0 auto;
-    border: 1px solid var(--np-line);
+    border: 1px solid var(--aurix-line);
     background: #fff;
 }
 
@@ -689,7 +699,7 @@ textarea {
 .quote-head p {
     max-width: 640px;
     margin: 8px auto 0;
-    color: var(--np-muted);
+    color: var(--aurix-muted);
     font-size: 14px;
     line-height: 1.6;
 }
@@ -762,7 +772,7 @@ textarea {
     margin: 24px 0 0 auto;
     border: 0;
     border-radius: 6px;
-    background: var(--np-red);
+    background: var(--aurix-red);
     padding: 0 24px;
     color: #fff;
     font-size: 14px;
@@ -770,10 +780,10 @@ textarea {
     cursor: pointer;
 }
 
-.np-site-footer {
+.aurix-site-footer {
     margin-top: 40px;
     border-top: 1px solid #10233f;
-    background: var(--np-blue);
+    background: var(--aurix-blue);
     color: #cbd5e1;
 }
 
@@ -784,14 +794,14 @@ textarea {
     padding: 40px 0;
 }
 
-.np-site-footer h3 {
+.aurix-site-footer h3 {
     margin: 0;
     color: #fff;
     font-size: 30px;
     font-weight: 900;
 }
 
-.np-site-footer h4 {
+.aurix-site-footer h4 {
     margin: 0 0 14px;
     color: #ff4b35;
     font-size: 13px;
@@ -800,8 +810,8 @@ textarea {
     text-transform: uppercase;
 }
 
-.np-site-footer p,
-.np-site-footer a {
+.aurix-site-footer p,
+.aurix-site-footer a {
     display: block;
     margin: 0 0 8px;
     color: #cbd5e1;
@@ -809,7 +819,7 @@ textarea {
     line-height: 1.65;
 }
 
-.np-site-footer button {
+.aurix-site-footer button {
     display: inline-flex;
     min-height: 42px;
     align-items: center;
@@ -831,7 +841,7 @@ textarea {
     font-weight: 900;
 }
 
-.np-site-footer-bottom {
+.aurix-site-footer-bottom {
     border-top: 1px solid #10233f;
     padding: 12px;
     color: #94a3b8;
@@ -839,7 +849,7 @@ textarea {
     font-size: 15px;
 }
 
-.np-whatsapp-widget {
+.aurix-whatsapp-widget {
     position: fixed;
     right: 26px;
     bottom: 24px;
@@ -850,7 +860,7 @@ textarea {
     gap: 10px;
 }
 
-.np-whatsapp-card {
+.aurix-whatsapp-card {
     position: relative;
     display: flex;
     width: min(270px, calc(100vw - 28px));
@@ -864,11 +874,11 @@ textarea {
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
 }
 
-.np-whatsapp-widget.is-closed .np-whatsapp-card {
+.aurix-whatsapp-widget.is-closed .aurix-whatsapp-card {
     display: none;
 }
 
-.np-whatsapp-card span {
+.aurix-whatsapp-card span {
     position: relative;
     width: 40px;
     height: 40px;
@@ -879,7 +889,7 @@ textarea {
     background: #e62222;
 }
 
-.np-whatsapp-card span::after {
+.aurix-whatsapp-card span::after {
     content: "";
     position: absolute;
     right: -3px;
@@ -891,19 +901,19 @@ textarea {
     background: #22c55e;
 }
 
-.np-whatsapp-card img {
+.aurix-whatsapp-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.np-whatsapp-card p {
+.aurix-whatsapp-card p {
     margin: 0;
     color: #4b587c;
     font-size: 14px;
 }
 
-.np-whatsapp-card strong {
+.aurix-whatsapp-card strong {
     display: block;
     margin-top: 4px;
     color: #111827;
@@ -912,7 +922,7 @@ textarea {
     line-height: 1.18;
 }
 
-.np-whatsapp-card button {
+.aurix-whatsapp-card button {
     position: absolute;
     top: 8px;
     right: 8px;
@@ -924,7 +934,7 @@ textarea {
     cursor: pointer;
 }
 
-.np-whatsapp-button {
+.aurix-whatsapp-button {
     display: inline-flex;
     width: 56px;
     height: 56px;
@@ -936,22 +946,22 @@ textarea {
     box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
 }
 
-.np-whatsapp-button svg {
+.aurix-whatsapp-button svg {
     width: 33px;
     height: 33px;
 }
 
 @media (max-width: 1060px) {
-    .np-header-main {
+    .aurix-header-main {
         grid-template-columns: 150px 1fr;
     }
 
-    .np-what-trigger,
-    .np-header-actions {
+    .aurix-what-trigger,
+    .aurix-header-actions {
         order: 3;
     }
 
-    .np-search {
+    .aurix-search {
         grid-column: span 2;
     }
 
@@ -981,19 +991,19 @@ textarea {
 }
 
 @media (max-width: 640px) {
-    .np-wrap,
+    .aurix-wrap,
     .home-wrap,
     .top-picks-inner {
         width: min(100% - 24px, 1240px);
     }
 
-    .np-top-strip .np-wrap {
+    .aurix-top-strip .aurix-wrap {
         flex-wrap: wrap;
         gap: 8px 14px;
         padding: 8px 0;
     }
 
-    .np-header-main,
+    .aurix-header-main,
     .thumb-grid-5,
     .thumb-grid-4,
     .thumb-grid-3,
@@ -1002,11 +1012,11 @@ textarea {
         grid-template-columns: 1fr;
     }
 
-    .np-search {
+    .aurix-search {
         grid-column: auto;
     }
 
-    .np-header-actions {
+    .aurix-header-actions {
         flex-wrap: wrap;
         justify-content: flex-start;
     }
@@ -1036,7 +1046,7 @@ textarea {
         padding: 20px 16px;
     }
 
-    .np-whatsapp-widget {
+    .aurix-whatsapp-widget {
         right: 16px;
         bottom: 16px;
     }

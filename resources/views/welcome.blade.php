@@ -3,16 +3,16 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Nai Printers | Online Printers Kenya</title>
-        <meta name="description" content="Online printers Kenya, ideal for business cards, flyers, banners, and branded apparel with nationwide delivery.">
+        <title>Aurix Branding</title>
+        <meta name="description" content="Aurix Branding provides business cards, flyers, banners, signage, branded apparel, and promotional products with nationwide delivery.">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="preconnect" href="https://naiprinters.co.ke" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-        <link rel="icon" href="https://naiprinters.co.ke/storage/site/favicon/J1J5igCuT7OJk8ufakdAkNupt4imNQONDVdQV8Ib.png" sizes="any">
+        <link rel="icon" href="{{ asset('images/aurix-mark.svg') }}" type="image/svg+xml">
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="np-page">
+    <body class="aurix-page">
         @php
             $assetBase = 'https://naiprinters.co.ke';
             $categories = [
@@ -52,38 +52,39 @@
             ];
         @endphp
 
-        <div class="np-top-strip">
-            <div class="np-wrap">
+        <div class="aurix-top-strip">
+            <div class="aurix-wrap">
                 <span>Free standard shipping</span>
                 <span>15 years of experience</span>
                 <span>Our own production</span>
-                <a href="https://wa.me/254745506619?text=Hello%20NaiPrinters%2C%20I%20need%20a%20quote.">Live Chat</a>
+                <a href="https://wa.me/254745506619?text=Hello%20Aurix%20Branding%2C%20I%20need%20a%20quote.">Live Chat</a>
             </div>
         </div>
 
-        <header class="np-header">
-            <div class="np-wrap np-header-main">
-                <a href="/" class="np-brand" aria-label="Nai Printers home">
-                    <img src="{{ $assetBase }}/storage/site/ux3DcuT7v5kksLXQUD5CMV4xxCEysmiwZnBYiyKk.png" alt="Nai Printers">
+        <header class="aurix-header">
+            <div class="aurix-wrap aurix-header-main">
+                <a href="/" class="aurix-brand" aria-label="Aurix Branding home">
+                    <img src="{{ asset('images/aurix-mark.svg') }}" alt="">
+                    <span>Aurix Branding</span>
                 </a>
-                <button class="np-what-trigger" type="button">What We Print <span>⌄</span></button>
-                <form class="np-search" action="/products" method="get">
+                <button class="aurix-what-trigger" type="button">What We Print <span>⌄</span></button>
+                <form class="aurix-search" action="/products" method="get">
                     <input name="q" type="search" placeholder="Search...">
                     <button type="submit" aria-label="Search">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m21 21-4.35-4.35m0 0A7.5 7.5 0 1 0 6 16.65a7.5 7.5 0 0 0 10.65 0Z"/></svg>
                     </button>
                 </form>
-                <nav class="np-header-actions" aria-label="Account">
+                <nav class="aurix-header-actions" aria-label="Account">
                     <a href="/login">Login</a>
-                    <a class="np-quick-btn" href="/products">Quick Quote</a>
+                    <a class="aurix-quick-btn" href="/products">Quick Quote</a>
                     <a href="/cart">Shopping Cart</a>
                     <a href="#">Country</a>
                 </nav>
             </div>
         </header>
 
-        <nav class="np-category-nav" aria-label="Product categories">
-            <div class="np-wrap">
+        <nav class="aurix-category-nav" aria-label="Product categories">
+            <div class="aurix-wrap">
                 @foreach(['All products', 'Brochures', 'Flyers & Leaflets', 'Posters', 'Trade show & Advertising', 'Business cards & Cards', 'Office supplies', 'Stickers', 'Promotional items', 'Services'] as $item)
                     <a href="/products">{{ $item }}</a>
                 @endforeach
@@ -91,13 +92,13 @@
         </nav>
 
         <main>
-            <section class="pet-promo-slide" aria-label="With Nai Print">
+            <section class="pet-promo-slide" aria-label="With Aurix Branding">
                 <div class="pet-promo-background"></div>
                 <img class="pet-promo-dog" src="{{ $assetBase }}/storage/media-library/ZlMZs8eN5i34Q6xOdkGhAqUZ1Sh2tfBIlJ11lqu3.png" alt="Online printing">
                 <div class="pet-promo-content">
                     <div class="pet-promo-icons">▼ · ♣ · ▼</div>
                     <h1><span>Online</span> printing</h1>
-                    <p class="pet-promo-subtitle">With Nai Print</p>
+                    <p class="pet-promo-subtitle">With Aurix Branding</p>
                     <p class="pet-promo-copy">Ideal for business cards, flyers, banners, and branded apparel with nationwide delivery</p>
                     <a class="pet-promo-button" href="/products">Print Now</a>
                 </div>
@@ -222,10 +223,10 @@
             </section>
         </main>
 
-        <footer class="np-site-footer">
-            <div class="np-wrap footer-grid">
+        <footer class="aurix-site-footer">
+            <div class="aurix-wrap footer-grid">
                 <div>
-                    <h3>Nai Printers</h3>
+                    <h3>Aurix Branding</h3>
                     <p>Custom printing at scale with fast turnaround and design-friendly workflows.</p>
                     <button type="button" data-printing-agent-button>Register as Our Printing Agent</button>
                     <p class="agent-status" hidden data-printing-agent-status>Coming soon!</p>
@@ -234,16 +235,16 @@
                 <div><h4>Support</h4><a href="/help">Help Center</a><a href="/upload-artwork">Artwork Upload</a><a href="/checkout">Checkout</a></div>
                 <div><h4>Trust</h4><p>ISO-grade print quality</p><p>Nationwide delivery</p><p>Eco-friendly paper options</p></div>
             </div>
-            <div class="np-site-footer-bottom">© {{ now()->year }} Nai Printers. All rights reserved.</div>
+            <div class="aurix-site-footer-bottom">© {{ now()->year }} Aurix Branding. All rights reserved.</div>
         </footer>
 
-        <div class="np-whatsapp-widget is-visible" data-whatsapp-widget>
-            <div class="np-whatsapp-card">
+        <div class="aurix-whatsapp-widget is-visible" data-whatsapp-widget>
+            <div class="aurix-whatsapp-card">
                 <span><img src="{{ $assetBase }}/storage/site/xXonVZhS1Ttq3wYzC1aTVUbG9gaYMbnmt4evftzX.png" alt=""></span>
-                <div><p>Nai Prints</p><strong>Hi, how can we help?</strong></div>
+                <div><p>Aurix Branding</p><strong>Hi, how can we help?</strong></div>
                 <button type="button" aria-label="Close WhatsApp message" data-whatsapp-close>×</button>
             </div>
-            <a href="https://wa.me/254745506619?text=Hello%20NaiPrinters%2C%20I%20need%20a%20quote." class="np-whatsapp-button" aria-label="WhatsApp">
+            <a href="https://wa.me/254745506619?text=Hello%20Aurix%20Branding%2C%20I%20need%20a%20quote." class="aurix-whatsapp-button" aria-label="WhatsApp">
                 <svg viewBox="0 0 64 64" fill="currentColor"><path d="M32 8C18.75 8 8 17.82 8 29.94c0 7.1 3.69 13.42 9.41 17.43L15.8 56l8.71-4.65A26.33 26.33 0 0 0 32 51.88c13.25 0 24-9.82 24-21.94S45.25 8 32 8Z"/><circle cx="23.5" cy="30.5" r="3.2" fill="#078b19"/><circle cx="32" cy="30.5" r="3.2" fill="#078b19"/><circle cx="40.5" cy="30.5" r="3.2" fill="#078b19"/></svg>
             </a>
         </div>
