@@ -23,6 +23,9 @@ class BlogPost extends Model
         'published_at',
         'view_count',
         'cover_image',
+        'image_alt_text',
+        'heading',
+        'content_type',
     ];
 
     protected $casts = [

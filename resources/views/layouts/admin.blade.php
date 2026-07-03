@@ -228,8 +228,8 @@
                 <a class="nav-link {{ request()->routeIs('admin.packages.*') ? 'active' : '' }}" href="{{ route('admin.packages.index') }}">
                     <i class="fa-solid fa-tags"></i><span>Packages</span>
                 </a>
-                <a class="nav-link {{ request()->routeIs('admin.blog-posts.*') ? 'active' : '' }}" href="{{ route('admin.blog-posts.index') }}">
-                    <i class="fa-solid fa-pen-to-square"></i><span>Blog</span>
+                <a class="nav-link {{ request()->routeIs('admin.blog-posts.*') || request()->routeIs('admin.pages.*') || request()->routeIs('admin.new-post') ? 'active' : '' }}" href="{{ route('admin.pages.index') }}">
+                    <i class="fa-solid fa-pen-to-square"></i><span>Pages</span>
                 </a>
                 <a class="nav-link {{ request()->routeIs('admin.slider-images.*') ? 'active' : '' }}" href="{{ route('admin.slider-images.index') }}">
                     <i class="fa-solid fa-images"></i><span>Sliders</span>

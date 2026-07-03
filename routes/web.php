@@ -83,6 +83,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('invoices', InvoiceController::class)->only(['index', 'show', 'create', 'store', 'edit', 'update']);
 
     Route::resource('blog-posts', BlogPostController::class);
+    Route::post('blog-posts/bulk', [BlogPostController::class, 'bulkDestroy'])->name('blog-posts.bulk');
+    Route::get('pages', [BlogPostController::class, 'index'])->name('pages.index');
+    Route::get('new-post', [BlogPostController::class, 'create'])->name('new-post');
     Route::resource('blog-categories', BlogCategoryController::class);
     Route::resource('blog-tags', BlogTagController::class);
     Route::resource('slider-images', \App\Http\Controllers\Admin\SliderImageController::class)->except(['show']);

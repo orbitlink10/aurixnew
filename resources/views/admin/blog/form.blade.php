@@ -1,100 +1,362 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="flex items-center justify-between mb-4">
-    <div>
-        <h1 class="text-2xl font-bold text-slate-900">{{ isset($post) ? 'Edit Post' : 'Create Post' }}</h1>
-        <p class="text-slate-500 text-sm">Optimize SEO fields and publish.</p>
-    </div>
-    <a href="{{ route('admin.blog-posts.index') }}" class="px-4 py-2 rounded border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50">Back</a>
-</div>
+@php
+    $isEditing = isset($post) && $post->exists;
+@endphp
 
-<div class="card p-5">
-    <form method="POST" action="{{ isset($post) && $post->exists ? route('admin.blog-posts.update', $post) : route('admin.blog-posts.store') }}">
-        @csrf
-        @if(isset($post) && $post->exists)
-            @method('PUT')
-        @endif
-        <div class="grid md:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm font-semibold text-slate-800 mb-1">Title</label>
-                <input type="text" name="title" value="{{ old('title', $post->title ?? '') }}" class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-slate-900" required>
+<section class="content-header">
+    <div class="form-heading">
+        <div>
+            <h1 class="page-title mb-1">{{ $isEditing ? 'Edit Post' : 'Add New Post' }}</h1>
+            <p class="text-muted mb-0">Create SEO-ready posts and pages with rich content.</p>
+        </div>
+        <a href="{{ route('admin.pages.index') }}" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i> Back
+        </a>
+    </div>
+</section>
+
+<section class="content">
+    <div class="post-form-wrap">
+        <div class="card post-form-card">
+            <div class="post-form-header">
+                <h2 class="post-form-title">{{ $isEditing ? 'Update Post' : 'Add New Post' }}</h2>
             </div>
-            <div>
-                <label class="block text-sm font-semibold text-slate-800 mb-1">Slug</label>
-                <input type="text" name="slug" value="{{ old('slug', $post->slug ?? '') }}" class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-slate-900">
-            </div>
-            <div>
-                <label class="block text-sm font-semibold text-slate-800 mb-1">SEO Title</label>
-                <input type="text" name="seo_title" value="{{ old('seo_title', $post->seo_title ?? '') }}" class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-slate-900">
-            </div>
-            <div>
-                <label class="block text-sm font-semibold text-slate-800 mb-1">Meta Description</label>
-                <input type="text" name="meta_description" value="{{ old('meta_description', $post->meta_description ?? '') }}" class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-slate-900">
-            </div>
-            <div>
-                <label class="block text-sm font-semibold text-slate-800 mb-1">Category</label>
-                <select name="category_id" class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-slate-900">
-                    <option value="">--</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}" @selected(old('category_id', $post->category_id ?? '') == $cat->id)>{{ $cat->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-semibold text-slate-800 mb-1">Status</label>
-                <select name="status" class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-slate-900">
-                    @foreach(['draft','published'] as $status)
-                        <option value="{{ $status }}" @selected(old('status', $post->status ?? 'draft') == $status)>{{ ucfirst($status) }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-semibold text-slate-800 mb-1">Tags</label>
-                <select name="tag_ids[]" multiple class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-slate-900">
-                    @foreach($tags as $tag)
-                        <option value="{{ $tag->id }}" @selected(collect(old('tag_ids', isset($post) ? $post->tags->pluck('id')->toArray() : []))->contains($tag->id))>{{ $tag->name }}</option>
-                    @endforeach
-                </select>
-                <p class="text-xs text-slate-500 mt-1">Hold Ctrl/Cmd to select multiple.</p>
-            </div>
-            <div>
-                <label class="block text-sm font-semibold text-slate-800 mb-1">Published At</label>
-                <input type="datetime-local" name="published_at" value="{{ old('published_at', isset($post) && $post->published_at ? $post->published_at->format('Y-m-d\TH:i') : '') }}" class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-slate-900">
+
+            <div class="post-form-body">
+                <form method="POST" action="{{ $isEditing ? route('admin.blog-posts.update', $post) : route('admin.blog-posts.store') }}" enctype="multipart/form-data">
+                    @csrf
+                    @if($isEditing)
+                        @method('PUT')
+                    @endif
+
+                    <div class="form-group">
+                        <label for="seo_title">Meta Title</label>
+                        <input type="text" class="form-control" name="seo_title" value="{{ old('seo_title', $post->seo_title ?? '') }}" id="seo_title" placeholder="Enter Meta Title">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="meta_description">Meta Description</label>
+                        <input type="text" class="form-control" name="meta_description" value="{{ old('meta_description', $post->meta_description ?? '') }}" id="meta_description" placeholder="Enter Meta Description">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title">Page Title</label>
+                        <input type="text" class="form-control" name="title" value="{{ old('title', $post->title ?? '') }}" id="title" placeholder="Enter Keyword Title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image_alt_text">Image Alt Text</label>
+                        <input type="text" class="form-control" name="image_alt_text" value="{{ old('image_alt_text', $post->image_alt_text ?? '') }}" id="image_alt_text" placeholder="Enter Image Alt Text">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="heading">Heading 2</label>
+                        <input type="text" class="form-control" name="heading" value="{{ old('heading', $post->heading ?? '') }}" id="heading" placeholder="Enter Heading 2">
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="content_type">Type</label>
+                            <select class="form-control" name="content_type" id="content_type">
+                                @foreach(['Post', 'Page'] as $type)
+                                    <option value="{{ $type }}" @selected(old('content_type', $post->content_type ?? 'Post') === $type)>{{ $type }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select class="form-control" name="status" id="status">
+                                @foreach(['draft','published'] as $status)
+                                    <option value="{{ $status }}" @selected(old('status', $post->status ?? 'draft') === $status)>{{ ucfirst($status) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="category_id">Category</label>
+                            <select class="form-control" name="category_id" id="category_id">
+                                <option value="">Select category</option>
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat->id }}" @selected(old('category_id', $post->category_id ?? '') == $cat->id)>{{ $cat->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="published_at">Published At</label>
+                            <input type="datetime-local" class="form-control" name="published_at" id="published_at" value="{{ old('published_at', $isEditing && $post->published_at ? $post->published_at->format('Y-m-d\TH:i') : '') }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tag_ids">Tags</label>
+                        <select class="form-control" name="tag_ids[]" id="tag_ids" multiple>
+                            @foreach($tags as $tag)
+                                <option value="{{ $tag->id }}" @selected(collect(old('tag_ids', $isEditing ? $post->tags->pluck('id')->toArray() : []))->contains($tag->id))>{{ $tag->name }}</option>
+                            @endforeach
+                        </select>
+                        <small class="form-help">Hold Ctrl/Cmd to select multiple.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="excerpt">Excerpt</label>
+                        <textarea name="excerpt" id="excerpt" rows="3" class="form-control" placeholder="Short summary for listings and SEO">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="blog-body-editor">Page Description:</label>
+                        <textarea id="blog-body-editor" name="body" rows="12" class="form-control editor-field" required>{{ old('body', $post->body ?? '') }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cover_image">Cover Image URL</label>
+                        <input type="text" class="form-control" name="cover_image" value="{{ old('cover_image', $post->cover_image ?? '') }}" id="cover_image" placeholder="Optional image URL or storage path">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="photo">Upload Image (optional, only for Posts)</label>
+                        <label class="file-control" for="photo">
+                            <span id="file-label">{{ $post->cover_image ?? 'Choose file' }}</span>
+                            <input type="file" id="photo" name="photo" accept="image/*">
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="{{ route('admin.pages.index') }}" class="btn-danger-soft">Cancel</a>
+                        <button type="submit" class="btn-primary-soft">Submit</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="mt-4">
-            <label class="block text-sm font-semibold text-slate-800 mb-1">Excerpt</label>
-            <textarea name="excerpt" rows="2" class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-slate-900">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
-        </div>
-        <div class="mt-4">
-            <label class="block text-sm font-semibold text-slate-800 mb-1">Body</label>
-            <textarea id="blog-body-editor" name="body" rows="8" class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-slate-900" required>{{ old('body', $post->body ?? '') }}</textarea>
-        </div>
-        <div class="mt-4 flex items-center gap-3">
-            <button class="px-5 py-2 rounded bg-sky-600 text-white font-semibold hover:bg-sky-500" type="submit">
-                {{ isset($post) ? 'Update Post' : 'Create Post' }}
-            </button>
-            <a href="{{ route('admin.blog-posts.index') }}" class="px-5 py-2 rounded border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50">Cancel</a>
-        </div>
-    </form>
-</div>
+    </div>
+</section>
+
+<style>
+    .content-header {
+        margin-bottom: 18px;
+    }
+
+    .form-heading {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+    .text-muted {
+        color: #64748b;
+        font-size: 0.92rem;
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid #cbd5e1;
+        border-radius: 999px;
+        color: #475569;
+        background: #ffffff;
+        padding: 8px 14px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.86rem;
+    }
+
+    .post-form-wrap {
+        max-width: 980px;
+    }
+
+    .post-form-card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .post-form-header {
+        background: #2563eb;
+        color: #ffffff;
+        padding: 14px 18px;
+    }
+
+    .post-form-title {
+        margin: 0;
+        font-size: 1.08rem;
+        font-weight: 700;
+    }
+
+    .post-form-body {
+        padding: 20px;
+        background: #ffffff;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        display: block;
+        color: #334155;
+        font-weight: 600;
+        margin-bottom: 7px;
+    }
+
+    .form-control {
+        width: 100%;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        background: #ffffff;
+        color: #0f172a;
+        padding: 10px 12px;
+        outline: none;
+        transition: border 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-control:focus {
+        border-color: #93c5fd;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    select.form-control[multiple] {
+        min-height: 108px;
+    }
+
+    .form-help {
+        display: block;
+        color: #64748b;
+        margin-top: 5px;
+        font-size: 0.78rem;
+    }
+
+    .editor-field {
+        border-radius: 8px;
+        min-height: 240px;
+    }
+
+    .file-control {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        background: #ffffff;
+        color: #64748b;
+        padding: 10px 12px;
+        cursor: pointer;
+    }
+
+    .file-control::after {
+        content: "Browse";
+        background: #e2e8f0;
+        color: #334155;
+        padding: 6px 10px;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 0.82rem;
+    }
+
+    .file-control input {
+        display: none;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn-danger-soft,
+    .btn-primary-soft {
+        border: 0;
+        border-radius: 6px;
+        padding: 10px 16px;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .btn-danger-soft {
+        background: #dc2626;
+        color: #ffffff;
+    }
+
+    .btn-primary-soft {
+        background: #2563eb;
+        color: #ffffff;
+    }
+
+    @media (max-width: 700px) {
+        .form-heading,
+        .form-grid {
+            grid-template-columns: 1fr;
+            flex-direction: column;
+        }
+
+        .back-btn,
+        .form-actions a,
+        .form-actions button {
+            justify-content: center;
+            width: 100%;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+        }
+    }
+</style>
 
 <script src="https://cdn.jsdelivr.net/npm/tinymce@7/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
     if (typeof tinymce !== 'undefined') {
         tinymce.init({
             selector: '#blog-body-editor',
-            height: 420,
+            height: 400,
             license_key: 'gpl',
-            menubar: 'file edit view insert format tools table',
-            plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table wordcount',
-            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image media | code fullscreen',
-            toolbar_mode: 'wrap',
-            branding: false,
+            plugins: 'image advcode link lists media table code wordcount fullscreen',
+            toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image media | code fullscreen',
+            menubar: 'file edit view insert format tools table help',
+            image_title: true,
+            automatic_uploads: true,
             promotion: false,
-            convert_urls: false
+            branding: false,
+            convert_urls: false,
+            file_picker_types: 'image',
+            file_picker_callback: function (cb) {
+                const input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
+                input.onchange = function () {
+                    const file = this.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function () {
+                        const id = 'blobid' + (new Date()).getTime();
+                        const blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                        const base64 = reader.result.split(',')[1];
+                        const blobInfo = blobCache.create(id, file, base64);
+                        blobCache.add(blobInfo);
+                        cb(blobInfo.blobUri(), { title: file.name });
+                    };
+                    reader.readAsDataURL(file);
+                };
+                input.click();
+            },
         });
     }
+
+    document.getElementById('photo')?.addEventListener('change', function () {
+        document.getElementById('file-label').textContent = this.files[0]?.name || 'Choose file';
+    });
 </script>
 @endsection
