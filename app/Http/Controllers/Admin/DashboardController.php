@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Lead;
 use App\Models\BlogPost;
 use App\Models\Invoice;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
@@ -25,6 +26,13 @@ class DashboardController extends Controller
         return view('admin.dashboard', [
             'serviceCount' => Service::count(),
             'packageCount' => Package::count(),
+            'orderCount' => Order::count(),
+            'invoiceCount' => Invoice::count(),
+            'userCount' => User::count(),
+            'enquiryCount' => Lead::count(),
+            'recentOrderCount' => Order::where('created_at', '>=', now()->subDays(7))->count(),
+            'newUserCount' => User::where('created_at', '>=', now()->subDays(30))->count(),
+            'activeUserCount' => User::where('updated_at', '>=', now()->subDay())->count(),
             'orderStats' => $orderStats,
             'leadStats' => $leadStats,
             'recentOrders' => Order::latest()->take(5)->get(),
