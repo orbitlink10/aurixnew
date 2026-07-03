@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\BlogPostController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogTagController;
+use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -78,6 +79,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('home-page-content', [HomePageContentController::class, 'index'])->name('home-page-content.index');
 
     Route::resource('services', ServiceController::class);
+    Route::resource('categories', ProductCategoryController::class);
     Route::resource('products', ProductController::class);
     Route::resource('packages', PackageController::class);
     Route::resource('leads', LeadController::class);

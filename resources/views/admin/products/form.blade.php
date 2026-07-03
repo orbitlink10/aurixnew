@@ -45,7 +45,13 @@
 
                 <div class="form-group">
                     <label for="productCategory">Category</label>
-                    <input type="text" class="form-control" name="category_name" value="{{ old('category_name', $product->category_name) }}" id="productCategory" placeholder="Enter category">
+                    <select class="form-control" name="product_category_id" id="productCategory">
+                        <option value="">Select Category</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" @selected(old('product_category_id', $product->product_category_id) == $category->id)>{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                    <input type="hidden" name="category_name" value="{{ old('category_name', $product->category_name) }}">
                 </div>
 
                 <div class="form-group">

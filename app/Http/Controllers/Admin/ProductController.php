@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -31,6 +32,7 @@ class ProductController extends Controller
     {
         return view('admin.products.form', [
             'product' => new Product(),
+            'categories' => ProductCategory::orderBy('name')->get(),
         ]);
     }
 
@@ -44,6 +46,7 @@ class ProductController extends Controller
             'price' => ['nullable', 'numeric', 'min:0'],
             'marked_price' => ['nullable', 'numeric', 'min:0'],
             'quantity' => ['nullable', 'integer', 'min:0'],
+            'product_category_id' => ['nullable', 'exists:product_categories,id'],
             'category_name' => ['nullable', 'string', 'max:255'],
             'subcategory_name' => ['nullable', 'string', 'max:255'],
             'google_merchant' => ['nullable', 'boolean'],
@@ -56,6 +59,9 @@ class ProductController extends Controller
         $data['is_active'] = $request->boolean('is_active');
         $data['google_merchant'] = $request->boolean('google_merchant');
         $data['quantity'] = $data['quantity'] ?? 0;
+        if (! empty($data['product_category_id'])) {
+            $data['category_name'] = ProductCategory::find($data['product_category_id'])?->name;
+        }
 
         $image = $request->file('photo') ?: $request->file('image');
         if ($image) {
@@ -77,6 +83,7 @@ class ProductController extends Controller
     {
         return view('admin.products.form', [
             'product' => $product,
+            'categories' => ProductCategory::orderBy('name')->get(),
         ]);
     }
 
@@ -90,6 +97,7 @@ class ProductController extends Controller
             'price' => ['nullable', 'numeric', 'min:0'],
             'marked_price' => ['nullable', 'numeric', 'min:0'],
             'quantity' => ['nullable', 'integer', 'min:0'],
+            'product_category_id' => ['nullable', 'exists:product_categories,id'],
             'category_name' => ['nullable', 'string', 'max:255'],
             'subcategory_name' => ['nullable', 'string', 'max:255'],
             'google_merchant' => ['nullable', 'boolean'],
@@ -102,6 +110,9 @@ class ProductController extends Controller
         $data['is_active'] = $request->boolean('is_active');
         $data['google_merchant'] = $request->boolean('google_merchant');
         $data['quantity'] = $data['quantity'] ?? 0;
+        if (! empty($data['product_category_id'])) {
+            $data['category_name'] = ProductCategory::find($data['product_category_id'])?->name;
+        }
 
         $image = $request->file('photo') ?: $request->file('image');
         if ($image) {

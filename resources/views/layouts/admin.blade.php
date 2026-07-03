@@ -222,6 +222,9 @@
                 <a class="nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }}" href="{{ route('admin.services.index') }}">
                     <i class="fa-solid fa-screwdriver-wrench"></i><span>Services</span>
                 </a>
+                <a class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}" href="{{ route('admin.categories.index') }}">
+                    <i class="fa-solid fa-list-alt"></i><span>Categories</span>
+                </a>
                 <a class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
                     <i class="fa-solid fa-boxes-stacked"></i><span>Products</span>
                 </a>
