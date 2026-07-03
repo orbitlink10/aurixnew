@@ -94,21 +94,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="tag_ids">Tags</label>
-                        <select class="form-control" name="tag_ids[]" id="tag_ids" multiple>
-                            @foreach($tags as $tag)
-                                <option value="{{ $tag->id }}" @selected(collect(old('tag_ids', $isEditing ? $post->tags->pluck('id')->toArray() : []))->contains($tag->id))>{{ $tag->name }}</option>
-                            @endforeach
-                        </select>
-                        <small class="form-help">Hold Ctrl/Cmd to select multiple.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="excerpt">Excerpt</label>
-                        <textarea name="excerpt" id="excerpt" rows="3" class="form-control" placeholder="Short summary for listings and SEO">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
-                    </div>
-
-                    <div class="form-group">
                         <label for="blog-body-editor">Page Description:</label>
                         <textarea id="blog-body-editor" name="body" rows="12" class="form-control editor-field" required>{{ old('body', $post->body ?? '') }}</textarea>
                     </div>

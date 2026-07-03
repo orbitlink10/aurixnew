@@ -52,13 +52,10 @@ class BlogPostController extends Controller
             'image_alt_text' => ['nullable', 'string', 'max:255'],
             'heading' => ['nullable', 'string', 'max:255'],
             'content_type' => ['required', 'string', 'in:Post,Page'],
-            'excerpt' => ['nullable', 'string'],
             'body' => ['required', 'string'],
             'status' => ['required', 'string', 'in:draft,published'],
             'published_at' => ['nullable', 'date'],
             'category_id' => ['nullable', 'exists:blog_categories,id'],
-            'tag_ids' => ['nullable', 'array'],
-            'tag_ids.*' => ['exists:blog_tags,id'],
             'cover_image' => ['nullable', 'string', 'max:255'],
             'photo' => ['nullable', 'image', 'max:4096'],
         ]);
@@ -73,7 +70,6 @@ class BlogPostController extends Controller
         unset($data['photo']);
 
         $post = BlogPost::create(array_merge($data, ['user_id' => auth()->id()]));
-        $post->tags()->sync($data['tag_ids'] ?? []);
 
         return redirect()->route('admin.blog-posts.index')->with('success', 'Post created.');
     }
@@ -111,13 +107,10 @@ class BlogPostController extends Controller
             'image_alt_text' => ['nullable', 'string', 'max:255'],
             'heading' => ['nullable', 'string', 'max:255'],
             'content_type' => ['required', 'string', 'in:Post,Page'],
-            'excerpt' => ['nullable', 'string'],
             'body' => ['required', 'string'],
             'status' => ['required', 'string', 'in:draft,published'],
             'published_at' => ['nullable', 'date'],
             'category_id' => ['nullable', 'exists:blog_categories,id'],
-            'tag_ids' => ['nullable', 'array'],
-            'tag_ids.*' => ['exists:blog_tags,id'],
             'cover_image' => ['nullable', 'string', 'max:255'],
             'photo' => ['nullable', 'image', 'max:4096'],
         ]);
@@ -135,7 +128,6 @@ class BlogPostController extends Controller
         unset($data['photo']);
 
         $blogPost->update($data);
-        $blogPost->tags()->sync($data['tag_ids'] ?? []);
 
         return redirect()->route('admin.blog-posts.index')->with('success', 'Post updated.');
     }
