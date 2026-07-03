@@ -1,100 +1,309 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="flex flex-col gap-4">
-    <div class="card p-4 rounded-xl">
-        <div class="flex items-center justify-between mb-3">
-            <h2 class="text-lg font-semibold text-white">{{ isset($editing) ? 'Edit Product' : 'Add Product' }}</h2>
-            @isset($editing)
-                <a href="{{ route('admin.products.index') }}" class="text-sky-400 text-sm">Cancel edit</a>
-            @endisset
+<section class="content-header">
+    <div class="products-heading">
+        <div>
+            <h1 class="page-title">Products</h1>
+            <p class="text-muted">Manage and view all products available in the system</p>
         </div>
-        <form method="POST" enctype="multipart/form-data" action="{{ isset($editing) ? route('admin.products.update', $editing) : route('admin.products.store') }}" class="grid md:grid-cols-2 gap-4">
-            @csrf
-            @isset($editing)
-                @method('PUT')
-            @endisset
-            <div>
-                <label class="block text-sm mb-1">Name</label>
-                <input type="text" name="name" value="{{ old('name', $editing->name ?? '') }}" required class="w-full bg-white border border-slate-300 rounded px-3 py-2 text-slate-900 placeholder:text-slate-400">
-            </div>
-            <div>
-                <label class="block text-sm mb-1">Slug</label>
-                <input type="text" name="slug" value="{{ old('slug', $editing->slug ?? '') }}" class="w-full bg-white border border-slate-300 rounded px-3 py-2 text-slate-900 placeholder:text-slate-400">
-            </div>
-            <div>
-                <label class="block text-sm mb-1">Price</label>
-                <input type="number" step="0.01" name="price" value="{{ old('price', $editing->price ?? 0) }}" class="w-full bg-white border border-slate-300 rounded px-3 py-2 text-slate-900">
-            </div>
-            <div class="flex items-center gap-2 pt-6">
-                <label class="inline-flex items-center gap-2 text-sm">
-                    <input type="checkbox" name="is_active" value="1" class="accent-sky-500" {{ old('is_active', $editing->is_active ?? true) ? 'checked' : '' }}>
-                    Active
-                </label>
-            </div>
-            <div class="md:col-span-2">
-                <label class="block text-sm mb-1">Description</label>
-                <textarea name="description" rows="3" class="w-full bg-white border border-slate-300 rounded px-3 py-2 text-slate-900 placeholder:text-slate-400">{{ old('description', $editing->description ?? '') }}</textarea>
-            </div>
-            <div class="md:col-span-2">
-                <label class="block text-sm mb-1">Product Image {{ isset($editing) ? '(leave blank to keep current)' : '' }}</label>
-                <input type="file" name="image" accept="image/*" class="w-full bg-white border border-slate-300 rounded px-3 py-2 text-slate-900 file:mr-3 file:rounded file:border-0 file:bg-slate-100 file:px-3 file:py-1 file:text-slate-800">
-                @if(isset($editing) && $editing->image_url)
-                    <div class="mt-2">
-                        <img src="{{ $editing->image_url }}" alt="" class="h-14 w-14 rounded object-cover border border-slate-700">
-                    </div>
-                @endif
-            </div>
-            <div class="md:col-span-2">
-                <button class="bg-sky-500 hover:bg-sky-400 text-slate-900 font-semibold px-4 py-2 rounded">{{ isset($editing) ? 'Update' : 'Create' }}</button>
-            </div>
-        </form>
+        <a href="{{ route('admin.products.create') }}" class="add-product-btn">
+            <i class="fa-solid fa-plus"></i> Add Product
+        </a>
     </div>
+</section>
 
-    <div class="card p-4 rounded-xl">
-        <h2 class="text-lg font-semibold text-white mb-3">Products</h2>
-        <div class="overflow-x-auto">
-            <table class="min-w-full text-sm">
-                <thead class="text-slate-400">
-                    <tr>
-                        <th class="text-left py-2">Image</th>
-                        <th class="text-left py-2">Name</th>
-                        <th class="text-left py-2">Slug</th>
-                        <th class="text-left py-2">Price</th>
-                        <th class="text-left py-2">Active</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($products as $product)
-                        <tr class="border-t border-slate-800">
-                            <td class="py-2">
-                                @if($product->image_url)
-                                    <img src="{{ $product->image_url }}" alt="" class="h-10 w-10 rounded object-cover border border-slate-700">
-                                @else
-                                    <div class="h-10 w-10 rounded bg-slate-800 border border-slate-700"></div>
-                                @endif
-                            </td>
-                            <td class="py-2 font-semibold">{{ $product->name }}</td>
-                            <td class="py-2 text-slate-400">{{ $product->slug }}</td>
-                            <td class="py-2">${{ number_format($product->price, 2) }}</td>
-                            <td class="py-2">{{ $product->is_active ? 'Yes' : 'No' }}</td>
-                            <td class="py-2 text-right space-x-2">
-                                <a class="text-sky-400" href="{{ route('admin.products.edit', $product) }}">Edit</a>
-                                <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="text-rose-300" onclick="return confirm('Delete this product?')">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr><td class="py-3 text-slate-500" colspan="6">No products created.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
+<section class="content">
+    <div class="card product-list-card">
+        <div class="product-card-header">
+            <h2 class="product-card-title">Product List</h2>
+            <form action="{{ route('admin.products.index') }}" method="GET" class="product-search">
+                <input type="text" name="query" class="search-input" placeholder="Search by product name..." value="{{ request('query') }}">
+                <button type="submit" class="search-btn">
+                    <i class="fa-solid fa-search"></i> Search
+                </button>
+            </form>
         </div>
-        <div class="mt-3">{{ $products->links() }}</div>
+
+        <div class="product-card-body">
+            <div class="table-wrap">
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th class="number-cell">#</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Slug</th>
+                            <th>Price (KES)</th>
+                            <th>Google Merchant</th>
+                            <th>Category</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($products as $product)
+                            <tr>
+                                <td class="number-cell">{{ $products->firstItem() + $loop->index }}</td>
+                                <td>
+                                    @if($product->image_url)
+                                        <img class="product-thumb" src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                                    @else
+                                        <div class="product-thumb product-thumb-empty">
+                                            <i class="fa-solid fa-image"></i>
+                                        </div>
+                                    @endif
+                                </td>
+                                <td class="product-name">{{ $product->name }}</td>
+                                <td class="product-slug">{{ $product->slug }}</td>
+                                <td>
+                                    <div>KES {{ number_format((float) $product->price, 2) }}</div>
+                                    @if((float) $product->price > 0)
+                                        <small class="price-note">has price</small>
+                                    @endif
+                                </td>
+                                <td>{{ $product->google_merchant ? 'Yes' : 'No' }}</td>
+                                <td>{{ $product->category_name ?: 'Unassigned' }}</td>
+                                <td class="action-cell">
+                                    <a href="{{ route('admin.products.edit', $product) }}" class="action-btn action-update">
+                                        <i class="fa-solid fa-pen-to-square"></i> Update
+                                    </a>
+                                    <button type="button" class="action-btn action-delete" data-delete-target="delete-product-{{ $product->id }}">
+                                        <i class="fa-solid fa-trash"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="empty-row">No products created.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            @foreach ($products as $product)
+                <form id="delete-product-{{ $product->id }}" action="{{ route('admin.products.destroy', $product) }}" method="POST" class="hidden">
+                    @csrf
+                    @method('DELETE')
+                </form>
+            @endforeach
+
+            <div class="pagination-wrap">{{ $products->links() }}</div>
+        </div>
     </div>
-</div>
+</section>
+
+<style>
+    .content-header {
+        margin-bottom: 18px;
+    }
+
+    .products-heading {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .text-muted {
+        color: #64748b;
+        font-size: 0.92rem;
+        margin: 4px 0 0;
+    }
+
+    .add-product-btn,
+    .search-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid #2563eb;
+        background: #2563eb;
+        color: #ffffff;
+        border-radius: 6px;
+        padding: 9px 14px;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 0.88rem;
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.16);
+    }
+
+    .product-list-card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .product-card-header {
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+        padding: 14px 18px;
+    }
+
+    .product-card-title {
+        margin: 0;
+        color: #0f172a;
+        font-size: 1.08rem;
+        font-weight: 700;
+    }
+
+    .product-search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .search-input {
+        min-width: 260px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        color: #0f172a;
+        padding: 9px 11px;
+        outline: none;
+    }
+
+    .search-input:focus {
+        border-color: #93c5fd;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .product-card-body {
+        background: #ffffff;
+        padding: 0;
+    }
+
+    .table-wrap {
+        overflow-x: auto;
+    }
+
+    .products-table {
+        width: 100%;
+        min-width: 1040px;
+        border-collapse: collapse;
+        color: #334155;
+        font-size: 0.9rem;
+    }
+
+    .products-table thead {
+        background: #f8fafc;
+        color: #334155;
+    }
+
+    .products-table th,
+    .products-table td {
+        padding: 12px 14px;
+        border: 1px solid #e2e8f0;
+        vertical-align: middle;
+        text-align: left;
+    }
+
+    .products-table tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .number-cell {
+        width: 52px;
+    }
+
+    .product-thumb {
+        width: 150px;
+        height: 86px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+    }
+
+    .product-thumb-empty {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-size: 1.35rem;
+    }
+
+    .product-name {
+        color: #0f172a;
+        font-weight: 600;
+    }
+
+    .product-slug {
+        color: #64748b;
+    }
+
+    .price-note {
+        display: inline-block;
+        color: #64748b;
+        margin-top: 2px;
+    }
+
+    .action-cell {
+        white-space: nowrap;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 6px;
+        padding: 7px 10px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-decoration: none;
+        margin: 2px;
+        background: #ffffff;
+    }
+
+    .action-update {
+        border: 1px solid #2563eb;
+        color: #1d4ed8;
+    }
+
+    .action-delete {
+        border: 1px solid #f43f5e;
+        color: #be123c;
+    }
+
+    .empty-row {
+        color: #64748b;
+        text-align: center;
+        padding: 28px;
+    }
+
+    .pagination-wrap {
+        padding: 16px 18px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    @media (max-width: 700px) {
+        .products-heading,
+        .product-card-header,
+        .product-search {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .search-input,
+        .add-product-btn,
+        .search-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    document.querySelectorAll('[data-delete-target]').forEach((button) => {
+        button.addEventListener('click', () => {
+            if (window.confirm('Are you sure you want to delete this product?')) {
+                document.getElementById(button.dataset.deleteTarget)?.submit();
+            }
+        });
+    });
+</script>
 @endsection

@@ -12,14 +12,26 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::orderByDesc('created_at')->paginate(15);
+        $query = Product::query()->orderByDesc('created_at');
+
+        if ($search = request('query')) {
+            $query->where(function ($builder) use ($search) {
+                $builder->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('slug', 'like', '%'.$search.'%')
+                    ->orWhere('category_name', 'like', '%'.$search.'%');
+            });
+        }
+
+        $products = $query->paginate(15)->withQueryString();
 
         return view('admin.products.index', compact('products'));
     }
 
     public function create()
     {
-        return redirect()->route('admin.products.index');
+        return view('admin.products.form', [
+            'product' => new Product(),
+        ]);
     }
 
     public function store(Request $request)
@@ -28,17 +40,28 @@ class ProductController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:products,slug'],
             'description' => ['nullable', 'string'],
+            'meta_description' => ['nullable', 'string'],
             'price' => ['nullable', 'numeric', 'min:0'],
+            'marked_price' => ['nullable', 'numeric', 'min:0'],
+            'quantity' => ['nullable', 'integer', 'min:0'],
+            'category_name' => ['nullable', 'string', 'max:255'],
+            'subcategory_name' => ['nullable', 'string', 'max:255'],
+            'google_merchant' => ['nullable', 'boolean'],
             'image' => ['nullable', 'image', 'max:5120'],
+            'photo' => ['nullable', 'image', 'max:5120'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
         $data['slug'] = $data['slug'] ?? Str::slug($data['name']);
         $data['is_active'] = $request->boolean('is_active');
+        $data['google_merchant'] = $request->boolean('google_merchant');
+        $data['quantity'] = $data['quantity'] ?? 0;
 
-        if ($request->hasFile('image')) {
-            $data['image_path'] = $request->file('image')->store('products', 'uploads');
+        $image = $request->file('photo') ?: $request->file('image');
+        if ($image) {
+            $data['image_path'] = $image->store('products', 'uploads');
         }
+        unset($data['photo'], $data['image']);
 
         Product::create($data);
 
@@ -52,11 +75,8 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        $products = Product::orderByDesc('created_at')->paginate(15);
-
-        return view('admin.products.index', [
-            'products' => $products,
-            'editing' => $product,
+        return view('admin.products.form', [
+            'product' => $product,
         ]);
     }
 
@@ -66,21 +86,32 @@ class ProductController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:products,slug,'.$product->id],
             'description' => ['nullable', 'string'],
+            'meta_description' => ['nullable', 'string'],
             'price' => ['nullable', 'numeric', 'min:0'],
+            'marked_price' => ['nullable', 'numeric', 'min:0'],
+            'quantity' => ['nullable', 'integer', 'min:0'],
+            'category_name' => ['nullable', 'string', 'max:255'],
+            'subcategory_name' => ['nullable', 'string', 'max:255'],
+            'google_merchant' => ['nullable', 'boolean'],
             'image' => ['nullable', 'image', 'max:5120'],
+            'photo' => ['nullable', 'image', 'max:5120'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
         $data['slug'] = $data['slug'] ?? Str::slug($data['name']);
         $data['is_active'] = $request->boolean('is_active');
+        $data['google_merchant'] = $request->boolean('google_merchant');
+        $data['quantity'] = $data['quantity'] ?? 0;
 
-        if ($request->hasFile('image')) {
+        $image = $request->file('photo') ?: $request->file('image');
+        if ($image) {
             if ($product->image_path) {
                 Storage::disk('uploads')->delete($product->image_path);
                 Storage::disk('public')->delete($product->image_path); // legacy clean-up
             }
-            $data['image_path'] = $request->file('image')->store('products', 'uploads');
+            $data['image_path'] = $image->store('products', 'uploads');
         }
+        unset($data['photo'], $data['image']);
 
         $product->update($data);
 

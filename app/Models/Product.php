@@ -14,14 +14,23 @@ class Product extends Model
         'name',
         'slug',
         'description',
+        'meta_description',
         'price',
+        'marked_price',
+        'quantity',
+        'category_name',
+        'subcategory_name',
         'image_path',
         'is_active',
+        'google_merchant',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'marked_price' => 'decimal:2',
+        'quantity' => 'integer',
         'is_active' => 'boolean',
+        'google_merchant' => 'boolean',
     ];
 
     protected $appends = ['image_url'];
