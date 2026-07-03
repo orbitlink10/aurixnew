@@ -26,6 +26,7 @@ use App\Models\BlogPost;
 use App\Models\SiteSetting;
 use App\Models\Service;
 use App\Models\WorkCategory;
+use App\Models\Product;
 use Illuminate\Support\Facades\Schema;
 
 Route::get('/', function () {
@@ -63,6 +64,10 @@ Route::get('/blog/{slug}', function (string $slug) {
 Route::get('/blog-posts/{slug}', function (string $slug) {
     return redirect()->route('public.blog.show', ['slug' => $slug], 301);
 });
+
+Route::get('/products/{product:slug}', function (Product $product) {
+    return view('products.show', compact('product'));
+})->name('public.products.show');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);

@@ -33,7 +33,6 @@
                             <th class="number-cell">#</th>
                             <th>Image</th>
                             <th>Name</th>
-                            <th>Slug</th>
                             <th>Price (KES)</th>
                             <th>Google Merchant</th>
                             <th>Category</th>
@@ -54,7 +53,6 @@
                                     @endif
                                 </td>
                                 <td class="product-name">{{ $product->name }}</td>
-                                <td class="product-slug">{{ $product->slug }}</td>
                                 <td>
                                     <div>KES {{ number_format((float) $product->price, 2) }}</div>
                                     @if((float) $product->price > 0)
@@ -64,6 +62,9 @@
                                 <td>{{ $product->google_merchant ? 'Yes' : 'No' }}</td>
                                 <td>{{ $product->category_name ?: 'Unassigned' }}</td>
                                 <td class="action-cell">
+                                    <a href="{{ route('public.products.show', ['product' => $product->slug]) }}" target="_blank" class="action-btn action-preview">
+                                        <i class="fa-solid fa-eye"></i> Preview
+                                    </a>
                                     <a href="{{ route('admin.products.edit', $product) }}" class="action-btn action-update">
                                         <i class="fa-solid fa-pen-to-square"></i> Update
                                     </a>
@@ -74,7 +75,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="empty-row">No products created.</td>
+                                <td colspan="7" class="empty-row">No products created.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -184,7 +185,7 @@
 
     .products-table {
         width: 100%;
-        min-width: 1040px;
+        min-width: 960px;
         border-collapse: collapse;
         color: #334155;
         font-size: 0.9rem;
@@ -233,10 +234,6 @@
         font-weight: 600;
     }
 
-    .product-slug {
-        color: #64748b;
-    }
-
     .price-note {
         display: inline-block;
         color: #64748b;
@@ -263,6 +260,11 @@
     .action-update {
         border: 1px solid #2563eb;
         color: #1d4ed8;
+    }
+
+    .action-preview {
+        border: 1px solid #38bdf8;
+        color: #0284c7;
     }
 
     .action-delete {
