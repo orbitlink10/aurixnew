@@ -7,199 +7,790 @@
     <meta name="description" content="{{ $product->meta_description ?: Str::limit(strip_tags($product->description ?? ''), 155) }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         body {
             margin: 0;
-            background: #f4f6fb;
-            color: #0f172a;
-            font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f7f8fa;
+            color: #111827;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
-        .site-header {
-            background: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .header-inner {
-            width: min(1180px, calc(100% - 32px));
+        a { color: inherit; text-decoration: none; }
+        button, input { font: inherit; }
+        .wrap {
+            width: min(100% - 32px, 1240px);
             margin: 0 auto;
-            min-height: 72px;
+        }
+        .helpbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            color: #475569;
+            font-size: 13px;
+        }
+        .helpbar .wrap,
+        .header .wrap,
+        .dealbar .wrap {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 18px;
+        }
+        .helpbar .wrap {
+            min-height: 34px;
+        }
+        .helpbar strong {
+            color: #0f172a;
+        }
+        .header {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .header .wrap {
+            min-height: 74px;
         }
         .brand {
-            color: #0f172a;
-            font-size: 1.25rem;
-            font-weight: 700;
-            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 900;
         }
-        .back-link {
-            color: #2563eb;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        .product-shell {
-            width: min(1180px, calc(100% - 32px));
-            margin: 32px auto;
+        .brand-mark {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
-            gap: 28px;
-            align-items: start;
+            width: 40px;
+            height: 40px;
+            place-items: center;
+            border-radius: 10px;
+            background: #0f9f6e;
+            color: #fff;
+            font-weight: 900;
         }
-        .product-media,
-        .product-panel {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            box-shadow: 0 18px 32px rgba(15, 23, 42, 0.08);
+        .nav {
+            display: flex;
+            gap: 20px;
+            color: #334155;
+            font-size: 14px;
+            font-weight: 800;
         }
-        .product-media {
-            min-height: 420px;
+        .header-actions {
             display: flex;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding: 18px;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 800;
         }
-        .product-media img {
+        .quote-btn {
+            border-radius: 999px;
+            background: #0b5ed7;
+            color: #fff;
+            padding: 10px 14px;
+        }
+        .dealbar {
+            background: #0f9f6e;
+            color: #fff;
+        }
+        .dealbar .wrap {
+            min-height: 46px;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 900;
+            text-align: center;
+        }
+        .subbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .subbar .wrap {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            padding: 12px 0;
+        }
+        .subbar-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #f8fafc;
+            padding: 12px;
+        }
+        .subbar-card strong {
+            display: block;
+            font-size: 14px;
+        }
+        .subbar-card span {
+            display: block;
+            margin-top: 3px;
+            color: #64748b;
+            font-size: 12px;
+        }
+        .breadcrumb {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 18px 0;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        .breadcrumb a {
+            color: #0b5ed7;
+        }
+        .product-top {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(380px, 0.76fr);
+            gap: 34px;
+            align-items: start;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: 88px minmax(0, 1fr);
+            gap: 16px;
+            position: sticky;
+            top: 18px;
+        }
+        .thumbs {
+            display: grid;
+            align-content: start;
+            gap: 12px;
+        }
+        .thumb {
+            aspect-ratio: 1;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            background: #ffffff;
+            padding: 6px;
+            box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+        }
+        .thumb.is-active {
+            border-color: #0b5ed7;
+        }
+        .thumb img,
+        .hero-media img {
             width: 100%;
             height: 100%;
-            max-height: 560px;
             object-fit: contain;
-            border-radius: 10px;
         }
-        .image-empty {
-            width: 100%;
-            min-height: 360px;
+        .hero-media {
+            min-height: 560px;
             display: grid;
             place-items: center;
+            overflow: hidden;
+            border-radius: 14px;
+            background: #ffffff;
+            padding: 28px;
+            box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
+        }
+        .image-empty {
+            display: grid;
+            width: 100%;
+            min-height: 420px;
+            place-items: center;
+            border-radius: 12px;
+            background: #eef2f7;
             color: #94a3b8;
-            background: #f8fafc;
-            border-radius: 10px;
-            font-weight: 600;
+            font-weight: 800;
         }
-        .product-panel {
+        .choice-panel {
+            border-radius: 14px;
+            background: #ffffff;
             padding: 26px;
+            box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
         }
-        .kicker {
-            display: inline-flex;
-            border-radius: 999px;
-            background: #e8f0ff;
-            color: #1d4ed8;
-            padding: 6px 12px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 800;
+        }
+        .stars {
+            color: #f59e0b;
+            letter-spacing: 1px;
         }
         h1 {
-            margin: 14px 0 12px;
+            margin: 12px 0 12px;
             font-size: clamp(2rem, 4vw, 3.4rem);
             line-height: 1.06;
             letter-spacing: 0;
         }
-        .price {
-            color: #0f172a;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0 0 18px;
+        .summary {
+            color: #475569;
+            font-size: 16px;
+            line-height: 1.7;
         }
-        .marked-price {
-            color: #94a3b8;
-            font-size: 1rem;
-            font-weight: 500;
-            margin-left: 8px;
-            text-decoration: line-through;
+        .read-more {
+            display: inline-flex;
+            margin-top: 8px;
+            color: #0b5ed7;
+            font-weight: 900;
         }
-        .meta-list {
+        .product-facts {
             display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 10px;
-            margin: 18px 0;
+            margin: 22px 0;
+        }
+        .fact {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 12px;
+        }
+        .fact span {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .fact strong {
+            display: block;
+            margin-top: 4px;
+            font-size: 18px;
+            font-weight: 900;
+        }
+        .benefits {
+            margin: 0 0 22px;
             padding: 0;
             list-style: none;
         }
-        .meta-list li {
+        .benefits li {
+            display: flex;
+            gap: 9px;
+            margin-top: 8px;
+            color: #334155;
+            font-weight: 700;
+        }
+        .benefits li::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            flex: 0 0 auto;
+            margin-top: 8px;
+            border-radius: 999px;
+            background: #0f9f6e;
+        }
+        .option-group {
+            margin-top: 18px;
+        }
+        .option-label {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 900;
+        }
+        .option-label span {
+            color: #64748b;
+            font-weight: 700;
+        }
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .option {
+            border: 1px solid #dbe3ef;
+            border-radius: 10px;
+            background: #fff;
+            padding: 12px;
+            color: #334155;
+            font-weight: 800;
+        }
+        .option.is-selected {
+            border-color: #0b5ed7;
+            background: #eef6ff;
+            color: #0b5ed7;
+            box-shadow: inset 0 0 0 1px #0b5ed7;
+        }
+        .quantity-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 18px;
+        }
+        .qty-box,
+        .price-box {
+            border: 1px solid #dbe3ef;
+            border-radius: 10px;
+            background: #f8fafc;
+            padding: 13px;
+        }
+        .qty-box span,
+        .price-box span {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 7px;
+        }
+        .qty-control button {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            font-weight: 900;
+        }
+        .qty-control input {
+            width: 54px;
+            border: 0;
+            background: transparent;
+            text-align: center;
+            font-weight: 900;
+        }
+        .price-box strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 24px;
+            font-weight: 900;
+        }
+        .each {
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .cta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 18px;
+        }
+        .cta {
+            display: inline-flex;
+            min-height: 48px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            padding: 0 16px;
+            font-weight: 900;
+            text-align: center;
+        }
+        .cta.primary {
+            background: #0b5ed7;
+            color: #fff;
+        }
+        .cta.secondary {
+            border: 1px solid #0b5ed7;
+            background: #fff;
+            color: #0b5ed7;
+        }
+        .later {
+            margin-top: 12px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 13px;
+            color: #334155;
+            text-align: center;
+            font-weight: 800;
+        }
+        .share {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 800;
+        }
+        .tabs {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            margin-top: 44px;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+        }
+        .tabs .wrap {
+            display: flex;
+            gap: 28px;
+            overflow-x: auto;
+        }
+        .tabs a {
+            padding: 17px 0;
+            color: #475569;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+        .tabs a:first-child {
+            color: #0b5ed7;
+        }
+        .content-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 330px;
+            gap: 34px;
+            padding: 42px 0 64px;
+        }
+        .content-card {
+            border-radius: 14px;
+            background: #ffffff;
+            padding: 28px;
+            box-shadow: 0 14px 36px rgba(15, 23, 42, 0.06);
+        }
+        .content-card h2 {
+            margin: 0 0 16px;
+            font-size: clamp(1.8rem, 3vw, 2.6rem);
+            line-height: 1.1;
+        }
+        .content-card h3 {
+            margin: 28px 0 10px;
+            font-size: 1.35rem;
+        }
+        .content-card p,
+        .content-card li {
+            color: #475569;
+            line-height: 1.75;
+        }
+        .benefit-icons {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .benefit-icon {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            font-weight: 900;
+        }
+        .benefit-icon span {
+            display: grid;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            margin: 0 auto 9px;
+            border-radius: 999px;
+            background: #e8f7f0;
+            color: #0f9f6e;
+        }
+        .side-card {
+            position: sticky;
+            top: 78px;
+            align-self: start;
+        }
+        .spec-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .spec-list li {
             display: flex;
             justify-content: space-between;
             gap: 16px;
-            border-bottom: 1px dashed #e2e8f0;
-            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 13px 0;
             color: #64748b;
         }
-        .meta-list strong {
-            color: #0f172a;
-            font-weight: 600;
+        .spec-list strong {
+            color: #111827;
+            text-align: right;
         }
-        .description {
-            margin-top: 26px;
-            color: #334155;
-            line-height: 1.75;
+        .footer {
+            background: #0f172a;
+            color: #fff;
+            padding: 34px 0;
         }
-        .description :first-child { margin-top: 0; }
-        .cta {
-            display: inline-flex;
-            justify-content: center;
-            margin-top: 18px;
-            border-radius: 8px;
-            background: #2563eb;
-            color: #ffffff;
-            padding: 12px 18px;
-            text-decoration: none;
-            font-weight: 700;
+        .footer .wrap {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
         }
-        @media (max-width: 860px) {
-            .product-shell {
+        .footer p {
+            margin: 0;
+            color: #cbd5e1;
+        }
+        @media (max-width: 980px) {
+            .nav,
+            .header-actions {
+                display: none;
+            }
+            .product-top,
+            .content-grid {
                 grid-template-columns: 1fr;
             }
-            .product-media {
-                min-height: 280px;
+            .gallery,
+            .side-card {
+                position: static;
+            }
+            .subbar .wrap,
+            .benefit-icons {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 680px) {
+            .wrap {
+                width: min(100% - 24px, 1240px);
+            }
+            .helpbar .wrap,
+            .header .wrap {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 12px 0;
+            }
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            .thumbs {
+                display: flex;
+                order: 2;
+                overflow-x: auto;
+            }
+            .thumb {
+                width: 78px;
+                flex: 0 0 auto;
+            }
+            .hero-media {
+                min-height: 320px;
+            }
+            .product-facts,
+            .option-grid,
+            .quantity-row,
+            .cta-grid {
+                grid-template-columns: 1fr;
+            }
+            .choice-panel,
+            .content-card {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <header class="site-header">
-        <div class="header-inner">
-            <a href="{{ url('/') }}" class="brand">Aurix Branding</a>
-            <a href="{{ url('/') }}" class="back-link">Back to Home</a>
+    @php
+        $categoryName = $product->category?->name ?: $product->category_name ?: 'Product';
+        $summary = trim(strip_tags($product->meta_description ?: $product->description ?: 'Custom printed products made for business events, promotional campaigns, retail packaging, and everyday brand visibility.'));
+        $price = (float) $product->price;
+        $markedPrice = (float) ($product->marked_price ?? 0);
+        $quantity = max(1, (int) ($product->quantity ?: 10));
+        $unitPrice = $quantity > 0 && $price > 0 ? $price / $quantity : $price;
+        $benefits = [
+            'Ideal for business events, gifts, and brand campaigns.',
+            'Upload your finished artwork or request design support.',
+            'Durable production with clean, full-color finishing.',
+            'Nationwide delivery and responsive quote support.',
+        ];
+    @endphp
+
+    <div class="helpbar">
+        <div class="wrap">
+            <span>Need Help? <strong>+254 745 506 619</strong></span>
+            <span>Design Online | My Projects | Sign In | 0 Cart</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="wrap">
+            <a href="{{ url('/') }}" class="brand">
+                <span class="brand-mark">A</span>
+                <span>Aurix Branding</span>
+            </a>
+            <nav class="nav" aria-label="Main navigation">
+                <a href="{{ route('public.products.index') }}">All Products</a>
+                <a href="{{ route('public.products.index', ['q' => 'Signs']) }}">Signs & Banners</a>
+                <a href="{{ route('public.products.index', ['q' => 'Stationery']) }}">Stationery</a>
+                <a href="{{ route('public.products.index', ['q' => 'Apparel']) }}">Apparel</a>
+                <a href="{{ route('public.products.index', ['q' => 'Promotional']) }}">Promotional Items</a>
+            </nav>
+            <div class="header-actions">
+                <a href="{{ url('/login') }}">Sign In</a>
+                <a href="https://wa.me/254745506619?text=Hello%20Aurix%20Branding%2C%20I%20need%20a%20quote%20for%20{{ urlencode($product->name) }}." class="quote-btn">Get a Quote</a>
+            </div>
         </div>
     </header>
 
-    <main class="product-shell">
-        <section class="product-media">
-            @if($product->image_url)
-                <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
-            @else
-                <div class="image-empty">No product image</div>
-            @endif
-        </section>
+    <div class="dealbar">
+        <div class="wrap">FREE DESIGN CHECK ON ALL ORDERS | SAME-DAY QUOTE SUPPORT | NATIONWIDE DELIVERY</div>
+    </div>
 
-        <section class="product-panel">
-            <span class="kicker">{{ $product->category_name ?: 'Product' }}</span>
-            <h1>{{ $product->name }}</h1>
-            <p class="price">
-                KES {{ number_format((float) $product->price, 2) }}
-                @if($product->marked_price)
-                    <span class="marked-price">KES {{ number_format((float) $product->marked_price, 2) }}</span>
-                @endif
-            </p>
+    <section class="subbar" aria-label="Service highlights">
+        <div class="wrap">
+            <div class="subbar-card"><strong>Bulk order savings</strong><span>Buy more and reduce your unit cost.</span></div>
+            <div class="subbar-card"><strong>Artwork support</strong><span>Upload files now or design after ordering.</span></div>
+            <div class="subbar-card"><strong>Local production</strong><span>Reliable branding, print, and finishing.</span></div>
+        </div>
+    </section>
 
-            <ul class="meta-list">
-                <li><span>Availability</span><strong>{{ $product->is_active ? 'Available' : 'Inactive' }}</strong></li>
-                <li><span>Quantity</span><strong>{{ $product->quantity ?? 0 }}</strong></li>
-                <li><span>Subcategory</span><strong>{{ $product->subcategory_name ?: 'Not set' }}</strong></li>
-            </ul>
+    <main>
+        <div class="wrap">
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="{{ url('/') }}">Home</a>
+                <span>/</span>
+                <a href="{{ route('public.products.index') }}">Products</a>
+                <span>/</span>
+                <span>{{ $product->name }}</span>
+            </nav>
 
-            <a href="{{ url('/#quote') }}" class="cta">Request Quote</a>
-        </section>
+            <section class="product-top">
+                <div class="gallery">
+                    <div class="thumbs" aria-label="Product gallery thumbnails">
+                        @for($i = 0; $i < 5; $i++)
+                            <div class="thumb {{ $i === 0 ? 'is-active' : '' }}">
+                                @if($product->image_url)
+                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }} thumbnail">
+                                @else
+                                    <div class="image-empty">Image</div>
+                                @endif
+                            </div>
+                        @endfor
+                    </div>
+                    <div class="hero-media">
+                        @if($product->image_url)
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                        @else
+                            <div class="image-empty">No product image</div>
+                        @endif
+                    </div>
+                </div>
 
-        @if($product->description)
-            <section class="product-panel description" style="grid-column: 1 / -1;">
-                {!! $product->description !!}
+                <aside class="choice-panel">
+                    <div class="rating">
+                        <span class="stars">★★★★☆</span>
+                        <span>4.0 | 1 review</span>
+                    </div>
+                    <h1>{{ $product->name }}</h1>
+                    <p class="summary">{{ Str::limit($summary, 190) }}</p>
+                    @if($product->description)
+                        <a href="#overview" class="read-more">Read More</a>
+                    @endif
+
+                    <div class="product-facts">
+                        <div class="fact"><span>Minimum Qty</span><strong>{{ $quantity }}</strong></div>
+                        <div class="fact"><span>Starting at</span><strong>KES {{ number_format($price, 0) }}</strong></div>
+                        <div class="fact"><span>Category</span><strong>{{ Str::limit($categoryName, 16) }}</strong></div>
+                    </div>
+
+                    <ul class="benefits">
+                        @foreach($benefits as $benefit)
+                            <li>{{ $benefit }}</li>
+                        @endforeach
+                    </ul>
+
+                    <div class="option-group">
+                        <div class="option-label">Size <span>Choose a format</span></div>
+                        <div class="option-grid">
+                            <div class="option is-selected">Standard</div>
+                            <div class="option">Custom Size</div>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <div class="option-label">Printing Sides <span>Production option</span></div>
+                        <div class="option-grid">
+                            <div class="option is-selected">Single-Sided</div>
+                            <div class="option">Double-Sided +KES 50</div>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <div class="option-label">Finish <span>Recommended</span></div>
+                        <div class="option-grid">
+                            <div class="option is-selected">Standard Finish</div>
+                            <div class="option">Premium Finish</div>
+                        </div>
+                    </div>
+
+                    <div class="quantity-row">
+                        <div class="qty-box">
+                            <span>Quantity</span>
+                            <div class="qty-control">
+                                <button type="button">-</button>
+                                <input value="{{ $quantity }}" aria-label="Quantity">
+                                <button type="button">+</button>
+                            </div>
+                        </div>
+                        <div class="price-box">
+                            <span>Price</span>
+                            <strong>KES {{ number_format($price, 2) }}</strong>
+                            @if($unitPrice > 0)
+                                <div class="each">KES {{ number_format($unitPrice, 2) }} each</div>
+                            @endif
+                            @if($markedPrice > $price)
+                                <div class="each">Was KES {{ number_format($markedPrice, 2) }}</div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="cta-grid">
+                        <a href="https://wa.me/254745506619?text=Hello%20Aurix%20Branding%2C%20I%20want%20to%20upload%20artwork%20for%20{{ urlencode($product->name) }}." class="cta primary">Upload Design</a>
+                        <a href="https://wa.me/254745506619?text=Hello%20Aurix%20Branding%2C%20I%20need%20design%20help%20for%20{{ urlencode($product->name) }}." class="cta secondary">Design Online</a>
+                    </div>
+                    <div class="later">Artwork not ready? Buy now and design later.</div>
+                    <div class="share">
+                        <span>Share Product</span>
+                        <span>SKU: AURIX-{{ str_pad((string) $product->id, 5, '0', STR_PAD_LEFT) }}</span>
+                    </div>
+                </aside>
             </section>
-        @endif
+        </div>
+
+        <nav class="tabs" aria-label="Product content">
+            <div class="wrap">
+                <a href="#overview">Overview</a>
+                <a href="#specifications">Specifications</a>
+                <a href="#design">Design</a>
+                <a href="#faq">FAQ</a>
+                <a href="{{ route('public.products.index') }}">Related Products</a>
+            </div>
+        </nav>
+
+        <section class="wrap content-grid">
+            <article class="content-card" id="overview">
+                <h2>{{ $product->name }} Overview</h2>
+                @if($product->description)
+                    {!! $product->description !!}
+                @else
+                    <p>{{ $product->name }} is prepared for professional brand visibility, customer engagement, events, retail packaging, and promotional giveaways. Use it to keep your logo in front of the right audience with a polished custom finish.</p>
+                    <p>Send your artwork, request help from our design team, or confirm the production specifications after placing your order. Aurix Branding will guide the right material, finish, and delivery plan for your project.</p>
+                @endif
+
+                <h3>Benefits of Custom {{ $categoryName }}</h3>
+                <div class="benefit-icons">
+                    @foreach(['Versatile', 'Memorable', 'Lightweight', 'Modern', 'Affordable', 'Impactful'] as $benefit)
+                        <div class="benefit-icon"><span>✓</span>{{ $benefit }}</div>
+                    @endforeach
+                </div>
+
+                <h3 id="design">Design Support</h3>
+                <p>Upload your finished artwork, send a logo, or request a fresh design. We can check sizing, resolution, placement, bleed, and production readiness before printing.</p>
+
+                <h3 id="faq">Frequently Asked Questions</h3>
+                <p><strong>Can I order before my artwork is ready?</strong><br>Yes. Send your details through WhatsApp and our team will help you finalize artwork after quote confirmation.</p>
+                <p><strong>Do you support bulk orders?</strong><br>Yes. Bulk orders can be quoted with quantity-based pricing depending on the material, finishing, and timeline.</p>
+            </article>
+
+            <aside class="content-card side-card" id="specifications">
+                <h2>Specifications</h2>
+                <ul class="spec-list">
+                    <li><span>Product</span><strong>{{ $product->name }}</strong></li>
+                    <li><span>Category</span><strong>{{ $categoryName }}</strong></li>
+                    <li><span>Subcategory</span><strong>{{ $product->subcategory_name ?: 'Custom print' }}</strong></li>
+                    <li><span>Availability</span><strong>{{ $product->is_active ? 'Available' : 'Inactive' }}</strong></li>
+                    <li><span>Minimum Quantity</span><strong>{{ $quantity }}</strong></li>
+                    <li><span>Starting Price</span><strong>KES {{ number_format($price, 2) }}</strong></li>
+                    <li><span>Artwork</span><strong>Upload or design online</strong></li>
+                    <li><span>Delivery</span><strong>Nationwide</strong></li>
+                </ul>
+            </aside>
+        </section>
     </main>
+
+    <footer class="footer">
+        <div class="wrap">
+            <strong>Aurix Branding</strong>
+            <p>Custom apparel, print, signage, and promotional products.</p>
+            <a href="{{ route('public.products.index') }}">Back to products</a>
+        </div>
+    </footer>
 </body>
 </html>
