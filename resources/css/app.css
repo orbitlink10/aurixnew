@@ -9,6 +9,741 @@
     --font-sans: 'Inter', sans-serif;
 }
 
+/* Apparel Factory inspired homepage */
+.taf-page {
+    margin: 0;
+    background: #f6f7f4;
+    color: #0b0a09;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.taf-page a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.taf-wrap {
+    width: min(100% - 32px, 1220px);
+    margin: 0 auto;
+}
+
+.taf-topbar {
+    background: #0b0a09;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.taf-topbar .taf-wrap {
+    display: flex;
+    min-height: 36px;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    text-align: center;
+}
+
+.taf-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    border-bottom: 1px solid rgba(11, 10, 9, 0.08);
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(16px);
+}
+
+.taf-header-main {
+    display: grid;
+    min-height: 78px;
+    grid-template-columns: 240px minmax(240px, 1fr) 210px;
+    align-items: center;
+    gap: 24px;
+}
+
+.taf-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.taf-brand img {
+    width: 42px;
+    height: 42px;
+}
+
+.taf-search {
+    display: flex;
+    overflow: hidden;
+    border: 1px solid #d8ddd6;
+    border-radius: 999px;
+    background: #f7f8f6;
+}
+
+.taf-search input {
+    min-width: 0;
+    flex: 1;
+    border: 0;
+    background: transparent;
+    padding: 14px 18px;
+    color: #0b0a09;
+    font: inherit;
+    outline: 0;
+}
+
+.taf-search button {
+    display: inline-grid;
+    width: 50px;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    color: #0b0a09;
+    cursor: pointer;
+}
+
+.taf-search svg {
+    width: 20px;
+    height: 20px;
+}
+
+.taf-phone {
+    text-align: right;
+}
+
+.taf-phone span {
+    display: block;
+    color: #6f6a63;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.taf-phone strong {
+    display: block;
+    margin-top: 3px;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.taf-nav {
+    border-top: 1px solid #ece8df;
+}
+
+.taf-nav .taf-wrap {
+    display: flex;
+    gap: 26px;
+    overflow-x: auto;
+    padding: 13px 0;
+    color: #28221d;
+    font-size: 14px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.taf-hero {
+    overflow: hidden;
+    background: #fed4a1;
+}
+
+.taf-hero-grid {
+    display: grid;
+    min-height: 500px;
+    grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+    align-items: center;
+    gap: 48px;
+    padding: 54px 0;
+}
+
+.taf-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #b73216;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.taf-eyebrow::before {
+    content: "";
+    width: 26px;
+    height: 2px;
+    background: currentColor;
+}
+
+.taf-hero-copy h1,
+.taf-section-head h2,
+.taf-split-copy h2,
+.taf-testimonial h2 {
+    margin: 14px 0 0;
+    font-size: clamp(2.35rem, 5vw, 4.8rem);
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 0.98;
+}
+
+.taf-hero-copy p {
+    max-width: 580px;
+    margin: 20px 0 0;
+    color: #553b2f;
+    font-size: 18px;
+    line-height: 1.65;
+}
+
+.taf-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.taf-primary-btn,
+.taf-link-btn {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 0 22px;
+    font-weight: 900;
+}
+
+.taf-primary-btn {
+    background: #b73216;
+    color: #fff;
+}
+
+.taf-link-btn {
+    border: 1px solid rgba(85, 59, 47, 0.24);
+    background: rgba(255, 255, 255, 0.42);
+    color: #0b0a09;
+}
+
+.taf-callout {
+    margin-top: 24px;
+}
+
+.taf-callout span {
+    display: block;
+    color: #553b2f;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.taf-callout strong {
+    display: block;
+    margin-top: 4px;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.taf-hero-visual {
+    position: relative;
+    min-height: 390px;
+    isolation: isolate;
+}
+
+.taf-hero-visual::before,
+.taf-hero-visual::after {
+    content: "";
+    position: absolute;
+    border-radius: 999px;
+    z-index: -1;
+}
+
+.taf-hero-visual::before {
+    inset: 32px 28px 12px auto;
+    width: min(78%, 500px);
+    background: #e8eaf0;
+}
+
+.taf-hero-visual::after {
+    right: 0;
+    bottom: 12px;
+    width: 180px;
+    height: 180px;
+    border: 28px solid rgba(183, 50, 22, 0.12);
+}
+
+.taf-hero-visual img {
+    position: absolute;
+    object-fit: cover;
+    box-shadow: 0 20px 45px rgba(85, 59, 47, 0.22);
+}
+
+.taf-hero-visual img:nth-of-type(1) {
+    right: 22%;
+    bottom: 4px;
+    z-index: 3;
+    width: min(52%, 330px);
+    height: 300px;
+    border-radius: 999px 999px 28px 28px;
+}
+
+.taf-hero-visual img:nth-of-type(2) {
+    right: 0;
+    top: 22px;
+    z-index: 2;
+    width: min(46%, 290px);
+    height: 230px;
+    border-radius: 28px;
+}
+
+.taf-hero-visual img:nth-of-type(3) {
+    left: 0;
+    top: 88px;
+    z-index: 1;
+    width: min(42%, 260px);
+    height: 210px;
+    border-radius: 28px;
+}
+
+.taf-hero-visual img:nth-of-type(n+4) {
+    display: none;
+}
+
+.taf-hero-badge {
+    position: absolute;
+    left: 18px;
+    bottom: 36px;
+    z-index: 5;
+    border-radius: 999px;
+    background: #0b0a09;
+    color: #fff;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.taf-section {
+    padding: 72px 0 0;
+}
+
+.taf-section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 26px;
+}
+
+.taf-section-head.centered {
+    display: block;
+    max-width: 680px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+.taf-section-head.centered .taf-eyebrow::before {
+    display: none;
+}
+
+.taf-section-head h2,
+.taf-split-copy h2,
+.taf-testimonial h2 {
+    font-size: clamp(2rem, 3.6vw, 3.4rem);
+}
+
+.taf-section-head p {
+    margin: 12px 0 0;
+    color: #6f6a63;
+    font-size: 16px;
+}
+
+.taf-section-head > a {
+    color: #b73216;
+    font-weight: 900;
+}
+
+.taf-category-row {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.taf-category-card {
+    min-width: 0;
+    text-align: center;
+}
+
+.taf-category-media {
+    display: block;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #e8eaf0;
+}
+
+.taf-category-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.25s ease;
+}
+
+.taf-category-card:hover .taf-category-media img {
+    transform: scale(1.04);
+}
+
+.taf-category-card strong {
+    display: block;
+    margin-top: 12px;
+    font-weight: 900;
+}
+
+.taf-category-card small {
+    display: block;
+    margin-top: 3px;
+    color: #6f6a63;
+    font-weight: 700;
+}
+
+.taf-services {
+    margin-top: 72px;
+    padding: 72px 0;
+    background: #e8eaf0;
+}
+
+.taf-service-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.taf-service-card {
+    min-height: 230px;
+    border: 1px solid rgba(11, 10, 9, 0.08);
+    border-radius: 8px;
+    background: #fff;
+    padding: 24px;
+}
+
+.taf-service-card span {
+    display: inline-block;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: #579449;
+    box-shadow: 16px 0 0 #bf9959;
+}
+
+.taf-service-card h3 {
+    margin: 34px 0 10px;
+    font-size: 22px;
+}
+
+.taf-service-card p,
+.taf-split-copy p {
+    margin: 0;
+    color: #5d4a43;
+    line-height: 1.65;
+}
+
+.taf-split {
+    display: grid;
+    grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 54px;
+}
+
+.taf-custom-card {
+    overflow: hidden;
+    border-radius: 8px;
+    background: #b7c1b8;
+    box-shadow: 0 24px 54px rgba(11, 10, 9, 0.14);
+}
+
+.taf-custom-card img {
+    display: block;
+    width: 100%;
+    height: 480px;
+    object-fit: cover;
+}
+
+.taf-split-copy p {
+    max-width: 620px;
+    margin-top: 18px;
+    font-size: 18px;
+}
+
+.taf-brand-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.taf-brand-strip span {
+    border: 1px solid #ddd5c8;
+    border-radius: 999px;
+    background: #fff;
+    padding: 10px 14px;
+    font-weight: 900;
+}
+
+.taf-product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.taf-product-card {
+    display: block;
+    overflow: hidden;
+    border: 1px solid #e2dfd8;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.taf-product-card img {
+    width: 100%;
+    aspect-ratio: 1 / 0.82;
+    object-fit: cover;
+    background: #e8eaf0;
+}
+
+.taf-product-card span,
+.taf-product-card h3,
+.taf-product-card p {
+    margin-right: 16px;
+    margin-left: 16px;
+}
+
+.taf-product-card span {
+    display: block;
+    margin-top: 15px;
+    color: #579449;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.taf-product-card h3 {
+    margin-top: 6px;
+    margin-bottom: 8px;
+    font-size: 20px;
+}
+
+.taf-product-card p {
+    margin-top: 0;
+    margin-bottom: 18px;
+    color: #553b2f;
+    font-weight: 900;
+}
+
+.taf-testimonial {
+    margin-top: 72px;
+    padding: 70px 0;
+    background: #0b0a09;
+    color: #fff;
+}
+
+.taf-testimonial .taf-eyebrow {
+    color: #fed4a1;
+}
+
+.taf-testimonial-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.8fr);
+    gap: 48px;
+    align-items: center;
+}
+
+.taf-testimonial blockquote {
+    margin: 0;
+    border-left: 4px solid #fed4a1;
+    padding-left: 24px;
+    color: #f3eadf;
+    font-size: 22px;
+    line-height: 1.55;
+}
+
+.taf-testimonial cite {
+    display: block;
+    margin-top: 18px;
+    color: #bf9959;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 900;
+}
+
+.taf-footer {
+    background: #fff;
+    padding: 48px 0;
+}
+
+.taf-footer-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 0.65fr 0.65fr 1fr;
+    gap: 32px;
+}
+
+.taf-footer h3,
+.taf-footer h4 {
+    margin: 0 0 12px;
+}
+
+.taf-footer p {
+    margin: 0;
+    color: #6f6a63;
+    line-height: 1.65;
+}
+
+.taf-footer a {
+    display: block;
+    margin-top: 9px;
+    color: #553b2f;
+    font-weight: 800;
+}
+
+.taf-newsletter div {
+    display: flex;
+    overflow: hidden;
+    border: 1px solid #ddd5c8;
+    border-radius: 999px;
+}
+
+.taf-newsletter input {
+    min-width: 0;
+    flex: 1;
+    border: 0;
+    padding: 12px 15px;
+    font: inherit;
+    outline: 0;
+}
+
+.taf-newsletter button {
+    border: 0;
+    background: #b73216;
+    color: #fff;
+    padding: 0 16px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+@media (max-width: 1020px) {
+    .taf-topbar .taf-wrap {
+        flex-wrap: wrap;
+        gap: 8px 18px;
+        padding: 8px 0;
+    }
+
+    .taf-header-main {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 16px 0;
+    }
+
+    .taf-phone {
+        text-align: left;
+    }
+
+    .taf-hero-grid,
+    .taf-split,
+    .taf-testimonial-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .taf-hero-grid {
+        gap: 26px;
+    }
+
+    .taf-category-row,
+    .taf-service-grid,
+    .taf-product-grid,
+    .taf-footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .taf-wrap {
+        width: min(100% - 24px, 1220px);
+    }
+
+    .taf-nav .taf-wrap {
+        gap: 18px;
+    }
+
+    .taf-hero-grid {
+        min-height: auto;
+        padding: 42px 0 34px;
+    }
+
+    .taf-hero-copy h1 {
+        font-size: 2.45rem;
+    }
+
+    .taf-hero-copy p {
+        font-size: 16px;
+    }
+
+    .taf-hero-visual {
+        min-height: 320px;
+    }
+
+    .taf-hero-visual img:nth-of-type(1) {
+        right: 12%;
+        width: 58%;
+        height: 250px;
+    }
+
+    .taf-hero-visual img:nth-of-type(2),
+    .taf-hero-visual img:nth-of-type(3) {
+        width: 44%;
+        height: 160px;
+    }
+
+    .taf-section {
+        padding-top: 48px;
+    }
+
+    .taf-services,
+    .taf-testimonial {
+        margin-top: 48px;
+        padding: 48px 0;
+    }
+
+    .taf-section-head {
+        display: block;
+    }
+
+    .taf-section-head > a {
+        display: inline-block;
+        margin-top: 14px;
+    }
+
+    .taf-category-row,
+    .taf-service-grid,
+    .taf-product-grid,
+    .taf-footer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .taf-category-card {
+        display: grid;
+        grid-template-columns: 92px 1fr;
+        align-items: center;
+        gap: 14px;
+        text-align: left;
+    }
+
+    .taf-category-media {
+        width: 92px;
+    }
+
+    .taf-custom-card img {
+        height: 320px;
+    }
+
+    .taf-testimonial blockquote {
+        font-size: 18px;
+    }
+}
+
 :root {
     --aurix-red: #b10f1e;
     --aurix-red-bright: #ff3347;
