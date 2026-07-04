@@ -28,6 +28,8 @@ use App\Models\SiteSetting;
 use App\Models\Service;
 use App\Models\WorkCategory;
 use App\Models\Product;
+use App\Models\ProductCategory;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Schema;
 
 Route::get('/', function () {
@@ -65,6 +67,48 @@ Route::get('/blog/{slug}', function (string $slug) {
 Route::get('/blog-posts/{slug}', function (string $slug) {
     return redirect()->route('public.blog.show', ['slug' => $slug], 301);
 });
+
+Route::get('/products', function () {
+    if (! Schema::hasTable('products')) {
+        $products = new LengthAwarePaginator([], 0, 12);
+        $categories = collect();
+
+        return view('products.index', compact('products', 'categories'));
+    }
+
+    $query = Product::query()
+        ->where('is_active', true)
+        ->with('category')
+        ->orderByDesc('created_at');
+
+    if (request()->filled('q')) {
+        $search = request('q');
+        $query->where(function ($products) use ($search) {
+            $products->where('name', 'like', '%'.$search.'%')
+                ->orWhere('description', 'like', '%'.$search.'%')
+                ->orWhere('category_name', 'like', '%'.$search.'%')
+                ->orWhere('subcategory_name', 'like', '%'.$search.'%');
+        });
+    }
+
+    if (request()->filled('category') && Schema::hasTable('product_categories')) {
+        $category = ProductCategory::where('slug', request('category'))->first();
+
+        if ($category) {
+            $query->where('product_category_id', $category->id);
+        }
+    }
+
+    $products = $query->paginate(12)->withQueryString();
+
+    $categories = Schema::hasTable('product_categories')
+        ? ProductCategory::withCount(['products' => fn ($products) => $products->where('is_active', true)])
+            ->orderBy('name')
+            ->get()
+        : collect();
+
+    return view('products.index', compact('products', 'categories'));
+})->name('public.products.index');
 
 Route::get('/products/{product:slug}', function (Product $product) {
     return view('products.show', compact('product'));
