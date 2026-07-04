@@ -34,13 +34,12 @@ class ProductCategoryController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:product_categories,slug'],
             'meta_description' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'photo' => ['nullable', 'image', 'max:5120'],
         ]);
 
-        $data['slug'] = $data['slug'] ?: Str::slug($data['name']);
+        $data['slug'] = $this->uniqueSlug($data['name']);
 
         if ($request->hasFile('photo')) {
             $data['image_path'] = $request->file('photo')->store('categories', 'uploads');
@@ -71,13 +70,14 @@ class ProductCategoryController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:product_categories,slug,'.$category->id],
             'meta_description' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'photo' => ['nullable', 'image', 'max:5120'],
         ]);
 
-        $data['slug'] = $data['slug'] ?: Str::slug($data['name']);
+        if ($category->name !== $data['name']) {
+            $data['slug'] = $this->uniqueSlug($data['name'], $category->id);
+        }
 
         if ($request->hasFile('photo')) {
             if ($category->image_path) {
@@ -113,5 +113,21 @@ class ProductCategoryController extends Controller
         $category->delete();
 
         return redirect()->route('admin.categories.index')->with('success', 'Category deleted.');
+    }
+
+    private function uniqueSlug(string $name, ?int $ignoreId = null): string
+    {
+        $base = Str::slug($name);
+        $slug = $base;
+        $counter = 2;
+
+        while (ProductCategory::where('slug', $slug)
+            ->when($ignoreId, fn ($query) => $query->whereKeyNot($ignoreId))
+            ->exists()) {
+            $slug = $base.'-'.$counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 }

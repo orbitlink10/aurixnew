@@ -22,11 +22,6 @@
         </div>
 
         <div class="form-group">
-            <label for="slug">Slug</label>
-            <input type="text" name="slug" id="slug" class="form-control" value="{{ old('slug', $category->slug) }}" placeholder="Leave blank to generate automatically">
-        </div>
-
-        <div class="form-group">
             <label for="meta_description">Meta description</label>
             <textarea class="form-control" name="meta_description" id="meta_description" rows="3">{{ old('meta_description', $category->meta_description) }}</textarea>
         </div>

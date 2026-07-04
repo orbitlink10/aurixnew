@@ -15,13 +15,25 @@
     <body class="aurix-page">
         @php
             $assetBase = 'https://naiprinters.co.ke';
-            $categories = [
+            $fallbackCategories = [
                 ['name' => 'Banners', 'href' => '/Banners', 'image' => '/storage/media-library/DnFPnNQR1k6VMcpEpywCvt3BFzmAwbEnax0ywKop.jpg'],
                 ['name' => 'Business Cards', 'href' => '/flyers-posters', 'image' => '/storage/media-library/om47dlzLTyw1w5x6zYITYxOkLyUImobXJDdKQYyL.jpg'],
                 ['name' => 'Posters', 'href' => '/flyers-posters', 'image' => '/storage/media-library/mftQ0gnr88XpOPn7Q1q1Mbbu6zIewUy2wynh3AQU.jpg'],
                 ['name' => 'Brochures', 'href' => '/products', 'image' => '/storage/media-library/WTWxzKuUU0eJbzVWCMJgthfA3cSs7EQ8jtpazyj4.png'],
                 ['name' => 'New products', 'href' => '/products', 'image' => '/storage/media-library/vcwO607a80yVPosKoaJDe8TTghzXiidTi71bZcKR.jpg'],
             ];
+            $homepageCategories = isset($workCategories) && $workCategories->count()
+                ? $workCategories->map(fn ($category) => [
+                    'name' => $category->name,
+                    'href' => '/products',
+                    'image' => $category->image_url ?: asset('images/hero-showcase.svg'),
+                    'item_count' => $category->item_count,
+                    'is_custom' => true,
+                ])->values()->all()
+                : array_map(fn ($category) => $category + ['item_count' => null, 'is_custom' => false], $fallbackCategories);
+            $homepageHeroImages = isset($heroImageUrls) && count($heroImageUrls)
+                ? array_values($heroImageUrls)
+                : [];
             $showcases = [
                 ['title' => 'Promotional items', 'copy' => 'Mugs | Keychains | Tote Bags | Water Bottles | Notebooks | Stickers | Calendars | USB Drives | Lanyards | Caps | Mouse Pads', 'image' => '/storage/media-library/sr3lAsBIi4SDPydesVSZbmEua7wnbbEuLtyJKzWg.jpg'],
                 ['title' => 'Clothing & textiles', 'copy' => 'Printed apparel and textile products for staff uniforms, teams, and campaigns.', 'image' => '/storage/media-library/gPxJcSfQyNq800mYR7L9ShbOa9v14tFT9EllYXfN.jpg'],
@@ -94,7 +106,9 @@
         <main>
             <section class="pet-promo-slide" aria-label="With Aurix Branding">
                 <div class="pet-promo-background"></div>
-                <img class="pet-promo-dog" src="{{ $assetBase }}/storage/media-library/ZlMZs8eN5i34Q6xOdkGhAqUZ1Sh2tfBIlJ11lqu3.png" alt="Online printing">
+                @if(empty($homepageHeroImages))
+                    <img class="pet-promo-dog" src="{{ $assetBase }}/storage/media-library/ZlMZs8eN5i34Q6xOdkGhAqUZ1Sh2tfBIlJ11lqu3.png" alt="Online printing">
+                @endif
                 <div class="pet-promo-content">
                     <div class="pet-promo-icons">▼ · ♣ · ▼</div>
                     <h1><span>Online</span> printing</h1>
@@ -102,9 +116,22 @@
                     <p class="pet-promo-copy">Ideal for business cards, flyers, banners, and branded apparel with nationwide delivery</p>
                     <a class="pet-promo-button" href="/products">Print Now</a>
                 </div>
-                <div class="pet-promo-products" aria-hidden="true">
-                    <img src="{{ $assetBase }}/storage/media-library/CsoceV7QRBwRhuWCHHEiM8qm845tbT4YLmjrguSE.png" alt="">
-                </div>
+                @if(count($homepageHeroImages))
+                    <div class="pet-promo-hero-rotator" style="--hero-slide-count: {{ count($homepageHeroImages) }};" aria-hidden="true">
+                        @foreach($homepageHeroImages as $index => $heroImageUrl)
+                            <img
+                                src="{{ $heroImageUrl }}"
+                                alt=""
+                                style="--hero-slide-index: {{ $index }};"
+                                @class(['is-active' => $index === 0])
+                            >
+                        @endforeach
+                    </div>
+                @else
+                    <div class="pet-promo-products" aria-hidden="true">
+                        <img src="{{ $assetBase }}/storage/media-library/CsoceV7QRBwRhuWCHHEiM8qm845tbT4YLmjrguSE.png" alt="">
+                    </div>
+                @endif
             </section>
 
             <section class="home-wrap">
@@ -113,10 +140,15 @@
                     <a href="/products">SHOW ALL</a>
                 </div>
                 <div class="thumb-grid-5">
-                    @foreach($categories as $category)
+                    @foreach($homepageCategories as $category)
                         <a href="{{ $category['href'] }}" class="top-category-card">
-                            <img src="{{ $assetBase }}{{ $category['image'] }}" alt="{{ $category['name'] }}">
-                            <span>{{ $category['name'] }}</span>
+                            <img src="{{ $category['is_custom'] ? $category['image'] : $assetBase.$category['image'] }}" alt="{{ $category['name'] }}">
+                            <span>
+                                {{ $category['name'] }}
+                                @if($category['item_count'])
+                                    <small>{{ $category['item_count'] }} {{ $category['item_count'] == 1 ? 'item' : 'items' }}</small>
+                                @endif
+                            </span>
                         </a>
                     @endforeach
                 </div>
