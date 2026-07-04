@@ -63,7 +63,7 @@
         <header class="taf-header">
             <div class="taf-wrap taf-header-main">
                 <a href="{{ url('/') }}" class="taf-brand" aria-label="Aurix Branding home">
-                    <img src="{{ asset('images/aurix-mark.svg') }}" alt="">
+                    <img src="{{ $logoUrl ?: asset('images/aurix-mark.svg') }}" alt="Aurix Branding logo">
                     <span>Aurix Branding</span>
                 </a>
                 <form class="taf-search" action="{{ route('public.products.index') }}" method="get">

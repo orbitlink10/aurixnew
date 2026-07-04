@@ -82,6 +82,23 @@ class SiteSetting extends Model
         return $urls[0] ?? null;
     }
 
+    public static function logoPath(): ?string
+    {
+        return static::getValue('site_logo_path');
+    }
+
+    public static function setLogoPath(?string $path): void
+    {
+        static::setValue('site_logo_path', $path);
+    }
+
+    public static function logoUrl(): ?string
+    {
+        $path = static::logoPath();
+
+        return $path ? static::resolveImageUrl($path) : null;
+    }
+
     protected static function resolveImageUrl(string $path): ?string
     {
         $uploads = Storage::disk('uploads');

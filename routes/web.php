@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\HomeHeroImageController;
+use App\Http\Controllers\Admin\SiteLogoController;
 use App\Http\Controllers\Admin\WorkCategoryController;
 use App\Http\Controllers\Admin\HomePageContentController;
 use App\Models\SliderImage;
@@ -41,6 +42,10 @@ Route::get('/', function () {
         ? SiteSetting::heroImageUrls()
         : [];
 
+    $logoUrl = Schema::hasTable('site_settings')
+        ? SiteSetting::logoUrl()
+        : null;
+
     $workCategories = Schema::hasTable('work_categories')
         ? WorkCategory::where('is_active', true)->orderBy('sort_order')->orderByDesc('created_at')->get()
         : collect();
@@ -49,7 +54,7 @@ Route::get('/', function () {
         ? Service::where('is_active', true)->orderBy('id')->get()
         : collect();
 
-    return view('welcome', compact('slides', 'heroImageUrls', 'workCategories', 'services'));
+    return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'workCategories', 'services'));
 });
 
 Route::any('/blog/{probe}', function () {
@@ -141,6 +146,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('blog-tags', BlogTagController::class);
     Route::resource('slider-images', \App\Http\Controllers\Admin\SliderImageController::class)->except(['show']);
     Route::resource('work-categories', WorkCategoryController::class)->except(['show']);
+    Route::post('site-settings/logo', [SiteLogoController::class, 'store'])->name('site-settings.logo.store');
+    Route::delete('site-settings/logo', [SiteLogoController::class, 'destroy'])->name('site-settings.logo.destroy');
     Route::post('site-settings/home-hero-image', [HomeHeroImageController::class, 'store'])->name('site-settings.home-hero-image.store');
     Route::delete('site-settings/home-hero-image', [HomeHeroImageController::class, 'destroy'])->name('site-settings.home-hero-image.destroy');
 

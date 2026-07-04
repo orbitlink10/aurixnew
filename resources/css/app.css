@@ -69,8 +69,10 @@
 }
 
 .taf-brand img {
-    width: 42px;
+    width: auto;
+    max-width: 150px;
     height: 42px;
+    object-fit: contain;
 }
 
 .taf-search {

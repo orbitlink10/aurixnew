@@ -16,6 +16,10 @@ class HomePageContentController extends Controller
             ? SiteSetting::heroImageUrls()
             : [];
 
+        $logoUrl = Schema::hasTable('site_settings')
+            ? SiteSetting::logoUrl()
+            : null;
+
         $workCategories = Schema::hasTable('work_categories')
             ? WorkCategory::orderBy('sort_order')->orderByDesc('created_at')->get()
             : collect();
@@ -25,6 +29,6 @@ class HomePageContentController extends Controller
             $editingCategory = WorkCategory::find($request->integer('edit'));
         }
 
-        return view('admin.home-page-content.index', compact('heroImageUrls', 'workCategories', 'editingCategory'));
+        return view('admin.home-page-content.index', compact('heroImageUrls', 'logoUrl', 'workCategories', 'editingCategory'));
     }
 }

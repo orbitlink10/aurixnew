@@ -11,6 +11,37 @@
 <div class="card p-4 rounded-xl">
     <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div class="md:max-w-xl">
+            <h2 class="text-lg font-semibold text-slate-900">Website Logo</h2>
+            <p class="text-sm text-slate-500 mt-1">Upload the logo shown in the public homepage header.</p>
+            @if($logoUrl)
+                <div class="mt-3 inline-flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3">
+                    <img src="{{ $logoUrl }}" alt="Current site logo" class="h-14 w-auto max-w-48 object-contain">
+                    <span class="text-sm text-slate-500">Current logo</span>
+                </div>
+            @else
+                <p class="text-sm text-slate-500 mt-3">No custom logo uploaded. The default Aurix mark is currently shown.</p>
+            @endif
+        </div>
+        <div class="w-full md:max-w-sm space-y-2">
+            <form action="{{ route('admin.site-settings.logo.store') }}" method="POST" enctype="multipart/form-data" class="space-y-2">
+                @csrf
+                <input type="file" name="logo" accept="image/*" class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-sm" required>
+                <button type="submit" class="w-full px-4 py-2 rounded bg-sky-600 text-white font-semibold hover:bg-sky-500">Upload Logo</button>
+            </form>
+            @if($logoUrl)
+                <form action="{{ route('admin.site-settings.logo.destroy') }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="w-full px-4 py-2 rounded border border-rose-200 text-rose-600 font-semibold hover:bg-rose-50" onclick="return confirm('Remove the custom site logo?')">Remove Logo</button>
+                </form>
+            @endif
+        </div>
+    </div>
+</div>
+
+<div class="card p-4 rounded-xl">
+    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        <div class="md:max-w-xl">
             <h2 class="text-lg font-semibold text-slate-900">Homepage Hero Visuals</h2>
             <p class="text-sm text-slate-500 mt-1">Upload multiple images for the hero panel. They rotate automatically every 3 seconds.</p>
             @if(count($heroImageUrls))
