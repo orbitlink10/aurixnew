@@ -20,6 +20,10 @@ class HomePageContentController extends Controller
             ? SiteSetting::logoUrl()
             : null;
 
+        $contactSettings = Schema::hasTable('site_settings')
+            ? SiteSetting::contactSettings()
+            : SiteSetting::defaultContactSettings();
+
         $workCategories = Schema::hasTable('work_categories')
             ? WorkCategory::orderBy('sort_order')->orderByDesc('created_at')->get()
             : collect();
@@ -29,6 +33,24 @@ class HomePageContentController extends Controller
             $editingCategory = WorkCategory::find($request->integer('edit'));
         }
 
-        return view('admin.home-page-content.index', compact('heroImageUrls', 'logoUrl', 'workCategories', 'editingCategory'));
+        return view('admin.home-page-content.index', compact('heroImageUrls', 'logoUrl', 'contactSettings', 'workCategories', 'editingCategory'));
+    }
+
+    public function updateContact(Request $request)
+    {
+        $data = $request->validate([
+            'support_label' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'whatsapp_phone' => ['nullable', 'string', 'max:50'],
+            'whatsapp_message' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'address' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        foreach ($data as $key => $value) {
+            SiteSetting::setValue('contact_'.$key, $value);
+        }
+
+        return redirect()->route('admin.home-page-content.index')->with('success', 'Contact details updated.');
     }
 }

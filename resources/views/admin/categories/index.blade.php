@@ -18,9 +18,11 @@
                     <tr>
                         <th class="id-cell">ID</th>
                         <th>Name</th>
+                        <th>Parent</th>
                         <th>Slug</th>
                         <th>Photo</th>
                         <th class="products-cell">Products</th>
+                        <th class="products-cell">Subcategories</th>
                         <th class="actions-cell">Actions</th>
                     </tr>
                 </thead>
@@ -28,7 +30,13 @@
                     @forelse($categories as $category)
                         <tr>
                             <td class="id-cell">{{ $category->id }}</td>
-                            <td class="category-name">{{ $category->name }}</td>
+                            <td class="category-name">
+                                @if($category->parent)
+                                    <span class="subcategory-indent">--</span>
+                                @endif
+                                {{ $category->name }}
+                            </td>
+                            <td>{{ $category->parent?->name ?: 'Top level' }}</td>
                             <td class="category-slug">{{ $category->slug }}</td>
                             <td>
                                 @if($category->image_url)
@@ -40,6 +48,7 @@
                                 @endif
                             </td>
                             <td class="products-cell">{{ $category->products_count }}</td>
+                            <td class="products-cell">{{ $category->children_count }}</td>
                             <td class="actions-cell">
                                 <a href="{{ route('admin.categories.show', $category) }}" class="action-btn action-show">
                                     <i class="fa-solid fa-eye"></i> Show
@@ -58,7 +67,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="empty-row">No categories created.</td>
+                            <td colspan="8" class="empty-row">No categories created.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -145,6 +154,11 @@
 
     .category-slug {
         color: #64748b;
+    }
+
+    .subcategory-indent {
+        color: #94a3b8;
+        margin-right: 6px;
     }
 
     .category-thumb {

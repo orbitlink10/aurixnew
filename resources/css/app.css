@@ -594,7 +594,8 @@
     line-height: 1.65;
 }
 
-.taf-footer a {
+.taf-footer a,
+.taf-footer span {
     display: block;
     margin-top: 9px;
     color: #553b2f;

@@ -46,6 +46,10 @@ Route::get('/', function () {
         ? SiteSetting::logoUrl()
         : null;
 
+    $contactSettings = Schema::hasTable('site_settings')
+        ? SiteSetting::contactSettings()
+        : SiteSetting::defaultContactSettings();
+
     $workCategories = Schema::hasTable('work_categories')
         ? WorkCategory::where('is_active', true)->orderBy('sort_order')->orderByDesc('created_at')->get()
         : collect();
@@ -54,7 +58,7 @@ Route::get('/', function () {
         ? Service::where('is_active', true)->orderBy('id')->get()
         : collect();
 
-    return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'workCategories', 'services'));
+    return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'contactSettings', 'workCategories', 'services'));
 });
 
 Route::any('/blog/{probe}', function () {
@@ -100,14 +104,16 @@ Route::get('/products', function () {
         $category = ProductCategory::where('slug', request('category'))->first();
 
         if ($category) {
-            $query->where('product_category_id', $category->id);
+            $query->whereIn('product_category_id', array_merge([$category->id], $category->descendantIds()));
         }
     }
 
     $products = $query->paginate(12)->withQueryString();
 
     $categories = Schema::hasTable('product_categories')
-        ? ProductCategory::withCount(['products' => fn ($products) => $products->where('is_active', true)])
+        ? ProductCategory::with('children')
+            ->withCount(['products' => fn ($products) => $products->where('is_active', true)])
+            ->parents()
             ->orderBy('name')
             ->get()
         : collect();
@@ -126,6 +132,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('home-page-content', [HomePageContentController::class, 'index'])->name('home-page-content.index');
+    Route::post('home-page-content/contact', [HomePageContentController::class, 'updateContact'])->name('home-page-content.contact.update');
 
     Route::resource('services', ServiceController::class);
     Route::resource('categories', ProductCategoryController::class);

@@ -71,6 +71,45 @@
     </div>
 </div>
 
+<div class="card p-4 rounded-xl">
+    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        <div class="md:max-w-xl">
+            <h2 class="text-lg font-semibold text-slate-900">Homepage Contact Details</h2>
+            <p class="text-sm text-slate-500 mt-1">Edit the phone and WhatsApp details shown in the homepage header, hero, and footer.</p>
+        </div>
+        <form action="{{ route('admin.home-page-content.contact.update') }}" method="POST" class="w-full md:max-w-2xl grid md:grid-cols-2 gap-3">
+            @csrf
+            <div>
+                <label class="text-sm font-semibold text-slate-800">Support Label</label>
+                <input type="text" name="support_label" value="{{ old('support_label', $contactSettings['support_label']) }}" class="w-full bg-white border border-slate-200 rounded px-3 py-2">
+            </div>
+            <div>
+                <label class="text-sm font-semibold text-slate-800">Display Phone</label>
+                <input type="text" name="phone" value="{{ old('phone', $contactSettings['phone']) }}" class="w-full bg-white border border-slate-200 rounded px-3 py-2">
+            </div>
+            <div>
+                <label class="text-sm font-semibold text-slate-800">WhatsApp Number</label>
+                <input type="text" name="whatsapp_phone" value="{{ old('whatsapp_phone', $contactSettings['whatsapp_phone']) }}" class="w-full bg-white border border-slate-200 rounded px-3 py-2" placeholder="254700000000">
+            </div>
+            <div>
+                <label class="text-sm font-semibold text-slate-800">WhatsApp Message</label>
+                <input type="text" name="whatsapp_message" value="{{ old('whatsapp_message', $contactSettings['whatsapp_message']) }}" class="w-full bg-white border border-slate-200 rounded px-3 py-2">
+            </div>
+            <div>
+                <label class="text-sm font-semibold text-slate-800">Email</label>
+                <input type="email" name="email" value="{{ old('email', $contactSettings['email']) }}" class="w-full bg-white border border-slate-200 rounded px-3 py-2">
+            </div>
+            <div>
+                <label class="text-sm font-semibold text-slate-800">Address</label>
+                <input type="text" name="address" value="{{ old('address', $contactSettings['address']) }}" class="w-full bg-white border border-slate-200 rounded px-3 py-2">
+            </div>
+            <div class="md:col-span-2">
+                <button type="submit" class="px-5 py-2 rounded bg-sky-600 text-white font-semibold hover:bg-sky-500">Save Contact Details</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="grid md:grid-cols-2 gap-4">
     <div class="card p-4">
         <h2 class="text-lg font-semibold mb-3">{{ isset($editingCategory) && $editingCategory ? 'Edit Work Category' : 'Add Work Category' }}</h2>

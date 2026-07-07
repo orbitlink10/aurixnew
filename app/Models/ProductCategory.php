@@ -12,6 +12,7 @@ class ProductCategory extends Model
     use HasFactory;
 
     protected $fillable = [
+        'parent_id',
         'name',
         'slug',
         'meta_description',
@@ -33,6 +34,34 @@ class ProductCategory extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(ProductCategory::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(ProductCategory::class, 'parent_id')->orderBy('name');
+    }
+
+    public function scopeParents($query)
+    {
+        return $query->whereNull('parent_id');
+    }
+
+    public function descendantIds(): array
+    {
+        $ids = [];
+
+        $this->loadMissing('children.children');
+        foreach ($this->children as $child) {
+            $ids[] = $child->id;
+            $ids = array_merge($ids, $child->descendantIds());
+        }
+
+        return $ids;
     }
 
     public function getImageUrlAttribute(): ?string

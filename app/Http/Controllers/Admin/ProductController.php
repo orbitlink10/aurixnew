@@ -32,7 +32,7 @@ class ProductController extends Controller
     {
         return view('admin.products.form', [
             'product' => new Product(),
-            'categories' => ProductCategory::orderBy('name')->get(),
+            'categories' => ProductCategory::with('children')->parents()->orderBy('name')->get(),
         ]);
     }
 
@@ -83,7 +83,7 @@ class ProductController extends Controller
     {
         return view('admin.products.form', [
             'product' => $product,
-            'categories' => ProductCategory::orderBy('name')->get(),
+            'categories' => ProductCategory::with('children')->parents()->orderBy('name')->get(),
         ]);
     }
 

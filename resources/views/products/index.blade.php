@@ -107,6 +107,10 @@
             border-color: #2563eb;
             color: #2563eb;
         }
+        .subcategory-link {
+            background: #f8fafc;
+            font-size: 0.84rem;
+        }
         .product-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -251,6 +255,14 @@
                     >
                         {{ $category->name }} ({{ $category->products_count }})
                     </a>
+                    @foreach($category->children as $child)
+                        <a
+                            href="{{ route('public.products.index', array_filter(['category' => $child->slug, 'q' => request('q')])) }}"
+                            class="category-link subcategory-link {{ request('category') === $child->slug ? 'is-active' : '' }}"
+                        >
+                            {{ $child->name }}
+                        </a>
+                    @endforeach
                 @endforeach
             </nav>
         @endif

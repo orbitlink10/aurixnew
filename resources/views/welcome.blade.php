@@ -38,6 +38,9 @@
                     $assetBase.'/storage/media-library/gPxJcSfQyNq800mYR7L9ShbOa9v14tFT9EllYXfN.jpg',
                     $assetBase.'/storage/media-library/CsoceV7QRBwRhuWCHHEiM8qm845tbT4YLmjrguSE.png',
                 ];
+            $contact = $contactSettings ?? \App\Models\SiteSetting::defaultContactSettings();
+            $whatsappPhone = preg_replace('/\D+/', '', $contact['whatsapp_phone'] ?: $contact['phone']);
+            $whatsappUrl = 'https://wa.me/'.$whatsappPhone.'?text='.rawurlencode($contact['whatsapp_message']);
             $serviceHighlights = [
                 ['title' => 'Heat Transfer', 'copy' => 'Sharp full-color apparel prints for events, teams, and staff uniforms.'],
                 ['title' => 'Embroidery', 'copy' => 'Premium stitched logos for polos, caps, hoodies, jackets, and bags.'],
@@ -73,8 +76,8 @@
                     </button>
                 </form>
                 <div class="taf-phone">
-                    <span>For support call</span>
-                    <strong>+254 745 506 619</strong>
+                    <span>{{ $contact['support_label'] }}</span>
+                    <strong>{{ $contact['phone'] }}</strong>
                 </div>
             </div>
             <nav class="taf-nav" aria-label="Product categories">
@@ -95,11 +98,11 @@
                         <p>Build branded apparel, promotional products, signage, and business materials with design help, reliable production, and nationwide delivery.</p>
                         <div class="taf-hero-actions">
                             <a href="{{ route('public.products.index') }}" class="taf-primary-btn">Browse Products</a>
-                            <a href="https://wa.me/254745506619?text=Hello%20Aurix%20Branding%2C%20I%20need%20a%20quote." class="taf-link-btn">Request Quote</a>
+                            <a href="{{ $whatsappUrl }}" class="taf-link-btn">Request Quote</a>
                         </div>
                         <div class="taf-callout">
                             <span>Or call us at</span>
-                            <strong>+254 745 506 619</strong>
+                            <strong>{{ $contact['phone'] }}</strong>
                         </div>
                     </div>
                     <div class="taf-hero-visual" style="--hero-slide-count: {{ count($homepageHeroImages) }};">
@@ -228,7 +231,13 @@
                 </div>
                 <div>
                     <h4>Support</h4>
-                    <a href="https://wa.me/254745506619?text=Hello%20Aurix%20Branding%2C%20I%20need%20a%20quote.">WhatsApp Quote</a>
+                    <a href="{{ $whatsappUrl }}">WhatsApp Quote</a>
+                    @if($contact['email'])
+                        <a href="mailto:{{ $contact['email'] }}">{{ $contact['email'] }}</a>
+                    @endif
+                    @if($contact['address'])
+                        <span>{{ $contact['address'] }}</span>
+                    @endif
                     <a href="{{ url('/login') }}">Client Login</a>
                     <a href="{{ url('/') }}">Home</a>
                 </div>

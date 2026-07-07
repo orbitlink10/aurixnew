@@ -33,6 +33,14 @@
                 <dd>{{ $category->id }}</dd>
             </div>
             <div>
+                <dt>Parent</dt>
+                <dd>{{ $category->parent?->name ?: 'Top level' }}</dd>
+            </div>
+            <div>
+                <dt>Subcategories</dt>
+                <dd>{{ $category->children()->count() }}</dd>
+            </div>
+            <div>
                 <dt>Products</dt>
                 <dd>{{ $category->products_count ?? $category->products()->count() }}</dd>
             </div>
@@ -54,6 +62,13 @@
 
     <div class="card linked-products">
         <h2>Products</h2>
+        @if($category->children()->count())
+            <div class="subcategory-list">
+                @foreach($category->children as $child)
+                    <a href="{{ route('admin.categories.show', $child) }}">{{ $child->name }}</a>
+                @endforeach
+            </div>
+        @endif
         <div class="product-list">
             @forelse($products as $product)
                 <a href="{{ route('admin.products.edit', $product) }}" class="product-row">
@@ -200,6 +215,23 @@
     .product-list {
         display: grid;
         gap: 8px;
+    }
+
+    .subcategory-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+
+    .subcategory-list a {
+        border: 1px solid #dbe3ef;
+        border-radius: 999px;
+        color: #2563eb;
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 6px 10px;
+        text-decoration: none;
     }
 
     .product-row {

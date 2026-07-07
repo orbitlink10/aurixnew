@@ -99,6 +99,29 @@ class SiteSetting extends Model
         return $path ? static::resolveImageUrl($path) : null;
     }
 
+    public static function defaultContactSettings(): array
+    {
+        return [
+            'support_label' => 'For support call',
+            'phone' => '+254 745 506 619',
+            'whatsapp_phone' => '254745506619',
+            'whatsapp_message' => 'Hello Aurix Branding, I need a quote.',
+            'email' => '',
+            'address' => '',
+        ];
+    }
+
+    public static function contactSettings(): array
+    {
+        $defaults = static::defaultContactSettings();
+
+        foreach ($defaults as $key => $default) {
+            $defaults[$key] = static::getValue('contact_'.$key, $default);
+        }
+
+        return $defaults;
+    }
+
     protected static function resolveImageUrl(string $path): ?string
     {
         $uploads = Storage::disk('uploads');

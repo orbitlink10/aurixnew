@@ -49,6 +49,9 @@
                         <option value="">Select Category</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" @selected(old('product_category_id', $product->product_category_id) == $category->id)>{{ $category->name }}</option>
+                            @foreach($category->children as $child)
+                                <option value="{{ $child->id }}" @selected(old('product_category_id', $product->product_category_id) == $child->id)>&nbsp;&nbsp;-- {{ $child->name }}</option>
+                            @endforeach
                         @endforeach
                     </select>
                     <input type="hidden" name="category_name" value="{{ old('category_name', $product->category_name) }}">

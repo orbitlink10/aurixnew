@@ -22,6 +22,17 @@
         </div>
 
         <div class="form-group">
+            <label for="parent_id">Parent Category</label>
+            <select name="parent_id" id="parent_id" class="form-control">
+                <option value="">None - top level category</option>
+                @foreach($parentOptions as $parent)
+                    <option value="{{ $parent->id }}" @selected(old('parent_id', $category->parent_id) == $parent->id)>{{ $parent->name }}</option>
+                @endforeach
+            </select>
+            <p class="field-help">Choose a parent when this should be a subcategory.</p>
+        </div>
+
+        <div class="form-group">
             <label for="meta_description">Meta description</label>
             <textarea class="form-control" name="meta_description" id="meta_description" rows="3">{{ old('meta_description', $category->meta_description) }}</textarea>
         </div>
@@ -91,6 +102,12 @@
     .form-control:focus {
         border-color: #93c5fd;
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .field-help {
+        color: #64748b;
+        font-size: 0.84rem;
+        margin: 6px 0 0;
     }
 
     .editor-field {

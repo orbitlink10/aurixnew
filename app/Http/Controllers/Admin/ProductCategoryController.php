@@ -18,7 +18,12 @@ class ProductCategoryController extends Controller
 
     public function index()
     {
-        $categories = ProductCategory::withCount('products')->orderBy('id')->paginate(20);
+        $categories = ProductCategory::with('parent')
+            ->withCount(['products', 'children'])
+            ->orderByRaw('COALESCE(parent_id, id)')
+            ->orderByRaw('parent_id IS NOT NULL')
+            ->orderBy('name')
+            ->paginate(20);
 
         return view('admin.categories.index', compact('categories'));
     }
@@ -27,12 +32,14 @@ class ProductCategoryController extends Controller
     {
         return view('admin.categories.form', [
             'category' => new ProductCategory(),
+            'parentOptions' => $this->parentOptions(),
         ]);
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
+            'parent_id' => ['nullable', 'exists:product_categories,id'],
             'name' => ['required', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
@@ -63,17 +70,25 @@ class ProductCategoryController extends Controller
 
     public function edit(ProductCategory $category)
     {
-        return view('admin.categories.form', compact('category'));
+        return view('admin.categories.form', [
+            'category' => $category,
+            'parentOptions' => $this->parentOptions($category),
+        ]);
     }
 
     public function update(Request $request, ProductCategory $category)
     {
         $data = $request->validate([
+            'parent_id' => ['nullable', 'exists:product_categories,id'],
             'name' => ['required', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'photo' => ['nullable', 'image', 'max:5120'],
         ]);
+
+        if ((int) ($data['parent_id'] ?? 0) === $category->id || in_array((int) ($data['parent_id'] ?? 0), $category->descendantIds(), true)) {
+            return back()->withErrors(['parent_id' => 'A category cannot be assigned under itself or one of its subcategories.'])->withInput();
+        }
 
         if ($category->name !== $data['name']) {
             $data['slug'] = $this->uniqueSlug($data['name'], $category->id);
@@ -129,5 +144,20 @@ class ProductCategoryController extends Controller
         }
 
         return $slug;
+    }
+
+    private function parentOptions(?ProductCategory $category = null)
+    {
+        $excludedIds = [];
+
+        if ($category && $category->exists) {
+            $excludedIds = array_merge([$category->id], $category->descendantIds());
+        }
+
+        return ProductCategory::query()
+            ->whereNotIn('id', $excludedIds)
+            ->parents()
+            ->orderBy('name')
+            ->get();
     }
 }
