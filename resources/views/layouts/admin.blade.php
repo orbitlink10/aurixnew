@@ -225,6 +225,9 @@
                 <a class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}" href="{{ route('admin.categories.index') }}">
                     <i class="fa-solid fa-list-alt"></i><span>Categories</span>
                 </a>
+                <a class="nav-link {{ request()->routeIs('admin.sub-categories.*') ? 'active' : '' }}" href="{{ route('admin.sub-categories.index') }}">
+                    <i class="fa-solid fa-tags"></i><span>Sub Categories</span>
+                </a>
                 <a class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
                     <i class="fa-solid fa-boxes-stacked"></i><span>Products</span>
                 </a>

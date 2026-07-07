@@ -1,11 +1,17 @@
 @extends('layouts.admin')
 
 @section('content')
+@php
+    $mode = $mode ?? 'categories';
+    $title = $title ?? 'Categories';
+    $isSubcategoryPage = $mode === 'subcategories';
+@endphp
+
 <section class="content-header">
     <div class="categories-heading">
-        <h1 class="page-title">Categories</h1>
-        <a href="{{ route('admin.categories.create') }}" class="category-create-btn">
-            <i class="fa-solid fa-plus"></i> Create New Category
+        <h1 class="page-title">{{ $title }}</h1>
+        <a href="{{ route('admin.categories.create', $isSubcategoryPage ? ['type' => 'subcategory'] : []) }}" class="category-create-btn">
+            <i class="fa-solid fa-plus"></i> {{ $isSubcategoryPage ? 'Create New Sub Category' : 'Create New Category' }}
         </a>
     </div>
 </section>
@@ -18,7 +24,9 @@
                     <tr>
                         <th class="id-cell">ID</th>
                         <th>Name</th>
-                        <th>Parent</th>
+                        @if($isSubcategoryPage)
+                            <th>Parent</th>
+                        @endif
                         <th>Slug</th>
                         <th>Photo</th>
                         <th class="products-cell">Products</th>
@@ -36,7 +44,9 @@
                                 @endif
                                 {{ $category->name }}
                             </td>
-                            <td>{{ $category->parent?->name ?: 'Top level' }}</td>
+                            @if($isSubcategoryPage)
+                                <td>{{ $category->parent?->name ?: 'Top level' }}</td>
+                            @endif
                             <td class="category-slug">{{ $category->slug }}</td>
                             <td>
                                 @if($category->image_url)
@@ -67,7 +77,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="empty-row">No categories created.</td>
+                            <td colspan="{{ $isSubcategoryPage ? 8 : 7 }}" class="empty-row">No {{ $isSubcategoryPage ? 'sub categories' : 'categories' }} created.</td>
                         </tr>
                     @endforelse
                 </tbody>

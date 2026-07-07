@@ -3,10 +3,11 @@
 @section('content')
 @php
     $isEditing = $category->exists;
+    $isSubcategoryForm = $isSubcategoryForm ?? false;
 @endphp
 
 <section class="content-header">
-    <h1 class="page-title">{{ $isEditing ? 'Edit Category' : 'Create Category' }}</h1>
+    <h1 class="page-title">{{ $isEditing ? ($isSubcategoryForm ? 'Edit Sub Category' : 'Edit Category') : ($isSubcategoryForm ? 'Create Sub Category' : 'Create Category') }}</h1>
 </section>
 
 <section class="content">
@@ -14,6 +15,9 @@
         @csrf
         @if($isEditing)
             @method('PUT')
+        @endif
+        @if($isSubcategoryForm)
+            <input type="hidden" name="is_subcategory" value="1">
         @endif
 
         <div class="form-group">
@@ -29,7 +33,7 @@
                     <option value="{{ $parent->id }}" @selected(old('parent_id', $category->parent_id) == $parent->id)>{{ $parent->name }}</option>
                 @endforeach
             </select>
-            <p class="field-help">Choose a parent when this should be a subcategory.</p>
+            <p class="field-help">{{ $isSubcategoryForm ? 'Choose the main category this sub category belongs to.' : 'Choose a parent when this should be a subcategory.' }}</p>
         </div>
 
         <div class="form-group">
@@ -56,8 +60,8 @@
         </div>
 
         <div class="form-actions">
-            <a href="{{ route('admin.categories.index') }}" class="btn-secondary-soft">Cancel</a>
-            <button type="submit" class="btn-primary-soft">{{ $isEditing ? 'Update Category' : 'Create Category' }}</button>
+            <a href="{{ $isSubcategoryForm ? route('admin.sub-categories.index') : route('admin.categories.index') }}" class="btn-secondary-soft">Cancel</a>
+            <button type="submit" class="btn-primary-soft">{{ $isEditing ? ($isSubcategoryForm ? 'Update Sub Category' : 'Update Category') : ($isSubcategoryForm ? 'Create Sub Category' : 'Create Category') }}</button>
         </div>
     </form>
 </section>

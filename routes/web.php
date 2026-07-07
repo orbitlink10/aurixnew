@@ -135,6 +135,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::post('home-page-content/contact', [HomePageContentController::class, 'updateContact'])->name('home-page-content.contact.update');
 
     Route::resource('services', ServiceController::class);
+    Route::get('sub-categories', [ProductCategoryController::class, 'subcategories'])->name('sub-categories.index');
     Route::resource('categories', ProductCategoryController::class);
     Route::resource('products', ProductController::class);
     Route::resource('packages', PackageController::class);
