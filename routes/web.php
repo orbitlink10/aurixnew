@@ -69,7 +69,11 @@ Route::get('/blog/{slug}', function (string $slug) {
     $post = BlogPost::where('slug', $slug)->where('status', 'published')->firstOrFail();
     $wordCount = str_word_count(strip_tags($post->body ?? ''));
     $readingTime = max(1, (int) ceil($wordCount / 200));
-    return view('blog.show', compact('post', 'readingTime'));
+    $contactSettings = Schema::hasTable('site_settings')
+        ? SiteSetting::contactSettings()
+        : SiteSetting::defaultContactSettings();
+
+    return view('blog.show', compact('post', 'readingTime', 'contactSettings'));
 })->name('public.blog.show');
 
 // Backward compatibility for old URLs
