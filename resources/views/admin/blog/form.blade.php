@@ -25,11 +25,12 @@
             </div>
 
             <div class="post-form-body">
-                <form method="POST" action="{{ $isEditing ? route('admin.blog-posts.update', $post) : route('admin.blog-posts.store') }}" enctype="multipart/form-data">
+                <form id="blog-post-form" method="POST" action="{{ $isEditing ? route('admin.blog-posts.update', $post) : route('admin.blog-posts.store') }}" enctype="multipart/form-data">
                     @csrf
                     @if($isEditing)
                         @method('PUT')
                     @endif
+                    <input type="hidden" name="status" value="{{ old('status', $post->status ?? 'published') }}">
 
                     <div class="form-group">
                         <label for="seo_title">Meta Title</label>
@@ -67,17 +68,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="status">Status</label>
-                            <select class="form-control" name="status" id="status">
-                                @foreach(['draft','published'] as $status)
-                                    <option value="{{ $status }}" @selected(old('status', $post->status ?? 'draft') === $status)>{{ ucfirst($status) }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group">
                             <label for="category_id">Category</label>
                             <select class="form-control" name="category_id" id="category_id">
                                 <option value="">Select category</option>
@@ -86,21 +76,11 @@
                                 @endforeach
                             </select>
                         </div>
-
-                        <div class="form-group">
-                            <label for="published_at">Published At</label>
-                            <input type="datetime-local" class="form-control" name="published_at" id="published_at" value="{{ old('published_at', $isEditing && $post->published_at ? $post->published_at->format('Y-m-d\TH:i') : '') }}">
-                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="blog-body-editor">Page Description:</label>
-                        <textarea id="blog-body-editor" name="body" rows="12" class="form-control editor-field" required>{{ old('body', $post->body ?? '') }}</textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="cover_image">Cover Image URL</label>
-                        <input type="text" class="form-control" name="cover_image" value="{{ old('cover_image', $post->cover_image ?? '') }}" id="cover_image" placeholder="Optional image URL or storage path">
+                        <textarea id="blog-body-editor" name="body" rows="12" class="form-control editor-field">{{ old('body', $post->body ?? '') }}</textarea>
                     </div>
 
                     <div class="form-group">
@@ -342,6 +322,12 @@
 
     document.getElementById('photo')?.addEventListener('change', function () {
         document.getElementById('file-label').textContent = this.files[0]?.name || 'Choose file';
+    });
+
+    document.getElementById('blog-post-form')?.addEventListener('submit', function () {
+        if (typeof tinymce !== 'undefined') {
+            tinymce.triggerSave();
+        }
     });
 </script>
 @endsection
