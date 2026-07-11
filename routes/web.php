@@ -58,7 +58,31 @@ Route::get('/', function () {
         ? Service::where('is_active', true)->orderBy('id')->get()
         : collect();
 
-    return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'contactSettings', 'workCategories', 'services'));
+    $menuCategories = collect();
+    if (Schema::hasTable('product_categories')) {
+        $hasMenuFields = Schema::hasColumn('product_categories', 'show_in_menu')
+            && Schema::hasColumn('product_categories', 'menu_sort_order');
+
+        $menuCategories = ProductCategory::query()
+            ->with(['children' => function ($children) use ($hasMenuFields) {
+                $children->when($hasMenuFields, fn ($query) => $query->where('show_in_menu', true)->orderBy('menu_sort_order'))
+                    ->orderBy('name');
+            }])
+            ->parents()
+            ->when($hasMenuFields, fn ($query) => $query->where('show_in_menu', true)->orderBy('menu_sort_order'))
+            ->orderBy('name')
+            ->get();
+    }
+
+    $featuredProducts = Schema::hasTable('products')
+        ? Product::where('is_active', true)
+            ->with(['category', 'images'])
+            ->orderByDesc('created_at')
+            ->take(4)
+            ->get()
+        : collect();
+
+    return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'contactSettings', 'workCategories', 'services', 'menuCategories', 'featuredProducts'));
 });
 
 Route::any('/blog/{probe}', function () {
@@ -91,7 +115,7 @@ Route::get('/products', function () {
 
     $query = Product::query()
         ->where('is_active', true)
-        ->with('category')
+        ->with(['category', 'images'])
         ->orderByDesc('created_at');
 
     if (request()->filled('q')) {
@@ -118,6 +142,10 @@ Route::get('/products', function () {
         ? ProductCategory::with('children')
             ->withCount(['products' => fn ($products) => $products->where('is_active', true)])
             ->parents()
+            ->when(
+                Schema::hasColumn('product_categories', 'menu_sort_order'),
+                fn ($query) => $query->orderBy('menu_sort_order')
+            )
             ->orderBy('name')
             ->get()
         : collect();
@@ -126,6 +154,8 @@ Route::get('/products', function () {
 })->name('public.products.index');
 
 Route::get('/products/{product:slug}', function (Product $product) {
+    $product->load(['category', 'images']);
+
     return view('products.show', compact('product'));
 })->name('public.products.show');
 
@@ -139,6 +169,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::post('home-page-content/contact', [HomePageContentController::class, 'updateContact'])->name('home-page-content.contact.update');
 
     Route::resource('services', ServiceController::class);
+    Route::get('store-menu', [ProductCategoryController::class, 'menu'])->name('store-menu.index');
+    Route::post('store-menu', [ProductCategoryController::class, 'updateMenu'])->name('store-menu.update');
     Route::get('sub-categories', [ProductCategoryController::class, 'subcategories'])->name('sub-categories.index');
     Route::resource('categories', ProductCategoryController::class);
     Route::resource('products', ProductController::class);

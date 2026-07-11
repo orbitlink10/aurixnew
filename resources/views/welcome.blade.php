@@ -47,7 +47,8 @@
                 ['title' => 'Laser Etching', 'copy' => 'Clean permanent branding for tumblers, awards, plaques, and gifts.'],
                 ['title' => 'Large Format', 'copy' => 'Banners, backdrops, wall graphics, vehicle stickers, and shop signage.'],
             ];
-            $featuredProducts = [
+            $fallbackMenuItems = ['Women', 'Men', 'Outerwear', 'Headwear', 'Uniforms', 'Youth', 'Gifts', 'Infant & Toddler', 'Brands'];
+            $fallbackFeaturedProducts = [
                 ['cat' => 'Promotional Items', 'name' => 'Branded Lanyards', 'price' => '450', 'image' => '/storage/product-thumbnails/RB22IMcehGJedRgMrsuo8lzCbXuoCGJs7akE1NQn.png'],
                 ['cat' => 'Apparel', 'name' => 'Custom Hoodies', 'price' => '2,800', 'image' => '/storage/media-library/gPxJcSfQyNq800mYR7L9ShbOa9v14tFT9EllYXfN.jpg'],
                 ['cat' => 'Print', 'name' => 'Business Cards', 'price' => '10', 'image' => '/storage/product-thumbnails/GLhAqU3GevIf2xpwSMaLB1tsLmZxYLO2eyVI2lvS.jpg'],
@@ -82,9 +83,27 @@
             </div>
             <nav class="taf-nav" aria-label="Product categories">
                 <div class="taf-wrap">
-                    @foreach(['Women', 'Men', 'Outerwear', 'Headwear', 'Uniforms', 'Youth', 'Gifts', 'Infant & Toddler', 'Brands'] as $item)
-                        <a href="{{ route('public.products.index', ['q' => $item]) }}">{{ $item }}</a>
-                    @endforeach
+                    @if(isset($menuCategories) && $menuCategories->count())
+                        <div class="taf-menu-group">
+                            <a href="{{ route('public.products.index') }}" class="taf-menu-trigger">
+                                Products
+                                <span aria-hidden="true">&#9662;</span>
+                            </a>
+                            <div class="taf-menu-panel">
+                                <a href="{{ route('public.products.index') }}" class="taf-menu-all">All products</a>
+                                @foreach($menuCategories as $category)
+                                    <a href="{{ route('public.products.index', ['category' => $category->slug]) }}" class="taf-menu-parent">{{ $category->name }}</a>
+                                    @foreach($category->children as $child)
+                                        <a href="{{ route('public.products.index', ['category' => $child->slug]) }}" class="taf-menu-child">{{ $child->name }}</a>
+                                    @endforeach
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        @foreach($fallbackMenuItems as $item)
+                            <a href="{{ route('public.products.index', ['q' => $item]) }}">{{ $item }}</a>
+                        @endforeach
+                    @endif
                 </div>
             </nav>
         </header>
@@ -191,14 +210,31 @@
                         <a href="{{ route('public.products.index') }}">All products</a>
                     </div>
                     <div class="taf-product-grid">
-                        @foreach($featuredProducts as $product)
-                            <a href="{{ route('public.products.index', ['q' => $product['name']]) }}" class="taf-product-card">
-                                <img src="{{ $assetBase }}{{ $product['image'] }}" alt="{{ $product['name'] }}">
-                                <span>{{ $product['cat'] }}</span>
-                                <h3>{{ $product['name'] }}</h3>
-                                <p>From KES {{ $product['price'] }}</p>
+                        @forelse($featuredProducts ?? collect() as $product)
+                            <a href="{{ route('public.products.show', ['product' => $product->slug]) }}" class="taf-product-card">
+                                <span class="taf-product-media">
+                                    @if($product->image_url)
+                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                                    @else
+                                        <span class="taf-product-placeholder">No image</span>
+                                    @endif
+                                </span>
+                                <span>{{ $product->category?->name ?: $product->category_name ?: 'Product' }}</span>
+                                <h3>{{ $product->name }}</h3>
+                                <p>From KES {{ number_format((float) $product->price, 0) }}</p>
                             </a>
-                        @endforeach
+                        @empty
+                            @foreach($fallbackFeaturedProducts as $product)
+                                <a href="{{ route('public.products.index', ['q' => $product['name']]) }}" class="taf-product-card">
+                                    <span class="taf-product-media">
+                                        <img src="{{ $assetBase }}{{ $product['image'] }}" alt="{{ $product['name'] }}">
+                                    </span>
+                                    <span>{{ $product['cat'] }}</span>
+                                    <h3>{{ $product['name'] }}</h3>
+                                    <p>From KES {{ $product['price'] }}</p>
+                                </a>
+                            @endforeach
+                        @endforelse
                     </div>
                 </div>
             </section>

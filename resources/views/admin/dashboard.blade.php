@@ -63,6 +63,9 @@
             <a href="{{ route('admin.products.index') }}" class="dashboard-btn dashboard-btn-outline">
                 <i class="fa-solid fa-cogs"></i> Manage Products
             </a>
+            <a href="{{ route('admin.store-menu.index') }}" class="dashboard-btn dashboard-btn-outline">
+                <i class="fa-solid fa-bars-staggered"></i> Store Menu
+            </a>
         </div>
     </section>
 
@@ -155,6 +158,13 @@
                     <span>
                         <strong>Manage Products</strong>
                         <small>Update pricing and availability</small>
+                    </span>
+                </a>
+                <a href="{{ route('admin.store-menu.index') }}" class="dashboard-action-link">
+                    <span class="action-icon"><i class="fa-solid fa-bars-staggered"></i></span>
+                    <span>
+                        <strong>Edit Store Menu</strong>
+                        <small>Show, hide, and order storefront navigation items</small>
                     </span>
                 </a>
             </div>

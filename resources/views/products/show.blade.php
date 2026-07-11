@@ -160,6 +160,7 @@
             background: #ffffff;
             padding: 6px;
             box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+            cursor: pointer;
         }
         .thumb.is-active {
             border-color: #0b5ed7;
@@ -580,6 +581,7 @@
             'Durable production with clean, full-color finishing.',
             'Nationwide delivery and responsive quote support.',
         ];
+        $galleryImages = $product->gallery_image_urls;
     @endphp
 
     <div class="helpbar">
@@ -634,19 +636,26 @@
             <section class="product-top">
                 <div class="gallery">
                     <div class="thumbs" aria-label="Product gallery thumbnails">
-                        @for($i = 0; $i < 5; $i++)
-                            <div class="thumb {{ $i === 0 ? 'is-active' : '' }}">
-                                @if($product->image_url)
-                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }} thumbnail">
-                                @else
-                                    <div class="image-empty">Image</div>
-                                @endif
+                        @forelse($galleryImages as $index => $imageUrl)
+                            <button
+                                type="button"
+                                class="thumb {{ $index === 0 ? 'is-active' : '' }}"
+                                data-gallery-thumb
+                                data-full="{{ $imageUrl }}"
+                                data-alt="{{ $product->name }} image {{ $index + 1 }}"
+                                aria-label="Show {{ $product->name }} image {{ $index + 1 }}"
+                            >
+                                <img src="{{ $imageUrl }}" alt="{{ $product->name }} thumbnail {{ $index + 1 }}">
+                            </button>
+                        @empty
+                            <div class="thumb is-active">
+                                <div class="image-empty">Image</div>
                             </div>
-                        @endfor
+                        @endforelse
                     </div>
                     <div class="hero-media">
-                        @if($product->image_url)
-                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                        @if(count($galleryImages))
+                            <img id="productHeroImage" src="{{ $galleryImages[0] }}" alt="{{ $product->name }}">
                         @else
                             <div class="image-empty">No product image</div>
                         @endif
@@ -792,5 +801,21 @@
             <a href="{{ route('public.products.index') }}">Back to products</a>
         </div>
     </footer>
+    <script>
+        const heroImage = document.getElementById('productHeroImage');
+
+        document.querySelectorAll('[data-gallery-thumb]').forEach((button) => {
+            button.addEventListener('click', () => {
+                if (!heroImage) {
+                    return;
+                }
+
+                heroImage.src = button.dataset.full;
+                heroImage.alt = button.dataset.alt || heroImage.alt;
+                document.querySelectorAll('[data-gallery-thumb]').forEach((thumb) => thumb.classList.remove('is-active'));
+                button.classList.add('is-active');
+            });
+        });
+    </script>
 </body>
 </html>

@@ -128,18 +128,80 @@
 }
 
 .taf-nav {
+    position: relative;
+    z-index: 20;
     border-top: 1px solid #ece8df;
 }
 
 .taf-nav .taf-wrap {
     display: flex;
+    align-items: center;
     gap: 26px;
-    overflow-x: auto;
     padding: 13px 0;
     color: #28221d;
     font-size: 14px;
     font-weight: 800;
     white-space: nowrap;
+}
+
+.taf-menu-group {
+    position: relative;
+}
+
+.taf-menu-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 34px;
+}
+
+.taf-menu-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    z-index: 20;
+    display: grid;
+    min-width: 260px;
+    max-height: 420px;
+    overflow-y: auto;
+    border: 1px solid #e2dfd8;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 8px;
+    box-shadow: 0 20px 38px rgba(15, 23, 42, 0.15);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.taf-menu-group:hover .taf-menu-panel,
+.taf-menu-group:focus-within .taf-menu-panel {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.taf-menu-panel a {
+    border-radius: 6px;
+    padding: 9px 10px;
+}
+
+.taf-menu-panel a:hover {
+    background: #f8f2ea;
+}
+
+.taf-menu-all,
+.taf-menu-parent {
+    color: #111827;
+    font-weight: 900;
+}
+
+.taf-menu-child {
+    color: #5c554e;
+    font-size: 13px;
+    font-weight: 700;
+    padding-left: 22px !important;
 }
 
 .taf-hero {
@@ -493,28 +555,43 @@
 }
 
 .taf-product-card {
-    display: block;
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
     overflow: hidden;
     border: 1px solid #e2dfd8;
     border-radius: 8px;
     background: #fff;
 }
 
-.taf-product-card img {
+.taf-product-media {
+    display: grid;
     width: 100%;
     aspect-ratio: 1 / 0.82;
-    object-fit: cover;
+    place-items: center;
     background: #e8eaf0;
 }
 
-.taf-product-card span,
+.taf-product-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.taf-product-placeholder {
+    color: #77736d;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.taf-product-card > span:not(.taf-product-media),
 .taf-product-card h3,
 .taf-product-card p {
     margin-right: 16px;
     margin-left: 16px;
 }
 
-.taf-product-card span {
+.taf-product-card > span:not(.taf-product-media) {
     display: block;
     margin-top: 15px;
     color: #579449;
@@ -534,6 +611,7 @@
     margin-bottom: 18px;
     color: #553b2f;
     font-weight: 900;
+    margin-top: auto;
 }
 
 .taf-testimonial {
@@ -669,6 +747,11 @@
 
     .taf-nav .taf-wrap {
         gap: 18px;
+    }
+
+    .taf-menu-panel {
+        min-width: calc(100vw - 24px);
+        max-width: calc(100vw - 24px);
     }
 
     .taf-hero-grid {

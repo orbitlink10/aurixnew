@@ -85,14 +85,38 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="productImage">Product Image (optional)</label>
-                    <label class="file-control" for="productImage">
-                        <span id="file-label">{{ $product->image_path ? basename($product->image_path) : 'Choose file' }}</span>
-                        <input type="file" id="productImage" name="photo" accept="image/*">
+                    <label for="productImages">Product Images (optional)</label>
+                    <label class="file-control" for="productImages">
+                        <span id="file-label">Choose one or more images</span>
+                        <input type="file" id="productImages" name="images[]" accept="image/*" multiple>
                     </label>
-                    @if($isEditing && $product->image_url)
-                        <div class="current-image">
-                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                    <p class="field-help">The first image is used as the main product image. Additional images appear as clickable thumbnails on the product page.</p>
+
+                    @if($isEditing && ($product->image_path || $product->images->count()))
+                        <div class="current-gallery">
+                            @if($product->image_path && $product->image_url)
+                                <label class="gallery-image-card">
+                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                                    <span>Main image</span>
+                                    <span class="remove-option">
+                                        <input type="checkbox" name="remove_primary_image" value="1">
+                                        Remove
+                                    </span>
+                                </label>
+                            @endif
+
+                            @foreach($product->images as $image)
+                                @if($image->image_url)
+                                    <label class="gallery-image-card">
+                                        <img src="{{ $image->image_url }}" alt="{{ $product->name }} gallery image">
+                                        <span>Gallery image</span>
+                                        <span class="remove-option">
+                                            <input type="checkbox" name="remove_product_images[]" value="{{ $image->id }}">
+                                            Remove
+                                        </span>
+                                    </label>
+                                @endif
+                            @endforeach
                         </div>
                     @endif
                 </div>
@@ -167,6 +191,12 @@
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     }
 
+    .field-help {
+        color: #64748b;
+        font-size: 0.84rem;
+        margin: 6px 0 0;
+    }
+
     .editor-field {
         min-height: 260px;
         border-radius: 8px;
@@ -215,16 +245,44 @@
         display: none;
     }
 
-    .current-image {
-        margin-top: 10px;
+    .current-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+        margin-top: 12px;
     }
 
-    .current-image img {
-        width: 150px;
-        height: 86px;
+    .gallery-image-card {
+        display: grid;
+        gap: 7px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background: #f8fafc;
+        padding: 10px;
+        color: #334155;
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    .gallery-image-card img {
+        width: 100%;
+        aspect-ratio: 4 / 3;
         object-fit: cover;
         border-radius: 8px;
         border: 1px solid #e2e8f0;
+        background: #ffffff;
+    }
+
+    .remove-option {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #be123c;
+        font-weight: 700;
+    }
+
+    .remove-option input {
+        accent-color: #e11d48;
     }
 
     .form-footer {
@@ -309,8 +367,11 @@
         });
     }
 
-    document.getElementById('productImage')?.addEventListener('change', function () {
-        document.getElementById('file-label').textContent = this.files[0]?.name || 'Choose file';
+    document.getElementById('productImages')?.addEventListener('change', function () {
+        const files = Array.from(this.files || []);
+        document.getElementById('file-label').textContent = files.length
+            ? `${files.length} ${files.length === 1 ? 'image' : 'images'} selected`
+            : 'Choose one or more images';
     });
 </script>
 @endsection
