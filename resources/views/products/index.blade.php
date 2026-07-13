@@ -41,8 +41,10 @@
         .icon-btn { display: grid; width: 46px; height: 46px; place-items: center; border: 1px solid var(--line); border-radius: 999px; background: #fffaf1; color: var(--ink); }
         .icon-btn svg { width: 21px; height: 21px; }
         .category-ribbon { background: #0c0c0c; color: #fffaf1; }
-        .category-ribbon .shop-wrap { display: flex; min-height: 78px; align-items: center; justify-content: space-between; gap: 16px; overflow-x: auto; scrollbar-width: none; }
+        .category-ribbon .shop-wrap { display: flex; min-height: 60px; align-items: center; justify-content: flex-start; gap: clamp(22px, 3vw, 40px); overflow-x: auto; scrollbar-width: none; }
         .category-ribbon .shop-wrap::-webkit-scrollbar { display: none; }
+        .category-ribbon a { flex: 0 0 auto; color: #fffaf1; font-size: 16px; font-weight: 900; white-space: nowrap; }
+        .category-ribbon a.is-active { color: var(--gold-light); }
         .ribbon-item { display: grid; min-width: 78px; justify-items: center; gap: 7px; font-size: 12px; font-weight: 700; }
         .ribbon-icon { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 999px; background: rgba(241, 207, 122, .14); font-size: 18px; }
         .see-all { min-width: 142px; border: 1px solid rgba(241, 207, 122, .46); border-radius: 999px; padding: 12px 20px; text-align: center; font-size: 13px; font-weight: 900; }
@@ -171,15 +173,7 @@
         </div>
         <div class="category-ribbon">
             <div class="shop-wrap">
-                @foreach($ribbonItems as [$label, $icon])
-                    @if($loop->iteration === 9)
-                        <a class="see-all" href="{{ route('public.products.index') }}">See All Products</a>
-                    @endif
-                    <a class="ribbon-item" href="{{ route('public.products.index', ['category' => \Illuminate\Support\Str::slug($label)]) }}">
-                        <span class="ribbon-icon">{{ $icon }}</span>
-                        <span>{{ $label }}</span>
-                    </a>
-                @endforeach
+                @include('partials.public-main-menu')
             </div>
         </div>
     </header>

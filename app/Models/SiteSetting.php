@@ -122,6 +122,73 @@ class SiteSetting extends Model
         return $defaults;
     }
 
+    public static function defaultMainMenuItems(): array
+    {
+        return [
+            ['label' => 'Shop', 'url' => '/products'],
+            ['label' => 'Women', 'url' => '/products?category=women'],
+            ['label' => 'Men', 'url' => '/products?category=men'],
+            ['label' => 'Outerwear', 'url' => '/products?category=outerwear'],
+            ['label' => 'Headwear', 'url' => '/products?category=headwear'],
+            ['label' => 'Uniforms', 'url' => '/products?category=uniforms'],
+            ['label' => 'Youth', 'url' => '/products?category=youth'],
+            ['label' => 'Gifts', 'url' => '/products?category=gifts'],
+            ['label' => 'Infant & Toddler', 'url' => '/products?category=infant-toddler'],
+            ['label' => 'Embroidery', 'url' => '/embroidery'],
+            ['label' => 'Create Design', 'url' => '/create-design'],
+            ['label' => 'Brands', 'url' => '/products?category=brands'],
+        ];
+    }
+
+    public static function mainMenuItems(): array
+    {
+        $raw = static::getValue('main_menu_items');
+
+        if ($raw) {
+            $decoded = json_decode($raw, true);
+            if (is_array($decoded)) {
+                $items = array_values(array_filter($decoded, fn ($item) => is_array($item) && ! empty($item['label']) && ! empty($item['url'])));
+                if (count($items)) {
+                    return $items;
+                }
+            }
+        }
+
+        return static::defaultMainMenuItems();
+    }
+
+    public static function setMainMenuFromText(?string $value): void
+    {
+        $lines = preg_split('/\r\n|\r|\n/', (string) $value);
+        $items = [];
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line === '') {
+                continue;
+            }
+
+            [$label, $url] = array_pad(array_map('trim', explode('|', $line, 2)), 2, null);
+            if ($label === '') {
+                continue;
+            }
+
+            $items[] = [
+                'label' => $label,
+                'url' => $url ?: '/products?category='.str($label)->slug(),
+            ];
+        }
+
+        static::setValue('main_menu_items', count($items) ? json_encode($items) : null);
+    }
+
+    public static function mainMenuText(): string
+    {
+        return collect(static::mainMenuItems())
+            ->map(fn ($item) => ($item['label'] ?? '').' | '.($item['url'] ?? ''))
+            ->implode("\n");
+    }
+
     protected static function resolveImageUrl(string $path): ?string
     {
         $uploads = Storage::disk('uploads');

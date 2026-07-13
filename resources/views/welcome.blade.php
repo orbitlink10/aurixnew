@@ -85,10 +85,7 @@
             </div>
             <nav class="taf-nav" aria-label="Product categories">
                 <div class="taf-wrap">
-                    <a href="{{ route('public.products.index') }}">Shop</a>
-                    @foreach(['Women', 'Men', 'Outerwear', 'Headwear', 'Uniforms', 'Youth', 'Gifts', 'Infant & Toddler', 'Embroidery', 'Create Design', 'Brands'] as $item)
-                        <a href="{{ $item === 'Embroidery' ? route('public.embroidery') : ($item === 'Create Design' ? route('public.create-design') : route('public.products.index', ['category' => \Illuminate\Support\Str::slug($item)])) }}">{{ $item }}</a>
-                    @endforeach
+                    @include('partials.public-main-menu')
                 </div>
             </nav>
         </header>

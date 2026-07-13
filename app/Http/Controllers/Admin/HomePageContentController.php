@@ -24,6 +24,10 @@ class HomePageContentController extends Controller
             ? SiteSetting::contactSettings()
             : SiteSetting::defaultContactSettings();
 
+        $mainMenuText = Schema::hasTable('site_settings')
+            ? SiteSetting::mainMenuText()
+            : collect(SiteSetting::defaultMainMenuItems())->map(fn ($item) => $item['label'].' | '.$item['url'])->implode("\n");
+
         $workCategories = Schema::hasTable('work_categories')
             ? WorkCategory::orderBy('sort_order')->orderByDesc('created_at')->get()
             : collect();
@@ -33,7 +37,7 @@ class HomePageContentController extends Controller
             $editingCategory = WorkCategory::find($request->integer('edit'));
         }
 
-        return view('admin.home-page-content.index', compact('heroImageUrls', 'logoUrl', 'contactSettings', 'workCategories', 'editingCategory'));
+        return view('admin.home-page-content.index', compact('heroImageUrls', 'logoUrl', 'contactSettings', 'mainMenuText', 'workCategories', 'editingCategory'));
     }
 
     public function updateContact(Request $request)
@@ -52,5 +56,16 @@ class HomePageContentController extends Controller
         }
 
         return redirect()->route('admin.home-page-content.index')->with('success', 'Contact details updated.');
+    }
+
+    public function updateMainMenu(Request $request)
+    {
+        $data = $request->validate([
+            'main_menu_items' => ['nullable', 'string', 'max:5000'],
+        ]);
+
+        SiteSetting::setMainMenuFromText($data['main_menu_items'] ?? null);
+
+        return redirect()->route('admin.home-page-content.index')->with('success', 'Main menu updated.');
     }
 }

@@ -11,6 +11,24 @@
 <div class="card p-4 rounded-xl">
     <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div class="md:max-w-xl">
+            <h2 class="text-lg font-semibold text-slate-900">Main Website Menu</h2>
+            <p class="text-sm text-slate-500 mt-1">Edit the black menu shown on the homepage and shop page. Use one item per line in this format: <strong>Label | URL</strong>.</p>
+            <p class="text-xs text-slate-500 mt-2">Example: <code>Women | /products?category=women</code></p>
+        </div>
+        <form action="{{ route('admin.home-page-content.main-menu.update') }}" method="POST" class="w-full md:max-w-2xl space-y-3">
+            @csrf
+            <textarea name="main_menu_items" rows="12" class="w-full bg-white border border-slate-200 rounded px-3 py-2 font-mono text-sm" placeholder="Shop | /products">{{ old('main_menu_items', $mainMenuText) }}</textarea>
+            @error('main_menu_items')
+                <p class="text-sm text-rose-600">{{ $message }}</p>
+            @enderror
+            <button type="submit" class="px-5 py-2 rounded bg-sky-600 text-white font-semibold hover:bg-sky-500">Save Main Menu</button>
+        </form>
+    </div>
+</div>
+
+<div class="card p-4 rounded-xl">
+    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        <div class="md:max-w-xl">
             <h2 class="text-lg font-semibold text-slate-900">Website Logo</h2>
             <p class="text-sm text-slate-500 mt-1">Upload the logo shown in the public homepage header.</p>
             @if($logoUrl)
