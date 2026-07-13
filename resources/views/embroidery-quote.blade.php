@@ -40,6 +40,10 @@
         .field textarea { min-height: 220px; resize: vertical; }
         .field input:focus, .field textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(201, 148, 47, 0.16); }
         .send-btn { width: fit-content; min-height: 60px; border: 0; border-radius: 999px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--black); padding: 0 34px; font-size: 17px; font-weight: 900; cursor: pointer; }
+        .form-alert { grid-column: 1 / -1; border-radius: 16px; padding: 16px 18px; font-size: 15px; font-weight: 800; }
+        .form-alert.success { border: 1px solid rgba(22, 101, 52, .18); background: #ecfdf5; color: #166534; }
+        .form-alert.error { border: 1px solid rgba(185, 28, 28, .18); background: #fef2f2; color: #991b1b; }
+        .field-error { color: #991b1b; font-size: 13px; font-weight: 800; }
         .footer { background: #111111; color: #fffaf1; padding: 34px 0; }
         .footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px; }
         .footer p, .footer a { margin: 0; color: rgba(255, 250, 241, 0.72); line-height: 1.65; }
@@ -50,7 +54,7 @@
 <body>
     @php
         $displayPhone = '+254 700816670';
-        $contactEmail = '';
+        $contactEmail = 'info@aurixbranding.co.ke';
     @endphp
 
     <header class="header">
@@ -75,38 +79,46 @@
             <div class="contact-hero">
                 <span class="pill">Contact</span>
                 <h1>Talk to Aurix Branding</h1>
-                <p>Send us your embroidery question, order details, or branding request. Once you click send, your message will open in WhatsApp addressed to Aurix Branding.</p>
+                <p>Send us your embroidery question, order details, or branding request. Once you click send, your message will be emailed directly to Aurix Branding.</p>
                 <div class="contact-chips">
-                    @if($contactEmail)
-                        <a href="mailto:{{ $contactEmail }}">{{ $contactEmail }}</a>
-                    @else
-                        <span>Email coming soon</span>
-                    @endif
+                    <a href="mailto:{{ $contactEmail }}">{{ $contactEmail }}</a>
                     <a href="tel:+254700816670">{{ $displayPhone }}</a>
                 </div>
             </div>
 
             <div class="contact-form-card">
-                <form class="contact-form" id="embroideryQuoteForm">
+                <form class="contact-form" id="embroideryQuoteForm" action="{{ route('public.embroidery.quote.send') }}" method="POST">
+                    @csrf
+                    @if(session('quote_success'))
+                        <div class="form-alert success">{{ session('quote_success') }}</div>
+                    @endif
+                    @if(session('quote_error'))
+                        <div class="form-alert error">{{ session('quote_error') }}</div>
+                    @endif
                     <label class="field">
                         Full name
-                        <input type="text" name="name" autocomplete="name" required>
+                        <input type="text" name="name" value="{{ old('name') }}" autocomplete="name" required>
+                        @error('name')<span class="field-error">{{ $message }}</span>@enderror
                     </label>
                     <label class="field">
                         Email
-                        <input type="email" name="email" autocomplete="email">
+                        <input type="email" name="email" value="{{ old('email') }}" autocomplete="email">
+                        @error('email')<span class="field-error">{{ $message }}</span>@enderror
                     </label>
                     <label class="field">
                         Phone (optional)
-                        <input type="tel" name="phone" autocomplete="tel">
+                        <input type="tel" name="phone" value="{{ old('phone') }}" autocomplete="tel">
+                        @error('phone')<span class="field-error">{{ $message }}</span>@enderror
                     </label>
                     <label class="field">
                         Subject
-                        <input type="text" name="subject" value="Embroidery quote request">
+                        <input type="text" name="subject" value="{{ old('subject', 'Embroidery quote request') }}">
+                        @error('subject')<span class="field-error">{{ $message }}</span>@enderror
                     </label>
                     <label class="field full">
                         Message
-                        <textarea name="message" required placeholder="Tell us what you need embroidered, quantity, garment type, timeline, and logo placement."></textarea>
+                        <textarea name="message" required placeholder="Tell us what you need embroidered, quantity, garment type, timeline, and logo placement.">{{ old('message') }}</textarea>
+                        @error('message')<span class="field-error">{{ $message }}</span>@enderror
                     </label>
                     <button class="send-btn" type="submit">Send message</button>
                 </form>
@@ -120,26 +132,5 @@
             <a href="{{ route('public.embroidery') }}">Back to embroidery</a>
         </div>
     </footer>
-
-    <script>
-        document.getElementById('embroideryQuoteForm')?.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            const form = event.currentTarget;
-            const data = new FormData(form);
-            const message = [
-                'Hello Aurix Branding, I would like an embroidery quote.',
-                '',
-                `Full name: ${data.get('name') || ''}`,
-                `Email: ${data.get('email') || 'Not provided'}`,
-                `Phone: ${data.get('phone') || 'Not provided'}`,
-                `Subject: ${data.get('subject') || 'Embroidery quote request'}`,
-                '',
-                `Message: ${data.get('message') || ''}`,
-            ].join('\n');
-
-            window.open(`https://wa.me/254700816670?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
-        });
-    </script>
 </body>
 </html>

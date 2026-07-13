@@ -145,7 +145,7 @@
         $contact = $contactSettings ?? \App\Models\SiteSetting::defaultContactSettings();
         $whatsappPhone = '254700816670';
         $displayPhone = '+254 700816670';
-        $contactEmail = '';
+        $contactEmail = 'info@aurixbranding.co.ke';
         $whatsappUrl = 'https://wa.me/'.$whatsappPhone.'?text='.rawurlencode('Hello Aurix Branding, I would like an embroidery quote.');
         $tickerText = 'Premium Branding Solutions • Custom T-Shirts • Corporate Gifts • Vehicle Branding • Signage & Roll-Up Banners • Business Cards • Logo Design • High-Quality Printing • Same-Day Printing Available • Nationwide Delivery • Free Quotes';
         $ribbonItems = [

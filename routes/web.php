@@ -31,6 +31,8 @@ use App\Models\WorkCategory;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 
 Route::get('/', function () {
@@ -84,6 +86,48 @@ Route::get('/embroidery/request-quote', function () {
 
     return view('embroidery-quote', compact('contactSettings', 'logoUrl'));
 })->name('public.embroidery.quote');
+
+Route::post('/embroidery/request-quote', function (Request $request) {
+    $validated = $request->validate([
+        'name' => ['required', 'string', 'max:120'],
+        'email' => ['nullable', 'email', 'max:160'],
+        'phone' => ['nullable', 'string', 'max:60'],
+        'subject' => ['nullable', 'string', 'max:160'],
+        'message' => ['required', 'string', 'max:5000'],
+    ]);
+
+    $to = 'info@aurixbranding.co.ke';
+    $subject = $validated['subject'] ?: 'Embroidery quote request';
+    $body = implode("\n", [
+        'New Aurix Branding quote request',
+        '',
+        'Full name: '.$validated['name'],
+        'Email: '.($validated['email'] ?: 'Not provided'),
+        'Phone: '.($validated['phone'] ?: 'Not provided'),
+        'Subject: '.$subject,
+        '',
+        'Message:',
+        $validated['message'],
+    ]);
+
+    try {
+        Mail::raw($body, function ($message) use ($to, $subject, $validated) {
+            $message->to($to)->subject($subject);
+
+            if (! empty($validated['email'])) {
+                $message->replyTo($validated['email'], $validated['name']);
+            }
+        });
+    } catch (\Throwable $exception) {
+        report($exception);
+
+        return back()
+            ->withInput()
+            ->with('quote_error', 'We could not send the email automatically. Please email info@aurixbranding.co.ke or WhatsApp +254 700816670.');
+    }
+
+    return back()->with('quote_success', 'Thank you. Your quote request has been sent to info@aurixbranding.co.ke.');
+})->name('public.embroidery.quote.send');
 
 Route::get('/create-design', function () {
     $logoUrl = Schema::hasTable('site_settings')

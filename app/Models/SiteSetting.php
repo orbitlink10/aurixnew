@@ -106,7 +106,7 @@ class SiteSetting extends Model
             'phone' => '+254 700816670',
             'whatsapp_phone' => '254700816670',
             'whatsapp_message' => 'Hello Aurix Branding, I need a quote.',
-            'email' => '',
+            'email' => 'info@aurixbranding.co.ke',
             'address' => '',
         ];
     }
