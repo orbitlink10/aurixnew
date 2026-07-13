@@ -125,6 +125,7 @@ class SiteSetting extends Model
     public static function defaultMainMenuItems(): array
     {
         return [
+            ['label' => 'Home', 'url' => '/'],
             ['label' => 'Shop', 'url' => '/products'],
             ['label' => 'Women', 'url' => '/products?category=women'],
             ['label' => 'Men', 'url' => '/products?category=men'],
@@ -175,11 +176,22 @@ class SiteSetting extends Model
 
             $items[] = [
                 'label' => $label,
-                'url' => $url ?: '/products?category='.str($label)->slug(),
+                'url' => $url ?: static::defaultMainMenuUrlForLabel($label),
             ];
         }
 
         static::setValue('main_menu_items', count($items) ? json_encode($items) : null);
+    }
+
+    protected static function defaultMainMenuUrlForLabel(string $label): string
+    {
+        return match ((string) str($label)->lower()) {
+            'home' => '/',
+            'shop' => '/products',
+            'embroidery' => '/embroidery',
+            'create design' => '/create-design',
+            default => '/products?category='.str($label)->slug(),
+        };
     }
 
     public static function mainMenuText(): string

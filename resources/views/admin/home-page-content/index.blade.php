@@ -13,7 +13,7 @@
         <div class="md:max-w-xl">
             <h2 class="text-lg font-semibold text-slate-900">Main Website Menu</h2>
             <p class="text-sm text-slate-500 mt-1">Edit the black menu shown on the homepage and shop page. Use one item per line in this format: <strong>Label | URL</strong>.</p>
-            <p class="text-xs text-slate-500 mt-2">Example: <code>Women | /products?category=women</code></p>
+            <p class="text-xs text-slate-500 mt-2">Example: <code>Home | /</code> or <code>Women | /products?category=women</code></p>
         </div>
         <form action="{{ route('admin.home-page-content.main-menu.update') }}" method="POST" class="w-full md:max-w-2xl space-y-3">
             @csrf

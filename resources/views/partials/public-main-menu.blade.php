@@ -11,9 +11,11 @@
     @php
         $label = $menuItem['label'] ?? '';
         $rawUrl = $menuItem['url'] ?? '#';
-        $href = \Illuminate\Support\Str::startsWith($rawUrl, ['http://', 'https://', '#'])
+        $href = $rawUrl === '/'
+            ? url('/')
+            : (\Illuminate\Support\Str::startsWith($rawUrl, ['http://', 'https://', '#'])
             ? $rawUrl
-            : url($rawUrl);
+            : url($rawUrl));
         $normalizedHref = rtrim($href, '/');
         $isActive = $href !== '#'
             && (
