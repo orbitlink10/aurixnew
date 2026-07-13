@@ -228,7 +228,7 @@
                     <p class="eyebrow">Why embroidery</p>
                     <h2>Long-lasting, premium branding.</h2>
                     <p>Embroidery gives your brand a polished, tactile finish that resists fading and keeps your logo crisp after repeated wear and washes. Perfect for customer-facing teams, corporate gifting, and retail.</p>
-                    <img src="{{ asset('images/aurix-hoodie-category.png') }}" alt="Aurix embroidered hoodie branding">
+                    <img src="{{ asset('images/aurix-embroidery-production-collage.png') }}" alt="Aurix embroidery production branding">
                 </article>
                 <article class="info-card">
                     <p class="eyebrow">Service coverage</p>
@@ -304,7 +304,7 @@
                 <h2>High quality embroidery that represents your brand with elegance and durability.</h2>
             </div>
             <div class="embroidery-examples">
-                <img src="{{ asset('images/aurix-embroidery-production-collage.png') }}" alt="Aurix embroidery production collage">
+                <img src="{{ asset('images/aurix-embroidery-examples.png') }}" alt="Aurix embroidery examples">
             </div>
         </section>
 

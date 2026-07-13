@@ -157,7 +157,7 @@
                             ['name' => 'Polo T-shirt', 'count' => '8 items', 'slug' => 'polo-t-shirt', 'pos' => '50% 50%', 'image' => 'images/aurix-polo-category.png'],
                             ['name' => 'Hoodie', 'count' => '9 items', 'slug' => 'hoodie', 'pos' => '50% 50%', 'image' => 'images/aurix-hoodie-category.png'],
                             ['name' => 'Kids', 'count' => '6 items', 'slug' => 'kids', 'pos' => '50% 50%', 'image' => 'images/aurix-kids-category.png'],
-                            ['name' => 'Embroidery', 'count' => '5 items', 'slug' => 'embroidery', 'pos' => '50% 50%'],
+                            ['name' => 'Embroidery', 'count' => '5 items', 'slug' => 'embroidery', 'pos' => '50% 50%', 'image' => 'images/aurix-embroidery-production-collage.png'],
                             ['name' => 'Create Design', 'count' => 'Custom orders', 'slug' => 'create-design', 'pos' => '50% 50%', 'image' => 'images/aurix-branding-collage.png'],
                             ['name' => 'Corporate', 'count' => '12 items', 'slug' => 'corporate', 'pos' => '50% 50%', 'image' => 'images/aurix-branding-collage.png'],
                         ] as $category)
