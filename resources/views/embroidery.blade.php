@@ -304,7 +304,7 @@
                 <h2>High quality embroidery that represents your brand with elegance and durability.</h2>
             </div>
             <div class="embroidery-examples">
-                <img src="{{ asset('images/aurix-embroidery-examples.png') }}" alt="Aurix embroidery examples grid">
+                <img src="{{ asset('images/aurix-embroidery-production-collage.png') }}" alt="Aurix embroidery production collage">
             </div>
         </section>
 

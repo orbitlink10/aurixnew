@@ -159,12 +159,18 @@ Route::get('/blog-posts/{slug}', function (string $slug) {
 
 Route::get('/products', function () {
     $shopCategories = ['All', 'Design', 'Designs', 'Hoodie', 'Kids', 'Men', 'Onesis', 'Polo T-shirt', 'Sport', 'T-shirt', 'Weekly', 'Women'];
+    $logoUrl = Schema::hasTable('site_settings')
+        ? SiteSetting::logoUrl()
+        : null;
+    $contactSettings = Schema::hasTable('site_settings')
+        ? SiteSetting::contactSettings()
+        : SiteSetting::defaultContactSettings();
 
     if (! Schema::hasTable('products')) {
         $products = new LengthAwarePaginator([], 0, 12);
         $categories = collect();
 
-        return view('products.index', compact('products', 'categories', 'shopCategories'));
+        return view('products.index', compact('products', 'categories', 'shopCategories', 'logoUrl', 'contactSettings'));
     }
 
     $legacyBrand = 'Nai'.' Prints';
@@ -232,7 +238,7 @@ Route::get('/products', function () {
             ->get()
         : collect();
 
-    return view('products.index', compact('products', 'categories', 'shopCategories'));
+    return view('products.index', compact('products', 'categories', 'shopCategories', 'logoUrl', 'contactSettings'));
 })->name('public.products.index');
 
 Route::get('/products/{product:slug}', function (Product $product) {
