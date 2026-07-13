@@ -41,17 +41,11 @@
         .shop-phone { display: grid; gap: 2px; text-align: right; white-space: nowrap; }
         .shop-phone span { color: var(--muted); font-size: 12px; font-weight: 700; }
         .shop-phone strong { color: var(--ink); font-size: 16px; }
-        .header-icons { display: none; gap: 12px; }
-        .icon-btn { display: grid; width: 46px; height: 46px; place-items: center; border: 1px solid var(--line); border-radius: 999px; background: #fffaf1; color: var(--ink); }
-        .icon-btn svg { width: 21px; height: 21px; }
         .category-ribbon { background: #0c0c0c; color: #fffaf1; }
         .category-ribbon .shop-wrap { display: flex; min-height: 60px; align-items: center; justify-content: flex-start; gap: clamp(22px, 3vw, 40px); overflow-x: auto; scrollbar-width: none; }
         .category-ribbon .shop-wrap::-webkit-scrollbar { display: none; }
         .category-ribbon a { flex: 0 0 auto; color: #fffaf1; font-size: 16px; font-weight: 900; white-space: nowrap; }
         .category-ribbon a.is-active { color: var(--gold-light); }
-        .ribbon-item { display: grid; min-width: 78px; justify-items: center; gap: 7px; font-size: 12px; font-weight: 700; }
-        .ribbon-icon { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 999px; background: rgba(241, 207, 122, .14); font-size: 18px; }
-        .see-all { min-width: 142px; border: 1px solid rgba(241, 207, 122, .46); border-radius: 999px; padding: 12px 20px; text-align: center; font-size: 13px; font-weight: 900; }
         .shop-main { padding: 44px 0 70px; }
         .eyebrow { margin: 0 0 10px; color: var(--muted); font-size: 14px; font-weight: 600; letter-spacing: .34em; text-transform: uppercase; }
         h1 { margin: 0; font-size: clamp(2rem, 3.6vw, 3.4rem); font-weight: 500; letter-spacing: 0; }
@@ -146,6 +140,7 @@
             ['Hoodies', '🧥'], ['Bags', '💼'],
         ];
         $selectedCategory = request('category', 'all-categories');
+        $contact = $contactSettings ?? \App\Models\SiteSetting::defaultContactSettings();
     @endphp
 
     <div class="shop-marquee" aria-label="Shop highlights">
@@ -159,19 +154,18 @@
     <header class="shop-header">
         <div class="shop-wrap shop-nav">
             <a href="{{ url('/') }}" class="brand" aria-label="Aurix Branding home">
-                <img src="{{ asset('images/aurix-branding-logo.png') }}" alt="Aurix Branding logo">
+                <img src="{{ $logoUrl ?: asset('images/aurix-branding-logo.png') }}" alt="Aurix Branding logo">
                 <span>Aurix Branding</span>
             </a>
-            <nav class="nav-links" aria-label="Main navigation">
-                @foreach(['Home' => url('/'), 'Shop' => route('public.products.index'), 'Men' => route('public.products.index', ['category' => 'men']), 'Women' => route('public.products.index', ['category' => 'women']), 'Jersey' => route('public.products.index', ['category' => 'jersey']), 'Corporate' => route('public.products.index', ['category' => 'corporate']), 'Embroidery' => route('public.embroidery'), 'Remove background' => '#', 'Create Design' => route('public.create-design'), 'Maasai' => route('public.products.index', ['category' => 'maasai'])] as $label => $url)
-                    <a href="{{ $url }}" @class(['is-active' => $label === 'Shop'])>{{ $label }}</a>
-                @endforeach
-            </nav>
-            <div class="header-icons" aria-hidden="true">
-                <span class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>
-                <span class="icon-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z"/></svg></span>
-                <span class="icon-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.4-9.2-8.2C.9 9.6 2.6 6 6.2 6c2 0 3.3 1.1 3.8 2 .5-.9 1.8-2 3.8-2 3.6 0 5.3 3.6 3.4 6.8C19 16.6 12 21 12 21Z"/></svg></span>
-                <button class="icon-btn" type="button" data-cart-open aria-label="Open cart"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 6l.5 2h12.7l-1.5 6H8L5.6 3H2v2h2l2.3 11H18v-2H8.4L8 12h11.5L22 6H6.2Z"/></svg></button>
+            <form class="shop-search" action="{{ route('public.products.index') }}" method="get">
+                <input name="q" type="search" value="{{ request('q') }}" placeholder="Search apparel, branding, signage">
+                <button type="submit" aria-label="Search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 21-4.35-4.35m0 0A7.5 7.5 0 1 0 6 16.65a7.5 7.5 0 0 0 10.65 0Z"/></svg>
+                </button>
+            </form>
+            <div class="shop-phone">
+                <span>{{ $contact['support_label'] }}</span>
+                <strong>{{ $contact['phone'] }}</strong>
             </div>
         </div>
         <div class="category-ribbon">

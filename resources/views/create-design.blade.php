@@ -51,8 +51,7 @@
         .tabs button { border: 0; border-bottom: 2px solid transparent; background: transparent; padding: 0 0 14px; font-size: 15px; font-weight: 800; }
         .tabs button.is-active { border-color: var(--gold); color: var(--gold); }
         .panel-title { margin: 0 0 15px; font-size: 19px; }
-        .product-strip { display: grid; grid-template-columns: 34px minmax(0, 1fr) 34px; align-items: center; gap: 6px; }
-        .strip-btn { border: 0; background: transparent; font-size: 30px; font-weight: 900; }
+        .product-strip { display: block; }
         .products { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; }
         .product-card { min-width: 166px; scroll-snap-align: start; border: 1px solid #d8d1c3; border-radius: 16px; background: #ffffff; padding: 12px; text-align: left; }
         .product-card.is-active { border-color: var(--gold); background: rgba(201, 148, 47, 0.08); box-shadow: inset 0 0 0 1px var(--gold); }
@@ -176,7 +175,6 @@
 
                 <h2 class="panel-title">Product Mockups</h2>
                 <div class="product-strip">
-                    <button class="strip-btn" type="button" data-scroll-products="-1">‹</button>
                     <div class="products" id="productList">
                         @foreach($products as $product)
                             <button class="product-card {{ $loop->first ? 'is-active' : '' }}" type="button" data-product="{{ $product['key'] }}" data-label="{{ $product['label'] }}" data-image="{{ $product['image'] }}" data-mask="{{ $product['mask'] }}" data-light="{{ $product['light'] }}" data-print-left="{{ $product['print']['left'] }}" data-print-top="{{ $product['print']['top'] }}" data-print-width="{{ $product['print']['width'] }}" data-print-height="{{ $product['print']['height'] }}">
@@ -185,7 +183,6 @@
                             </button>
                         @endforeach
                     </div>
-                    <button class="strip-btn" type="button" data-scroll-products="1">›</button>
                 </div>
 
                 <section class="section">
@@ -650,10 +647,6 @@
                 await navigator.clipboard.writeText(window.location.href);
                 alert('Studio link copied.');
             }
-        });
-
-        document.querySelectorAll('[data-scroll-products]').forEach(button => {
-            button.addEventListener('click', () => productList.scrollBy({ left: Number(button.dataset.scrollProducts) * 220, behavior: 'smooth' }));
         });
 
         window.addEventListener('resize', updateSelectionBox);
