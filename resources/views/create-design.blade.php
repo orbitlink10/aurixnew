@@ -99,10 +99,13 @@
         .product-stitch { fill: none; stroke: rgba(17, 17, 17, .16); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 8 8; opacity: .45; }
         .product-edge { fill: none; stroke: rgba(17, 17, 17, .18); stroke-width: 3.5; stroke-linejoin: round; }
         .product-shadow { fill: rgba(0, 0, 0, .12); filter: blur(9px); }
-        .print-area { position: absolute; left: var(--print-left, 22%); top: var(--print-top, 26%); width: var(--print-width, 56%); height: var(--print-height, 36%); border: 2px dashed rgba(47, 124, 246, 0.5); outline: 2px solid rgba(47, 124, 246, 0.18); outline-offset: 8px; z-index: 4; }
-        .design-layer { position: absolute; left: 50%; top: 50%; max-width: 84%; max-height: 84%; transform: translate(-50%, -50%); z-index: 5; cursor: move; user-select: none; }
+        .print-area { position: absolute; left: var(--print-left, 22%); top: var(--print-top, 26%); width: var(--print-width, 56%); height: var(--print-height, 36%); border: 2px dashed rgba(47, 124, 246, 0.5); outline: 2px solid rgba(47, 124, 246, 0.18); outline-offset: 8px; z-index: 4; isolation: isolate; }
+        .design-layer { position: absolute; left: 50%; top: 50%; max-width: 84%; max-height: 84%; transform: translate(-50%, -50%); z-index: 5; cursor: move; user-select: none; mix-blend-mode: normal; }
         .design-text { min-width: 120px; color: #111; font-size: 34px; font-weight: 900; text-align: center; }
         .design-image { width: 180px; height: auto; }
+        .mockup:not([data-color-mode="white"]) .design-layer { filter: drop-shadow(0 1px 1px rgba(255, 255, 255, .75)) drop-shadow(0 2px 5px rgba(0, 0, 0, .24)); }
+        .mockup[data-color-mode="deep"] .design-text { color: #fff; text-shadow: 0 1px 1px rgba(0, 0, 0, .55), 0 0 5px rgba(255, 255, 255, .2); }
+        .mockup[data-color-mode="deep"] .design-image { filter: drop-shadow(0 0 1px rgba(255, 255, 255, .95)) drop-shadow(0 2px 7px rgba(255, 255, 255, .46)); }
         .selected-box { position: absolute; left: 20%; top: 24%; width: 60%; height: 40%; border: 2px solid var(--accent); pointer-events: none; z-index: 8; }
         .selected-box::before, .selected-box::after { content: ""; position: absolute; width: 14px; height: 14px; border-radius: 999px; background: var(--accent); }
         .selected-box::before { left: 50%; top: -8px; transform: translateX(-50%); }
@@ -131,7 +134,7 @@
             ['key' => 'polo', 'label' => 'Polo shirt', 'front_image' => asset('images/studio-polo-front.png'), 'back_image' => asset('images/studio-polo-back.png'), 'front_mask' => asset('images/studio-polo-front.png'), 'back_mask' => asset('images/studio-polo-back.png'), 'front_print' => ['left' => '33%', 'top' => '32%', 'width' => '34%', 'height' => '29%'], 'back_print' => ['left' => '31%', 'top' => '27%', 'width' => '38%', 'height' => '35%'], 'light' => 'dark'],
             ['key' => 'sweater', 'label' => 'Sweatshirt', 'front_image' => asset('images/studio-sweatshirt-front.png'), 'back_image' => asset('images/studio-sweatshirt-back.png'), 'front_mask' => asset('images/studio-sweatshirt-front.png'), 'back_mask' => asset('images/studio-sweatshirt-back.png'), 'front_print' => ['left' => '30%', 'top' => '30%', 'width' => '40%', 'height' => '33%'], 'back_print' => ['left' => '30%', 'top' => '28%', 'width' => '40%', 'height' => '36%'], 'light' => 'light'],
             ['key' => 'totebag', 'label' => 'Tote bag', 'front_image' => asset('images/studio-totebag-front.png'), 'back_image' => asset('images/studio-totebag-back.png'), 'front_mask' => asset('images/studio-totebag-front.png'), 'back_mask' => asset('images/studio-totebag-back.png'), 'front_print' => ['left' => '27%', 'top' => '42%', 'width' => '46%', 'height' => '32%'], 'back_print' => ['left' => '27%', 'top' => '42%', 'width' => '46%', 'height' => '32%'], 'light' => 'light'],
-            ['key' => 'kids', 'label' => 'Kids clothes', 'front_image' => asset('images/studio-tshirt-front.png'), 'back_image' => asset('images/studio-tshirt-back.png'), 'front_mask' => asset('images/studio-kids-color-mask.png'), 'back_mask' => asset('images/studio-tshirt-back.png'), 'front_print' => ['left' => '32%', 'top' => '30%', 'width' => '36%', 'height' => '28%'], 'back_print' => ['left' => '31%', 'top' => '28%', 'width' => '38%', 'height' => '35%'], 'light' => 'light'],
+            ['key' => 'kids', 'label' => 'Kids clothes', 'front_image' => asset('images/studio-kids-front.png'), 'back_image' => asset('images/studio-kids-back.png'), 'front_mask' => asset('images/studio-kids-front.png'), 'back_mask' => asset('images/studio-kids-back.png'), 'front_print' => ['left' => '34%', 'top' => '30%', 'width' => '32%', 'height' => '34%'], 'back_print' => ['left' => '34%', 'top' => '29%', 'width' => '32%', 'height' => '36%'], 'light' => 'light'],
         ];
     @endphp
 
@@ -404,12 +407,24 @@
             state.redo = [];
         }
 
+        function colorLuminance(hex) {
+            const value = (hex || '#ffffff').replace('#', '');
+            const rgb = [0, 2, 4].map(index => {
+                const component = parseInt(value.slice(index, index + 2), 16);
+                return Number.isNaN(component) ? 255 : component;
+            });
+            const channel = rgb.map(component => {
+                const scaled = component / 255;
+                return scaled <= 0.03928 ? scaled / 12.92 : Math.pow((scaled + 0.055) / 1.055, 2.4);
+            });
+            return 0.2126 * channel[0] + 0.7152 * channel[1] + 0.0722 * channel[2];
+        }
+
         function applyProductColor(color) {
             const normalized = (color || '#ffffff').toLowerCase();
-            const deepColors = ['#111111', '#0f172a', '#581c87'];
             state.color = normalized;
             mockup.style.setProperty('--product-color', normalized);
-            mockup.dataset.colorMode = normalized === '#ffffff' ? 'white' : (deepColors.includes(normalized) ? 'deep' : 'color');
+            mockup.dataset.colorMode = normalized === '#ffffff' ? 'white' : (colorLuminance(normalized) < 0.22 ? 'deep' : 'color');
             mockup.setAttribute('aria-label', `Selected ${state.productLabel} color ${normalized}`);
         }
 
