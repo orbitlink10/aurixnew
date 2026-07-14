@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -35,6 +36,21 @@ class Product extends Model
     ];
 
     protected $appends = ['image_url'];
+
+    public static function comparableName(string $name): string
+    {
+        $normalized = Str::of($name)
+            ->ascii()
+            ->lower()
+            ->replaceMatches('/[^a-z0-9]+/', ' ')
+            ->squish()
+            ->toString();
+
+        return collect(explode(' ', $normalized))
+            ->reject(fn ($word) => in_array($word, ['custom'], true))
+            ->map(fn ($word) => Str::singular($word))
+            ->implode('');
+    }
 
     public function getImageUrlAttribute(): ?string
     {

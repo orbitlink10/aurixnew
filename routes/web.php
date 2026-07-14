@@ -60,7 +60,35 @@ Route::get('/', function () {
         ? Service::where('is_active', true)->orderBy('id')->get()
         : collect();
 
-    return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'contactSettings', 'workCategories', 'services'));
+    $featuredProducts = collect([
+        ['cat' => 'Apparel', 'name' => 'Custom T-Shirts', 'price' => '1,200', 'image' => asset('images/aurix-tshirt-category.png')],
+        ['cat' => 'Apparel', 'name' => 'Custom Hoodies', 'price' => '2,800', 'image' => asset('images/aurix-hoodie-category.png')],
+        ['cat' => 'Corporate', 'name' => 'Polo T-Shirts', 'price' => '1,800', 'image' => asset('images/aurix-polo-category.png')],
+        ['cat' => 'Print', 'name' => 'Business Cards', 'price' => '45', 'image' => asset('images/aurix-business-cards.png')],
+    ]);
+
+    if (Schema::hasTable('products')) {
+        $activeProducts = Product::query()
+            ->where('is_active', true)
+            ->orderByDesc('updated_at')
+            ->get(['name', 'price']);
+
+        $featuredProducts = $featuredProducts->map(function ($featuredProduct) use ($activeProducts) {
+            $matchingProduct = $activeProducts->first(
+                fn (Product $product) => Product::comparableName($product->name) === Product::comparableName($featuredProduct['name'])
+            );
+
+            if ($matchingProduct) {
+                $featuredProduct['price'] = number_format((float) $matchingProduct->price, 0);
+            }
+
+            return $featuredProduct;
+        });
+    }
+
+    $featuredProducts = $featuredProducts->all();
+
+    return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'contactSettings', 'workCategories', 'services', 'featuredProducts'));
 });
 
 Route::get('/embroidery', function () {

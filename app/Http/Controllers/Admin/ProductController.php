@@ -125,8 +125,27 @@ class ProductController extends Controller
         unset($data['photo'], $data['image']);
 
         $product->update($data);
+        $this->syncPricesForMatchingProducts($product);
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated.');
+    }
+
+    private function syncPricesForMatchingProducts(Product $product): void
+    {
+        $comparableName = Product::comparableName($product->name);
+
+        if ($comparableName === '') {
+            return;
+        }
+
+        Product::query()
+            ->whereKeyNot($product->id)
+            ->get(['id', 'name'])
+            ->filter(fn (Product $matchingProduct) => Product::comparableName($matchingProduct->name) === $comparableName)
+            ->each(fn (Product $matchingProduct) => $matchingProduct->update([
+                'price' => $product->price,
+                'marked_price' => $product->marked_price,
+            ]));
     }
 
     public function destroy(Product $product)

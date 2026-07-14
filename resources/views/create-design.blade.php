@@ -124,13 +124,14 @@
 <body>
     @php
         $products = [
-            ['key' => 'tshirt', 'label' => 'Tshirt', 'image' => asset('images/studio-tshirt-transparent.png'), 'mask' => asset('images/studio-tshirt-color-mask.png'), 'print' => ['left' => '31%', 'top' => '30%', 'width' => '38%', 'height' => '29%'], 'light' => 'light'],
-            ['key' => 'hoodie', 'label' => 'Hoodie', 'image' => asset('images/studio-hoodie-transparent.png'), 'mask' => asset('images/studio-hoodie-transparent.png'), 'print' => ['left' => '31%', 'top' => '31%', 'width' => '38%', 'height' => '30%'], 'light' => 'dark'],
-            ['key' => 'cap', 'label' => 'Cap', 'image' => asset('images/studio-cap-transparent.png'), 'mask' => asset('images/studio-cap-transparent.png'), 'print' => ['left' => '34%', 'top' => '33%', 'width' => '32%', 'height' => '19%'], 'light' => 'dark'],
-            ['key' => 'mug', 'label' => 'Mug', 'image' => asset('images/studio-mug-transparent.png'), 'mask' => asset('images/studio-mug-transparent.png'), 'print' => ['left' => '28%', 'top' => '34%', 'width' => '28%', 'height' => '34%'], 'light' => 'light'],
-            ['key' => 'polo', 'label' => 'Polo shirt', 'image' => asset('images/studio-polo-transparent.png'), 'mask' => asset('images/studio-polo-transparent.png'), 'print' => ['left' => '35%', 'top' => '31%', 'width' => '30%', 'height' => '24%'], 'light' => 'dark'],
-            ['key' => 'sweater', 'label' => 'Sweater', 'image' => asset('images/studio-sweater-transparent.png'), 'mask' => asset('images/studio-sweater-transparent.png'), 'print' => ['left' => '29%', 'top' => '28%', 'width' => '42%', 'height' => '32%'], 'light' => 'light'],
-            ['key' => 'kids', 'label' => 'Kids clothes', 'image' => asset('images/studio-tshirt-transparent.png'), 'mask' => asset('images/studio-kids-color-mask.png'), 'print' => ['left' => '32%', 'top' => '30%', 'width' => '36%', 'height' => '28%'], 'light' => 'light'],
+            ['key' => 'tshirt', 'label' => 'Tshirt', 'front_image' => asset('images/studio-tshirt-front.png'), 'back_image' => asset('images/studio-tshirt-back.png'), 'front_mask' => asset('images/studio-tshirt-front.png'), 'back_mask' => asset('images/studio-tshirt-back.png'), 'front_print' => ['left' => '31%', 'top' => '31%', 'width' => '38%', 'height' => '31%'], 'back_print' => ['left' => '31%', 'top' => '28%', 'width' => '38%', 'height' => '35%'], 'light' => 'light'],
+            ['key' => 'hoodie', 'label' => 'Hoodie', 'front_image' => asset('images/studio-hoodie-front.png'), 'back_image' => asset('images/studio-hoodie-back.png'), 'front_mask' => asset('images/studio-hoodie-front.png'), 'back_mask' => asset('images/studio-hoodie-back.png'), 'front_print' => ['left' => '32%', 'top' => '34%', 'width' => '36%', 'height' => '25%'], 'back_print' => ['left' => '31%', 'top' => '33%', 'width' => '38%', 'height' => '32%'], 'light' => 'dark'],
+            ['key' => 'cap', 'label' => 'Cap', 'front_image' => asset('images/studio-cap-front.png'), 'back_image' => asset('images/studio-cap-back.png'), 'front_mask' => asset('images/studio-cap-front.png'), 'back_mask' => asset('images/studio-cap-back.png'), 'front_print' => ['left' => '34%', 'top' => '35%', 'width' => '32%', 'height' => '18%'], 'back_print' => ['left' => '35%', 'top' => '34%', 'width' => '30%', 'height' => '16%'], 'light' => 'dark'],
+            ['key' => 'mug', 'label' => 'Mug', 'front_image' => asset('images/studio-mug-front.png'), 'back_image' => asset('images/studio-mug-back.png'), 'front_mask' => asset('images/studio-mug-front.png'), 'back_mask' => asset('images/studio-mug-back.png'), 'front_print' => ['left' => '42%', 'top' => '28%', 'width' => '34%', 'height' => '43%'], 'back_print' => ['left' => '24%', 'top' => '28%', 'width' => '34%', 'height' => '43%'], 'light' => 'light'],
+            ['key' => 'polo', 'label' => 'Polo shirt', 'front_image' => asset('images/studio-polo-front.png'), 'back_image' => asset('images/studio-polo-back.png'), 'front_mask' => asset('images/studio-polo-front.png'), 'back_mask' => asset('images/studio-polo-back.png'), 'front_print' => ['left' => '33%', 'top' => '32%', 'width' => '34%', 'height' => '29%'], 'back_print' => ['left' => '31%', 'top' => '27%', 'width' => '38%', 'height' => '35%'], 'light' => 'dark'],
+            ['key' => 'sweater', 'label' => 'Sweatshirt', 'front_image' => asset('images/studio-sweatshirt-front.png'), 'back_image' => asset('images/studio-sweatshirt-back.png'), 'front_mask' => asset('images/studio-sweatshirt-front.png'), 'back_mask' => asset('images/studio-sweatshirt-back.png'), 'front_print' => ['left' => '30%', 'top' => '30%', 'width' => '40%', 'height' => '33%'], 'back_print' => ['left' => '30%', 'top' => '28%', 'width' => '40%', 'height' => '36%'], 'light' => 'light'],
+            ['key' => 'totebag', 'label' => 'Tote bag', 'front_image' => asset('images/studio-totebag-front.png'), 'back_image' => asset('images/studio-totebag-back.png'), 'front_mask' => asset('images/studio-totebag-front.png'), 'back_mask' => asset('images/studio-totebag-back.png'), 'front_print' => ['left' => '27%', 'top' => '42%', 'width' => '46%', 'height' => '32%'], 'back_print' => ['left' => '27%', 'top' => '42%', 'width' => '46%', 'height' => '32%'], 'light' => 'light'],
+            ['key' => 'kids', 'label' => 'Kids clothes', 'front_image' => asset('images/studio-tshirt-front.png'), 'back_image' => asset('images/studio-tshirt-back.png'), 'front_mask' => asset('images/studio-kids-color-mask.png'), 'back_mask' => asset('images/studio-tshirt-back.png'), 'front_print' => ['left' => '32%', 'top' => '30%', 'width' => '36%', 'height' => '28%'], 'back_print' => ['left' => '31%', 'top' => '28%', 'width' => '38%', 'height' => '35%'], 'light' => 'light'],
         ];
     @endphp
 
@@ -177,8 +178,8 @@
                 <div class="product-strip">
                     <div class="products" id="productList">
                         @foreach($products as $product)
-                            <button class="product-card {{ $loop->first ? 'is-active' : '' }}" type="button" data-product="{{ $product['key'] }}" data-label="{{ $product['label'] }}" data-image="{{ $product['image'] }}" data-mask="{{ $product['mask'] }}" data-light="{{ $product['light'] }}" data-print-left="{{ $product['print']['left'] }}" data-print-top="{{ $product['print']['top'] }}" data-print-width="{{ $product['print']['width'] }}" data-print-height="{{ $product['print']['height'] }}">
-                                <span class="product-icon"><img src="{{ $product['image'] }}" alt="{{ $product['label'] }} mockup"></span>
+                            <button class="product-card {{ $loop->first ? 'is-active' : '' }}" type="button" data-product="{{ $product['key'] }}" data-label="{{ $product['label'] }}" data-front-image="{{ $product['front_image'] }}" data-back-image="{{ $product['back_image'] }}" data-front-mask="{{ $product['front_mask'] }}" data-back-mask="{{ $product['back_mask'] }}" data-light="{{ $product['light'] }}" data-front-print-left="{{ $product['front_print']['left'] }}" data-front-print-top="{{ $product['front_print']['top'] }}" data-front-print-width="{{ $product['front_print']['width'] }}" data-front-print-height="{{ $product['front_print']['height'] }}" data-back-print-left="{{ $product['back_print']['left'] }}" data-back-print-top="{{ $product['back_print']['top'] }}" data-back-print-width="{{ $product['back_print']['width'] }}" data-back-print-height="{{ $product['back_print']['height'] }}">
+                                <span class="product-icon"><img src="{{ $product['front_image'] }}" alt="{{ $product['label'] }} mockup"></span>
                                 <strong>{{ $product['label'] }}</strong>
                             </button>
                         @endforeach
@@ -265,8 +266,8 @@
 
                 <div class="canvas-area" id="canvasArea">
                     <div class="canvas" id="canvas">
-                        <div class="mockup tshirt" id="mockup" data-light="light" data-color-mode="white" style="--product-color: #ffffff; --product-mask-image: url('{{ asset('images/studio-tshirt-color-mask.png') }}'); --print-left: 31%; --print-top: 30%; --print-width: 38%; --print-height: 29%;">
-                            <img class="mockup-image" id="mockupImage" src="{{ asset('images/studio-tshirt-transparent.png') }}" alt="Selected product mockup">
+                        <div class="mockup tshirt" id="mockup" data-light="light" data-color-mode="white" style="--product-color: #ffffff; --product-mask-image: url('{{ asset('images/studio-tshirt-front.png') }}'); --print-left: 31%; --print-top: 31%; --print-width: 38%; --print-height: 31%;">
+                            <img class="mockup-image" id="mockupImage" src="{{ asset('images/studio-tshirt-front.png') }}" alt="Selected product mockup">
                             <span class="color-tint"></span>
                             <svg class="product-vector" viewBox="0 0 600 600" role="img" aria-label="Selected product template">
                                 <defs>
@@ -412,6 +413,26 @@
             mockup.setAttribute('aria-label', `Selected ${state.productLabel} color ${normalized}`);
         }
 
+        function activeProductButton() {
+            return document.querySelector(`[data-product="${state.product}"]`);
+        }
+
+        function applyProductView(button = activeProductButton()) {
+            if (!button) return;
+
+            const view = state.view === 'back' ? 'back' : 'front';
+            mockupImage.src = button.dataset[`${view}Image`];
+            mockupImage.alt = `${state.productLabel} ${view} mockup`;
+            mockup.style.setProperty('--product-mask-image', `url("${button.dataset[`${view}Mask`] || button.dataset[`${view}Image`]}")`);
+            mockup.style.setProperty('--print-left', button.dataset[`${view}PrintLeft`]);
+            mockup.style.setProperty('--print-top', button.dataset[`${view}PrintTop`]);
+            mockup.style.setProperty('--print-width', button.dataset[`${view}PrintWidth`]);
+            mockup.style.setProperty('--print-height', button.dataset[`${view}PrintHeight`]);
+            mockup.style.transform = 'none';
+            printArea.style.transform = 'none';
+            updateSelectionBox();
+        }
+
         function setSelected(layer) {
             state.selected = layer;
             updateSelectionBox();
@@ -482,13 +503,7 @@
                 state.productLabel = button.dataset.label;
                 mockup.className = `mockup ${state.product}`;
                 mockup.dataset.light = button.dataset.light || 'light';
-                mockupImage.src = button.dataset.image;
-                mockupImage.alt = `${state.productLabel} mockup`;
-                mockup.style.setProperty('--product-mask-image', `url("${button.dataset.mask || button.dataset.image}")`);
-                mockup.style.setProperty('--print-left', button.dataset.printLeft);
-                mockup.style.setProperty('--print-top', button.dataset.printTop);
-                mockup.style.setProperty('--print-width', button.dataset.printWidth);
-                mockup.style.setProperty('--print-height', button.dataset.printHeight);
+                applyProductView(button);
                 applyProductColor(state.color);
                 updateSelectionBox();
             });
@@ -508,8 +523,7 @@
             button.addEventListener('click', () => {
                 state.view = button.dataset.view;
                 document.querySelectorAll('[data-view]').forEach(item => item.classList.toggle('is-active', item.dataset.view === state.view));
-                mockup.style.transform = state.view === 'back' ? 'rotateY(180deg)' : 'none';
-                printArea.style.transform = state.view === 'back' ? 'rotateY(180deg)' : 'none';
+                applyProductView();
             });
         });
 

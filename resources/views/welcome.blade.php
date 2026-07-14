@@ -20,7 +20,7 @@
                 ['name' => 'Polo T-Shirts', 'image' => asset('images/aurix-polo-category.png')],
                 ['name' => 'Hoodies', 'image' => asset('images/aurix-hoodie-category.png')],
                 ['name' => 'Kids', 'image' => asset('images/aurix-kids-category.png')],
-                ['name' => 'Business Cards', 'image' => asset('images/aurix-branding-collage.png')],
+                ['name' => 'Business Cards', 'image' => asset('images/aurix-business-cards.png')],
                 ['name' => 'Brochures', 'image' => asset('images/aurix-branding-collage.png')],
             ];
             $homepageCategories = isset($workCategories) && $workCategories->count()
@@ -50,11 +50,11 @@
                 ['title' => 'Laser Etching', 'copy' => 'Clean permanent branding for tumblers, awards, plaques, and gifts.'],
                 ['title' => 'Large Format', 'copy' => 'Banners, backdrops, wall graphics, vehicle stickers, and shop signage.'],
             ];
-            $featuredProducts = [
+            $featuredProducts = $featuredProducts ?? [
                 ['cat' => 'Apparel', 'name' => 'Custom T-Shirts', 'price' => '1,200', 'image' => asset('images/aurix-tshirt-category.png')],
                 ['cat' => 'Apparel', 'name' => 'Custom Hoodies', 'price' => '2,800', 'image' => asset('images/aurix-hoodie-category.png')],
                 ['cat' => 'Corporate', 'name' => 'Polo T-Shirts', 'price' => '1,800', 'image' => asset('images/aurix-polo-category.png')],
-                ['cat' => 'Print', 'name' => 'Business Cards', 'price' => '10', 'image' => asset('images/aurix-branding-collage.png')],
+                ['cat' => 'Print', 'name' => 'Business Cards', 'price' => '45', 'image' => asset('images/aurix-business-cards.png')],
             ];
         @endphp
 
