@@ -3,6 +3,7 @@
 @section('content')
 @php
     $isEditing = $product->exists;
+    $galleryImages = $isEditing ? $product->images : collect();
 @endphp
 
 <section class="content-header">
@@ -93,6 +94,29 @@
                     @if($isEditing && $product->image_url)
                         <div class="current-image">
                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                        </div>
+                    @endif
+                </div>
+
+                <div class="form-group">
+                    <label for="galleryImages">Gallery Images (optional)</label>
+                    <label class="file-control" for="galleryImages">
+                        <span id="gallery-file-label">Choose gallery files</span>
+                        <input type="file" id="galleryImages" name="gallery_images[]" accept="image/*" multiple>
+                    </label>
+                    <p class="form-hint">Select multiple images to show as clickable thumbnails on the product page.</p>
+
+                    @if($galleryImages->isNotEmpty())
+                        <div class="current-gallery">
+                            @foreach($galleryImages as $galleryImage)
+                                <label class="gallery-thumb">
+                                    <img src="{{ $galleryImage->image_url }}" alt="{{ $product->name }} gallery image">
+                                    <span>
+                                        <input type="checkbox" name="remove_gallery_images[]" value="{{ $galleryImage->id }}">
+                                        Remove
+                                    </span>
+                                </label>
+                            @endforeach
                         </div>
                     @endif
                 </div>
@@ -227,6 +251,45 @@
         border: 1px solid #e2e8f0;
     }
 
+    .form-hint {
+        margin: 7px 0 0;
+        color: #64748b;
+        font-size: 0.86rem;
+    }
+
+    .current-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    .gallery-thumb {
+        display: grid;
+        gap: 8px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+        padding: 8px;
+    }
+
+    .gallery-thumb img {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: contain;
+        border-radius: 6px;
+        background: #ffffff;
+    }
+
+    .gallery-thumb span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #334155;
+        font-size: 0.82rem;
+        font-weight: 600;
+    }
+
     .form-footer {
         display: flex;
         justify-content: flex-end;
@@ -311,6 +374,13 @@
 
     document.getElementById('productImage')?.addEventListener('change', function () {
         document.getElementById('file-label').textContent = this.files[0]?.name || 'Choose file';
+    });
+
+    document.getElementById('galleryImages')?.addEventListener('change', function () {
+        const fileCount = this.files.length;
+        document.getElementById('gallery-file-label').textContent = fileCount
+            ? `${fileCount} gallery file${fileCount === 1 ? '' : 's'} selected`
+            : 'Choose gallery files';
     });
 </script>
 @endsection

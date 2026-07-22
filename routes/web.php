@@ -340,6 +340,8 @@ Route::get('/products', function () {
 })->name('public.products.index');
 
 Route::get('/products/{product:slug}', function (Product $product) {
+    $product->load(['category', 'images']);
+
     return view('products.show', compact('product'));
 })->name('public.products.show');
 

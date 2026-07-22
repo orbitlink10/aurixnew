@@ -72,18 +72,14 @@
         .sort { display: flex; align-items: center; gap: 14px; font-size: 16px; white-space: nowrap; }
         .sort select { min-width: 218px; border: 1px solid var(--line); border-radius: 14px; background: #fffaf1; padding: 14px 18px; font-size: 16px; }
         .product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
-        .product-card { overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: #fffaf1; box-shadow: 0 18px 38px rgba(23, 20, 15, .06); }
-        .product-media { display: grid; aspect-ratio: 1 / .78; margin: 22px 22px 0; place-items: center; overflow: hidden; border-radius: 22px; background: #efe7d8; }
-        .product-media img { width: 100%; height: 100%; object-fit: cover; }
-        .product-info { padding: 22px; }
-        .product-meta { display: flex; justify-content: space-between; gap: 12px; color: var(--ink); font-size: 14px; }
-        .product-info h2 { margin: 20px 0 10px; font-size: 18px; line-height: 1.35; }
-        .price { display: block; margin-bottom: 18px; font-size: 21px; font-weight: 500; }
-        .card-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-        .rating { color: #111; font-size: 14px; }
-        .sold { color: #111; font-size: 14px; }
-        .card-actions { display: flex; gap: 12px; }
-        .small-action { display: grid; width: 54px; height: 54px; place-items: center; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--ink); font-size: 28px; cursor: pointer; }
+        .product-card { display: grid; overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: #fffaf1; box-shadow: 0 18px 38px rgba(23, 20, 15, .06); transition: transform .18s ease, box-shadow .18s ease; }
+        .product-card:hover { transform: translateY(-3px); box-shadow: 0 24px 46px rgba(23, 20, 15, .1); }
+        .product-media { display: grid; aspect-ratio: 4 / 3; margin: 22px 22px 0; place-items: center; overflow: hidden; border: 1px solid rgba(23, 20, 15, 0.08); border-radius: 22px; background: #ffffff; }
+        .product-media img { width: 100%; height: 100%; object-fit: contain; }
+        .product-media span { color: var(--muted); font-weight: 700; }
+        .product-info { padding: 20px 22px 26px; text-align: center; }
+        .product-info h2 { margin: 0; color: #0f172a; font-size: 19px; line-height: 1.3; font-weight: 700; }
+        .product-info h2 a { display: inline-block; }
         .empty-state { border: 1px dashed rgba(201, 148, 47, .42); border-radius: 28px; background: #fffaf1; padding: 52px; text-align: center; }
         .empty-state h2 { margin: 0 0 10px; font-size: 28px; }
         .empty-state p { margin: 0; color: var(--muted); }
@@ -268,29 +264,7 @@
                                     @endif
                                 </a>
                                 <div class="product-info">
-                                    <div class="product-meta">
-                                        <span>{{ $product->category?->name ?: $product->subcategory_name ?: $product->category_name ?: 'Product' }}</span>
-                                        <span>{{ $product->subcategory_name ?: $product->category?->name ?: 'Custom' }}</span>
-                                    </div>
                                     <h2><a href="{{ route('public.products.show', ['product' => $product->slug]) }}">{{ $product->name }}</a></h2>
-                                    <span class="price">KSh {{ number_format((float) $product->price) }}</span>
-                                    <div class="card-bottom">
-                                        <span class="rating">Star 4.8</span>
-                                        <span class="sold">{{ max(0, (int) $product->quantity) }} sold</span>
-                                        <div class="card-actions">
-                                            <button class="small-action" type="button" aria-label="Save {{ $product->name }}">♡</button>
-                                            <button
-                                                class="small-action"
-                                                type="button"
-                                                data-cart-add
-                                                data-product-id="{{ $product->id }}"
-                                                data-product-name="{{ $product->name }}"
-                                                data-product-price="{{ (float) $product->price }}"
-                                                data-product-image="{{ $product->image_url }}"
-                                                aria-label="Add {{ $product->name }} to cart"
-                                            >+</button>
-                                        </div>
-                                    </div>
                                 </div>
                             </article>
                         @if($loop->last)</div>@endif

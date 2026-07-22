@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -52,6 +53,8 @@ class ProductController extends Controller
             'google_merchant' => ['nullable', 'boolean'],
             'image' => ['nullable', 'image', 'max:5120'],
             'photo' => ['nullable', 'image', 'max:5120'],
+            'gallery_images' => ['nullable', 'array', 'max:12'],
+            'gallery_images.*' => ['image', 'max:5120'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
@@ -67,9 +70,10 @@ class ProductController extends Controller
         if ($image) {
             $data['image_path'] = $image->store('products', 'uploads');
         }
-        unset($data['photo'], $data['image']);
+        unset($data['photo'], $data['image'], $data['gallery_images']);
 
-        Product::create($data);
+        $product = Product::create($data);
+        $this->storeGalleryImages($request, $product);
 
         return redirect()->route('admin.products.index')->with('success', 'Product created.');
     }
@@ -82,7 +86,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         return view('admin.products.form', [
-            'product' => $product,
+            'product' => $product->loadMissing('images'),
             'categories' => ProductCategory::with('children')->parents()->orderBy('name')->get(),
         ]);
     }
@@ -103,6 +107,10 @@ class ProductController extends Controller
             'google_merchant' => ['nullable', 'boolean'],
             'image' => ['nullable', 'image', 'max:5120'],
             'photo' => ['nullable', 'image', 'max:5120'],
+            'gallery_images' => ['nullable', 'array', 'max:12'],
+            'gallery_images.*' => ['image', 'max:5120'],
+            'remove_gallery_images' => ['nullable', 'array'],
+            'remove_gallery_images.*' => ['integer', 'exists:product_images,id'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
@@ -122,9 +130,11 @@ class ProductController extends Controller
             }
             $data['image_path'] = $image->store('products', 'uploads');
         }
-        unset($data['photo'], $data['image']);
+        unset($data['photo'], $data['image'], $data['gallery_images'], $data['remove_gallery_images']);
 
         $product->update($data);
+        $this->removeGalleryImages($request, $product);
+        $this->storeGalleryImages($request, $product);
         $this->syncPricesForMatchingProducts($product);
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated.');
@@ -155,8 +165,60 @@ class ProductController extends Controller
             Storage::disk('public')->delete($product->image_path); // legacy clean-up
         }
 
+        $product->loadMissing('images');
+        $product->images->each(fn (ProductImage $image) => $this->deleteProductImage($image));
+
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Product removed.');
+    }
+
+    private function storeGalleryImages(Request $request, Product $product): void
+    {
+        $images = $request->file('gallery_images', []);
+
+        if (! is_array($images) || empty($images)) {
+            return;
+        }
+
+        $nextSortOrder = ((int) ($product->images()->max('sort_order') ?? -1)) + 1;
+
+        foreach ($images as $image) {
+            if (! $image) {
+                continue;
+            }
+
+            $product->images()->create([
+                'image_path' => $image->store('products', 'uploads'),
+                'sort_order' => $nextSortOrder++,
+            ]);
+        }
+    }
+
+    private function removeGalleryImages(Request $request, Product $product): void
+    {
+        $imageIds = collect($request->input('remove_gallery_images', []))
+            ->map(fn ($id) => (int) $id)
+            ->filter()
+            ->values();
+
+        if ($imageIds->isEmpty()) {
+            return;
+        }
+
+        $product->images()
+            ->whereKey($imageIds)
+            ->get()
+            ->each(fn (ProductImage $image) => $this->deleteProductImage($image));
+    }
+
+    private function deleteProductImage(ProductImage $image): void
+    {
+        if ($image->image_path) {
+            Storage::disk('uploads')->delete($image->image_path);
+            Storage::disk('public')->delete($image->image_path);
+        }
+
+        $image->delete();
     }
 }

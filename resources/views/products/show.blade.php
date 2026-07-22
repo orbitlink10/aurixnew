@@ -153,12 +153,16 @@
             gap: 12px;
         }
         .thumb {
+            display: grid;
+            width: 100%;
             aspect-ratio: 1;
             border: 2px solid transparent;
             border-radius: 10px;
             background: #ffffff;
             padding: 6px;
             box-shadow: 0 1px 0 rgba(23, 20, 15, 0.06);
+            cursor: pointer;
+            place-items: center;
         }
         .thumb.is-active {
             border-color: #c9942f;
@@ -169,14 +173,18 @@
             height: 100%;
             object-fit: contain;
         }
+        .thumb img {
+            border-radius: 7px;
+        }
         .hero-media {
-            min-height: 560px;
             display: grid;
+            height: min(62vw, 620px);
+            min-height: 460px;
             place-items: center;
             overflow: hidden;
             border-radius: 14px;
             background: #fffaf1;
-            padding: 28px;
+            padding: 18px;
             box-shadow: 0 14px 36px rgba(23, 20, 15, 0.08);
         }
         .image-empty {
@@ -573,6 +581,11 @@
         $markedPrice = (float) ($product->marked_price ?? 0);
         $quantity = max(1, (int) ($product->quantity ?: 10));
         $unitPrice = $quantity > 0 && $price > 0 ? $price / $quantity : $price;
+        $galleryImages = collect([$product->image_url])
+            ->merge($product->relationLoaded('images') ? $product->images->pluck('image_url') : [])
+            ->filter()
+            ->unique()
+            ->values();
         $benefits = [
             'Ideal for business events, gifts, and brand campaigns.',
             'Upload your finished artwork or request design support.',
@@ -633,19 +646,25 @@
             <section class="product-top">
                 <div class="gallery">
                     <div class="thumbs" aria-label="Product gallery thumbnails">
-                        @for($i = 0; $i < 5; $i++)
-                            <div class="thumb {{ $i === 0 ? 'is-active' : '' }}">
-                                @if($product->image_url)
-                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }} thumbnail">
-                                @else
-                                    <div class="image-empty">Image</div>
-                                @endif
+                        @forelse($galleryImages as $imageUrl)
+                            <button
+                                class="thumb {{ $loop->first ? 'is-active' : '' }}"
+                                type="button"
+                                data-gallery-thumb
+                                data-gallery-src="{{ $imageUrl }}"
+                                aria-label="View {{ $product->name }} image {{ $loop->iteration }}"
+                            >
+                                <img src="{{ $imageUrl }}" alt="{{ $product->name }} thumbnail {{ $loop->iteration }}">
+                            </button>
+                        @empty
+                            <div class="thumb is-active">
+                                <div class="image-empty">Image</div>
                             </div>
-                        @endfor
+                        @endforelse
                     </div>
                     <div class="hero-media">
-                        @if($product->image_url)
-                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                        @if($galleryImages->isNotEmpty())
+                            <img id="productMainImage" src="{{ $galleryImages->first() }}" alt="{{ $product->name }}">
                         @else
                             <div class="image-empty">No product image</div>
                         @endif
@@ -791,5 +810,21 @@
             <a href="{{ route('public.products.index') }}">Back to products</a>
         </div>
     </footer>
+    <script>
+        document.querySelectorAll('[data-gallery-thumb]').forEach((thumb) => {
+            thumb.addEventListener('click', () => {
+                const mainImage = document.getElementById('productMainImage');
+                const nextSource = thumb.dataset.gallerySrc;
+
+                if (!mainImage || !nextSource) {
+                    return;
+                }
+
+                mainImage.src = nextSource;
+                document.querySelectorAll('[data-gallery-thumb]').forEach((item) => item.classList.remove('is-active'));
+                thumb.classList.add('is-active');
+            });
+        });
+    </script>
 </body>
 </html>
