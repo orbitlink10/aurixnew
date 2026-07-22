@@ -67,16 +67,8 @@ Route::get('/', function () {
 
     $homepageProducts = collect();
     if (Schema::hasTable('products')) {
-        $legacyBrand = 'Nai'.' Prints';
-
         $homepageProducts = Product::query()
-            ->where('is_active', true)
             ->with('category')
-            ->where(function ($products) use ($legacyBrand) {
-                $products->whereNull('category_name')
-                    ->orWhere('category_name', 'not like', '%'.$legacyBrand.'%');
-            })
-            ->where('name', 'not like', '%'.$legacyBrand.'%')
             ->orderByDesc('updated_at')
             ->take(8)
             ->get();

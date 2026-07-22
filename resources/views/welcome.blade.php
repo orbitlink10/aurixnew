@@ -196,7 +196,7 @@
                                 </span>
                             </a>
                         @empty
-                            <p class="taf-dashboard-empty">No active dashboard products are available yet.</p>
+                            <p class="taf-dashboard-empty">No dashboard products have been added yet.</p>
                         @endforelse
                     </div>
                 </div>
