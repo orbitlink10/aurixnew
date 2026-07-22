@@ -79,4 +79,14 @@ class HomepageProductsTest extends TestCase
         $response->assertSee('1 item');
         $response->assertDontSee('No dashboard categories have been added yet.');
     }
+
+    public function test_homepage_uses_main_menu_items_when_no_category_data_exists(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertOk();
+        $response->assertSee('Women');
+        $response->assertSee('Men');
+        $response->assertDontSee('No dashboard categories have been added yet.');
+    }
 }

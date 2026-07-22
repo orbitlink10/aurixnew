@@ -117,6 +117,47 @@ Route::get('/', function () {
         }
     }
 
+    if ($homepageCategories->isEmpty()) {
+        $homepageCategories = collect($mainMenuItems)
+            ->map(function ($item) {
+                $label = trim((string) ($item['label'] ?? ''));
+                $rawUrl = trim((string) ($item['url'] ?? ''));
+
+                if ($label === '') {
+                    return null;
+                }
+
+                $itemCount = null;
+                if (Schema::hasTable('products')) {
+                    $matchedProducts = Product::query()
+                        ->where(function ($products) use ($label) {
+                            $products->where('category_name', $label)
+                                ->orWhere('subcategory_name', $label)
+                                ->orWhereHas('category', fn ($category) => $category->where('name', $label));
+                        })
+                        ->count();
+
+                    $itemCount = $matchedProducts > 0 ? $matchedProducts : null;
+                }
+
+                return (object) [
+                    'name' => $label,
+                    'slug' => (string) str($label)->slug(),
+                    'href' => $rawUrl === ''
+                        ? route('public.products.index', ['category' => str($label)->slug()])
+                        : ($rawUrl === '/'
+                            ? url('/')
+                            : (str($rawUrl)->startsWith(['http://', 'https://', '#']) ? $rawUrl : url($rawUrl))),
+                    'image_url' => null,
+                    'item_count' => $itemCount,
+                ];
+            })
+            ->filter()
+            ->reject(fn ($category) => in_array((string) str($category->name)->lower(), ['home', 'shop'], true))
+            ->take(8)
+            ->values();
+    }
+
     return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'contactSettings', 'mainMenuItems', 'homepageCategories', 'homepageProducts'));
 });
 

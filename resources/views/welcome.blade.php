@@ -24,7 +24,7 @@
                     'name' => $category->name,
                     'image' => $category->image_url ?: asset('images/aurix-design-categories.png'),
                     'item_count' => $category->item_count ?? $category->products_count ?? null,
-                    'href' => route('public.products.index', ['category' => $category->slug ?? \Illuminate\Support\Str::slug($category->name)]),
+                    'href' => $category->href ?? route('public.products.index', ['category' => $category->slug ?? \Illuminate\Support\Str::slug($category->name)]),
                 ])->values()->all()
                 : [];
             $homepageHeroImages = isset($heroImageUrls) && count($heroImageUrls)
