@@ -28,6 +28,7 @@ use App\Models\BlogPost;
 use App\Models\SiteSetting;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\WorkCategory;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -54,14 +55,10 @@ Route::get('/', function () {
         ? SiteSetting::mainMenuItems()
         : SiteSetting::defaultMainMenuItems();
 
-    $homepageSubCategories = Schema::hasTable('product_categories')
-        ? ProductCategory::withCount(['products' => fn ($products) => $products->where('is_active', true)])
-            ->whereNotNull('parent_id')
-            ->when(
-                Schema::hasColumn('product_categories', 'menu_sort_order'),
-                fn ($query) => $query->orderBy('menu_sort_order')
-            )
-            ->orderBy('name')
+    $homepageCategories = Schema::hasTable('work_categories')
+        ? WorkCategory::where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderByDesc('created_at')
             ->get()
         : collect();
 
@@ -74,7 +71,7 @@ Route::get('/', function () {
             ->get();
     }
 
-    return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'contactSettings', 'mainMenuItems', 'homepageSubCategories', 'homepageProducts'));
+    return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'contactSettings', 'mainMenuItems', 'homepageCategories', 'homepageProducts'));
 });
 
 Route::get('/embroidery', function () {

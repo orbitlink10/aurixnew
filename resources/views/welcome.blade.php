@@ -15,12 +15,16 @@
     <body class="taf-page">
         @php
             $liveAssetBase = 'https://aurixbranding.co.ke';
-            $homepageCategories = isset($homepageSubCategories) && $homepageSubCategories->count()
-                ? $homepageSubCategories->map(fn ($category) => [
+            $homepageCategoryRecords = isset($homepageCategories) ? collect($homepageCategories) : collect();
+            if ($homepageCategoryRecords->isEmpty() && isset($homepageSubCategories)) {
+                $homepageCategoryRecords = collect($homepageSubCategories);
+            }
+            $homepageCategories = $homepageCategoryRecords->count()
+                ? $homepageCategoryRecords->map(fn ($category) => [
                     'name' => $category->name,
                     'image' => $category->image_url ?: asset('images/aurix-design-categories.png'),
-                    'item_count' => $category->products_count,
-                    'href' => route('public.products.index', ['category' => $category->slug]),
+                    'item_count' => $category->item_count ?? $category->products_count ?? null,
+                    'href' => route('public.products.index', ['category' => $category->slug ?? \Illuminate\Support\Str::slug($category->name)]),
                 ])->values()->all()
                 : [];
             $homepageHeroImages = isset($heroImageUrls) && count($heroImageUrls)
@@ -38,8 +42,12 @@
             $phone = $contact['phone'] ?: '+254 700816670';
             $quoteUrl = $whatsappUrl;
             $tickerText = 'Premium Branding Solutions - Custom T-Shirts - Corporate Gifts - Vehicle Branding - Signage & Roll-Up Banners - Business Cards - Logo Design - High-Quality Printing - Same-Day Printing Available - Nationwide Delivery - Free Quotes';
-            $homepageProductCards = isset($homepageProducts) && $homepageProducts->count()
-                ? $homepageProducts->map(fn ($product) => [
+            $homepageProductRecords = isset($homepageProducts) ? collect($homepageProducts) : collect();
+            if ($homepageProductRecords->isEmpty() && \Illuminate\Support\Facades\Schema::hasTable('products')) {
+                $homepageProductRecords = \App\Models\Product::with('category')->orderByDesc('updated_at')->take(8)->get();
+            }
+            $homepageProductCards = $homepageProductRecords->count()
+                ? $homepageProductRecords->map(fn ($product) => [
                     'cat' => $product->category?->name ?: $product->category_name ?: 'Product',
                     'name' => $product->name,
                     'price' => (float) $product->price,
@@ -137,7 +145,7 @@
                                 </small>
                             </a>
                         @empty
-                            <p class="taf-dashboard-empty">No sub categories have been added from the dashboard yet.</p>
+                            <p class="taf-dashboard-empty">No dashboard categories have been added yet.</p>
                         @endforelse
                     </div>
                 </div>
