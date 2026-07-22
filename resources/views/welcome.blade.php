@@ -15,14 +15,6 @@
     <body class="taf-page">
         @php
             $liveAssetBase = 'https://aurixbranding.co.ke';
-            $fallbackCategories = [
-                ['name' => 'T-shirt', 'image' => asset('images/aurix-tshirt-category.png'), 'item_count' => 16, 'href' => route('public.products.index', ['category' => 't-shirt'])],
-                ['name' => 'Polo T-shirt', 'image' => asset('images/aurix-polo-category.png'), 'item_count' => 8, 'href' => route('public.products.index', ['category' => 'polo-t-shirt'])],
-                ['name' => 'Hoodie', 'image' => asset('images/aurix-hoodie-category.png'), 'item_count' => 9, 'href' => route('public.products.index', ['category' => 'hoodie'])],
-                ['name' => 'Kids', 'image' => asset('images/aurix-kids-category.png'), 'item_count' => 6, 'href' => route('public.products.index', ['category' => 'kids'])],
-                ['name' => 'Embroidery', 'image' => asset('images/aurix-embroidery-production-collage.png'), 'item_count' => 5, 'href' => route('public.embroidery')],
-                ['name' => 'Create Design', 'image' => asset('images/aurix-branding-collage.png'), 'item_count' => null, 'href' => route('public.create-design')],
-            ];
             $homepageCategories = isset($homepageSubCategories) && $homepageSubCategories->count()
                 ? $homepageSubCategories->map(fn ($category) => [
                     'name' => $category->name,
@@ -30,7 +22,7 @@
                     'item_count' => $category->products_count,
                     'href' => route('public.products.index', ['category' => $category->slug]),
                 ])->values()->all()
-                : $fallbackCategories;
+                : [];
             $homepageHeroImages = isset($heroImageUrls) && count($heroImageUrls)
                 ? array_values($heroImageUrls)
                 : [
@@ -43,17 +35,9 @@
             $contact = $contactSettings ?? \App\Models\SiteSetting::defaultContactSettings();
             $whatsappPhone = '254700816670';
             $whatsappUrl = 'https://wa.me/'.$whatsappPhone.'?text='.rawurlencode($contact['whatsapp_message']);
+            $phone = $contact['phone'] ?: '+254 700816670';
+            $quoteUrl = $whatsappUrl;
             $tickerText = 'Premium Branding Solutions - Custom T-Shirts - Corporate Gifts - Vehicle Branding - Signage & Roll-Up Banners - Business Cards - Logo Design - High-Quality Printing - Same-Day Printing Available - Nationwide Delivery - Free Quotes';
-            $fallbackProductCards = [
-                ['cat' => 'Apparel', 'name' => 'Branded Cap', 'price' => 570, 'marked_price' => 600, 'image' => asset('images/studio-cap-mockup.png'), 'href' => route('public.products.index', ['q' => 'Branded Cap'])],
-                ['cat' => 'Drinkware', 'name' => 'Branded Ceramic Mug', 'price' => 523, 'marked_price' => 550, 'image' => asset('images/studio-mug-mockup.png'), 'href' => route('public.products.index', ['q' => 'Branded Ceramic Mug'])],
-                ['cat' => 'Apparel', 'name' => 'Sweatshirt', 'price' => 2340, 'marked_price' => 2600, 'image' => asset('images/studio-sweater-mockup.png'), 'href' => route('public.products.index', ['q' => 'Sweatshirt'])],
-                ['cat' => 'Bags', 'name' => 'Tote Bag', 'price' => 595, 'marked_price' => 700, 'image' => asset('images/studio-totebag-front.png'), 'href' => route('public.products.index', ['q' => 'Tote Bag'])],
-                ['cat' => 'Kids', 'name' => 'Kids Tshirt', 'price' => 936, 'marked_price' => 1200, 'image' => asset('images/studio-kids-front.png'), 'href' => route('public.products.index', ['q' => 'Kids Tshirt'])],
-                ['cat' => 'Apparel', 'name' => 'Hoodie', 'price' => 2500, 'marked_price' => null, 'image' => asset('images/studio-hoodie-mockup.png'), 'href' => route('public.products.index', ['q' => 'Hoodie'])],
-                ['cat' => 'Apparel', 'name' => 'Men Tshirt', 'price' => 1050, 'marked_price' => 1500, 'image' => asset('images/studio-tshirt-front.png'), 'href' => route('public.products.index', ['q' => 'Men Tshirt'])],
-                ['cat' => 'Apparel', 'name' => 'Women T-Shirts', 'price' => 1050, 'marked_price' => 1500, 'image' => asset('images/studio-tshirt-mockup.png'), 'href' => route('public.products.index', ['q' => 'Women T-Shirts'])],
-            ];
             $homepageProductCards = isset($homepageProducts) && $homepageProducts->count()
                 ? $homepageProducts->map(fn ($product) => [
                     'cat' => $product->category?->name ?: $product->category_name ?: 'Product',
@@ -63,7 +47,7 @@
                     'image' => $product->image_url ?: asset('images/aurix-branding-collage.png'),
                     'href' => route('public.products.show', ['product' => $product->slug]),
                 ])->values()->all()
-                : $fallbackProductCards;
+                : [];
         @endphp
 
         <div class="taf-marquee" aria-label="Aurix branding services">
@@ -138,7 +122,7 @@
                         <a href="{{ route('public.products.index') }}">View all categories <span aria-hidden="true">&#8599;</span></a>
                     </div>
                     <div class="taf-category-row">
-                        @foreach($homepageCategories as $category)
+                        @forelse($homepageCategories as $category)
                             <a href="{{ $category['href'] }}" class="taf-category-card">
                                 <span class="taf-category-media">
                                     <img src="{{ $category['image'] }}" alt="{{ $category['name'] }}">
@@ -152,7 +136,9 @@
                                     @endif
                                 </small>
                             </a>
-                        @endforeach
+                        @empty
+                            <p class="taf-dashboard-empty">No sub categories have been added from the dashboard yet.</p>
+                        @endforelse
                     </div>
                 </div>
             </section>
@@ -168,7 +154,7 @@
                     </div>
 
                     <div class="taf-product-grid">
-                        @foreach($homepageProductCards as $product)
+                        @forelse($homepageProductCards as $product)
                             @php
                                 $price = (float) $product['price'];
                                 $markedPrice = (float) ($product['marked_price'] ?? 0);
@@ -209,44 +195,63 @@
                                     </span>
                                 </span>
                             </a>
-                        @endforeach
+                        @empty
+                            <p class="taf-dashboard-empty">No active dashboard products are available yet.</p>
+                        @endforelse
                     </div>
                 </div>
             </section>
         </main>
 
-        <footer class="taf-footer">
-            <div class="taf-wrap taf-footer-grid">
-                <div>
-                    <h3>Aurix Branding</h3>
-                    <p>Custom apparel, promotional products, print, and signage for brands that need dependable production.</p>
-                </div>
-                <div>
-                    <h4>Shop</h4>
-                    <a href="{{ route('public.products.index') }}">All Products</a>
-                    <a href="{{ route('public.products.index', ['q' => 'Apparel']) }}">Apparel</a>
-                    <a href="{{ route('public.products.index', ['q' => 'Banners']) }}">Banners</a>
-                </div>
-                <div>
-                    <h4>Support</h4>
-                    <a href="{{ $whatsappUrl }}">WhatsApp Quote</a>
-                    @if($contact['email'])
-                        <a href="mailto:{{ $contact['email'] }}">{{ $contact['email'] }}</a>
-                    @endif
-                    @if($contact['address'])
-                        <span>{{ $contact['address'] }}</span>
-                    @endif
-                    <a href="{{ url('/login') }}">Client Login</a>
-                    <a href="{{ url('/') }}">Home</a>
-                </div>
-                <form class="taf-newsletter" action="{{ route('public.products.index') }}" method="get">
-                    <h4>Find products faster</h4>
-                    <div>
-                        <input name="q" placeholder="Search products">
-                        <button type="submit">Search</button>
+        <footer class="site-footer">
+            <section class="footer-main">
+                <div class="footer-container">
+                    <div class="footer-grid">
+                        <div>
+                            <h2 class="footer-title">CONTACT US</h2>
+                            <a class="footer-brand" href="{{ url('/') }}"><img src="{{ asset('images/aurix-branding-logo.png') }}" alt="Aurix Branding logo"></a>
+                            <ul class="footer-contact">
+                                <li><span class="footer-icon">&#8250;</span><span>{{ $phone }}</span></li>
+                                @if(!empty($contact['email']))
+                                    <li><span class="footer-icon">&#8250;</span><span>{{ $contact['email'] }}</span></li>
+                                @endif
+                                <li><span class="footer-icon">&#8250;</span><span>Mon-Fri: 8am - 5pm</span></li>
+                                <li><span class="footer-icon">&#8250;</span><span>Sat: 8am - 12pm</span></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h2 class="footer-title">Our Services</h2>
+                            <ul class="footer-services">
+                                <li><span class="footer-icon">&#8250;</span><a href="{{ url('/products') }}">Printed Products</a></li>
+                                <li><span class="footer-icon">&#8250;</span><a href="{{ url('/#services') }}">Brand Strategy</a></li>
+                                <li><span class="footer-icon">&#8250;</span><a href="{{ url('/#services') }}">Signage</a></li>
+                                <li><span class="footer-icon">&#8250;</span><a href="{{ url('/#services') }}">Uniform Branding</a></li>
+                                <li><span class="footer-icon">&#8250;</span><a href="{{ url('/#services') }}">Packaging</a></li>
+                                <li><span class="footer-icon">&#8250;</span><a href="{{ $quoteUrl }}">Quote Request</a></li>
+                                <li><span class="footer-icon">&#8250;</span><a href="{{ url('/products') }}">Branding Guides</a></li>
+                                <li><span class="footer-icon">&#8250;</span><a href="{{ url('/') }}">Aurix Branding</a></li>
+                            </ul>
+                            <h2 class="footer-title">Our Office Address</h2>
+                            <div class="footer-address"><span class="footer-icon">&#8250;</span><span>{{ $contact['address'] ?: 'Nairobi, Kenya. Branding and printing support available across Kenya.' }}</span></div>
+                        </div>
+                        <div>
+                            <h2 class="footer-title">Find Us On Social Media</h2>
+                            <div class="footer-social">
+                                <a href="#" aria-label="Facebook">f</a>
+                                <a href="#" aria-label="Twitter">x</a>
+                                <a href="#" aria-label="Instagram">ig</a>
+                                <a href="#" aria-label="LinkedIn">in</a>
+                            </div>
+                            <h2 class="footer-title">Signup To Our Newsletter</h2>
+                            <form class="footer-newsletter" action="{{ url('/') }}" method="get">
+                                <input type="email" name="email" placeholder="Email Address..." aria-label="Email Address">
+                                <button type="submit">Subscribe!</button>
+                            </form>
+                        </div>
                     </div>
-                </form>
-            </div>
+                    <div class="footer-copy">&copy; {{ now()->year }} Aurix Branding. Branding, printing, signage, uniforms, packaging, and promotional products across Kenya.</div>
+                </div>
+            </section>
         </footer>
         <a class="taf-whatsapp-float" href="{{ $whatsappUrl }}" target="_blank" rel="noopener" aria-label="Chat with Aurix Branding on WhatsApp">
             <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
