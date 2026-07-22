@@ -68,10 +68,6 @@ Route::get('/', function () {
         $homepageCategories = ProductCategory::query()
             ->withCount('products')
             ->when(
-                Schema::hasColumn('product_categories', 'show_in_menu'),
-                fn ($query) => $query->where('show_in_menu', true)
-            )
-            ->when(
                 Schema::hasColumn('product_categories', 'menu_sort_order'),
                 fn ($query) => $query->orderBy('menu_sort_order')
             )
@@ -90,8 +86,13 @@ Route::get('/', function () {
 
         if ($homepageCategories->isEmpty()) {
             $categoryNames = Product::query()
-                ->get(['category_name', 'subcategory_name'])
-                ->flatMap(fn ($product) => [$product->subcategory_name, $product->category_name])
+                ->with('category')
+                ->get(['product_category_id', 'category_name', 'subcategory_name'])
+                ->flatMap(fn ($product) => [
+                    $product->subcategory_name,
+                    $product->category?->name,
+                    $product->category_name,
+                ])
                 ->filter()
                 ->map(fn ($name) => trim($name))
                 ->filter()
@@ -105,8 +106,11 @@ Route::get('/', function () {
                     'slug' => (string) str($name)->slug(),
                     'image_url' => null,
                     'item_count' => Product::query()
-                        ->where('category_name', $name)
-                        ->orWhere('subcategory_name', $name)
+                        ->where(function ($products) use ($name) {
+                            $products->where('category_name', $name)
+                                ->orWhere('subcategory_name', $name)
+                                ->orWhereHas('category', fn ($category) => $category->where('name', $name));
+                        })
                         ->count(),
                 ];
             });

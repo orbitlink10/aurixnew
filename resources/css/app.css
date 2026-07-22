@@ -2620,8 +2620,8 @@ textarea {
 .taf-product-info {
     display: grid;
     justify-items: center;
-    gap: 8px;
-    padding: 16px 4px 0;
+    gap: 10px;
+    padding: 18px 4px 0;
     color: #111827;
     text-align: center;
 }
@@ -2632,11 +2632,11 @@ textarea {
 
 .taf-product-info strong {
     display: block;
-    min-height: 22px;
+    min-height: 24px;
     color: #111827;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
-    line-height: 1.28;
+    line-height: 1.25;
 }
 
 .taf-product-price {
@@ -2646,7 +2646,7 @@ textarea {
     gap: 8px;
     flex-wrap: wrap;
     color: #ff2735;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 500;
     line-height: 1.2;
     font-variant-numeric: tabular-nums;
@@ -2655,20 +2655,20 @@ textarea {
 .taf-product-price del {
     color: #9aa6b8;
     margin-left: 0;
-    font-size: 13px;
+    font-size: 16px;
 }
 
 .taf-color-dots {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
-    min-height: 18px;
+    gap: 8px;
+    min-height: 22px;
 }
 
 .taf-color-dots span {
-    width: 13px;
-    height: 13px;
+    width: 16px;
+    height: 16px;
     border-radius: 999px;
     background: #ffffff;
     border: 1px solid #ff3040;
