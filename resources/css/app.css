@@ -2538,7 +2538,7 @@ textarea {
     text-transform: none;
 }
 
-.taf-product-media {
+.taf-product-card .taf-product-media {
     position: relative;
     display: grid;
     width: 100%;
@@ -2557,13 +2557,13 @@ textarea {
     object-fit: cover;
 }
 
-.taf-product-placeholder {
+.taf-product-card .taf-product-placeholder {
     color: #8b95a3;
     font-size: 13px;
     font-weight: 900;
 }
 
-.taf-product-discount {
+.taf-product-card .taf-product-discount {
     position: absolute;
     top: 18px;
     left: 18px;
@@ -2577,7 +2577,7 @@ textarea {
     letter-spacing: 0.04em;
 }
 
-.taf-product-tools {
+.taf-product-card .taf-product-tools {
     position: absolute;
     top: 16px;
     right: 16px;
@@ -2586,7 +2586,7 @@ textarea {
     gap: 9px;
 }
 
-.taf-product-tools span {
+.taf-product-card .taf-product-tools span {
     display: grid;
     width: 42px;
     height: 42px;
@@ -2599,7 +2599,7 @@ textarea {
     box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
 }
 
-.taf-customize-btn {
+.taf-product-card .taf-customize-btn {
     position: absolute;
     right: 16px;
     bottom: 16px;
@@ -2615,9 +2615,11 @@ textarea {
     font-size: 13px;
     font-weight: 900;
     letter-spacing: 0.01em;
+    margin: 0;
+    text-transform: none;
 }
 
-.taf-product-info {
+.taf-product-card .taf-product-info {
     display: grid;
     justify-items: center;
     gap: 10px;
@@ -2626,11 +2628,11 @@ textarea {
     text-align: center;
 }
 
-.taf-product-info small {
+.taf-product-card .taf-product-info small {
     display: none;
 }
 
-.taf-product-info strong {
+.taf-product-card .taf-product-info strong {
     display: block;
     min-height: 24px;
     color: #111827;
@@ -2639,7 +2641,7 @@ textarea {
     line-height: 1.25;
 }
 
-.taf-product-price {
+.taf-product-card .taf-product-price {
     display: flex;
     align-items: baseline;
     justify-content: center;
@@ -2650,41 +2652,45 @@ textarea {
     font-weight: 500;
     line-height: 1.2;
     font-variant-numeric: tabular-nums;
+    margin: 0;
+    text-transform: none;
 }
 
-.taf-product-price del {
+.taf-product-card .taf-product-price del {
     color: #9aa6b8;
     margin-left: 0;
     font-size: 16px;
 }
 
-.taf-color-dots {
+.taf-product-card .taf-color-dots {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     min-height: 22px;
+    margin: 0;
 }
 
-.taf-color-dots span {
+.taf-product-card .taf-color-dots span {
     width: 16px;
     height: 16px;
     border-radius: 999px;
     background: #ffffff;
     border: 1px solid #ff3040;
+    margin: 0;
 }
 
-.taf-color-dots span:nth-child(2) {
+.taf-product-card .taf-color-dots span:nth-child(2) {
     background: #173cff;
     border-color: #173cff;
 }
 
-.taf-color-dots span:nth-child(3) {
+.taf-product-card .taf-color-dots span:nth-child(3) {
     background: #ff0d1f;
     border-color: #ff0d1f;
 }
 
-.taf-color-dots span:nth-child(4) {
+.taf-product-card .taf-color-dots span:nth-child(4) {
     background: #000000;
     border-color: #000000;
 }
