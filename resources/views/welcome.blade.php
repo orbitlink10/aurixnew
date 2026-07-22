@@ -90,31 +90,63 @@
         </header>
 
         <main>
-            <section class="taf-hero">
+            <section class="taf-hero" aria-labelledby="home-hero-title">
                 <div class="taf-wrap taf-hero-grid">
                     <div class="taf-hero-copy">
-                        <span class="taf-eyebrow">Custom branding made simple</span>
-                        <h1>We offer <span class="taf-pop-word">100%</span> customized branding and embroidery services</h1>
-                        <p>Build branded apparel, promotional products, signage, and business materials with design help, reliable production, and nationwide delivery.</p>
+                        <span class="taf-eyebrow">Branding, print & embroidery</span>
+                        <h1 id="home-hero-title">Custom branded products made for teams, events, and growing businesses.</h1>
+                        <p>Produce apparel, promotional merchandise, business stationery, packaging, and signage with clean artwork setup, reliable print quality, and nationwide delivery.</p>
+                        <div class="taf-hero-services" aria-label="Printing and branding services">
+                            <span>Screen printing</span>
+                            <span>Embroidery</span>
+                            <span>DTF & vinyl</span>
+                            <span>Signage</span>
+                            <span>Packaging</span>
+                        </div>
                         <div class="taf-hero-actions">
                             <a href="{{ route('public.products.index') }}" class="taf-primary-btn">Browse Products</a>
-                            <a href="{{ $whatsappUrl }}" class="taf-link-btn">Request Quote</a>
+                            <a href="{{ $whatsappUrl }}" class="taf-link-btn">Request a Quote</a>
                         </div>
-                        <div class="taf-callout">
-                            <span>Or call us at</span>
-                            <strong>{{ $contact['phone'] }}</strong>
+                        <div class="taf-hero-proof-row" aria-label="Production highlights">
+                            <div>
+                                <strong>Artwork ready</strong>
+                                <span>Logo cleanup and print setup</span>
+                            </div>
+                            <div>
+                                <strong>Bulk friendly</strong>
+                                <span>Uniforms, events, teams, and staff kits</span>
+                            </div>
+                            <div>
+                                <strong>Delivery support</strong>
+                                <span>Nairobi pickup and countrywide dispatch</span>
+                            </div>
                         </div>
                     </div>
                     <div class="taf-hero-visual" style="--hero-slide-count: {{ count($homepageHeroImages) }};">
-                        <div class="taf-hero-badge">100% custom</div>
-                        @foreach($homepageHeroImages as $index => $heroImageUrl)
-                            <img
-                                src="{{ $heroImageUrl }}"
-                                alt=""
-                                style="--hero-slide-index: {{ $index }};"
-                                @class(['is-active' => $index === 0])
-                            >
-                        @endforeach
+                        <div class="taf-hero-showcase">
+                            @foreach(array_slice($homepageHeroImages, 0, 3) as $index => $heroImageUrl)
+                                <img
+                                    src="{{ $heroImageUrl }}"
+                                    alt=""
+                                    style="--hero-slide-index: {{ $index }};"
+                                    @class([
+                                        'taf-hero-image',
+                                        'taf-hero-image-primary' => $index === 0,
+                                        'taf-hero-image-secondary' => $index === 1,
+                                        'taf-hero-image-tertiary' => $index === 2,
+                                    ])
+                                >
+                            @endforeach
+                            <div class="taf-hero-print-card">
+                                <span>Print methods</span>
+                                <strong>Embroidery / DTF / Screen print / Vinyl</strong>
+                            </div>
+                            <div class="taf-hero-quality-card">
+                                <strong>Sharp logo reproduction</strong>
+                                <span>Consistent color, placement, and finishing.</span>
+                            </div>
+                            <div class="taf-hero-badge">Custom orders</div>
+                        </div>
                     </div>
                 </div>
             </section>
