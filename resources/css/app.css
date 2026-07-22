@@ -2394,3 +2394,328 @@ textarea {
         bottom: 16px;
     }
 }
+
+.taf-category-section {
+    background: #fff9ef;
+    padding: 36px 0 46px;
+}
+
+.taf-category-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 22px;
+    margin-bottom: 28px;
+}
+
+.taf-category-head h2 {
+    margin: 8px 0 0;
+    color: #101827;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 500;
+    line-height: 1.05;
+}
+
+.taf-category-kicker {
+    display: inline-flex;
+    border-radius: 999px;
+    background: #ffdb5f;
+    color: #ffffff;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.taf-category-head > a {
+    color: #c28213;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.taf-category-row {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 30px 24px;
+}
+
+.taf-category-card {
+    color: #111827;
+}
+
+.taf-category-media {
+    width: min(132px, 100%);
+    border: 3px solid #f4e3c4;
+    border-radius: 999px;
+    margin: 0 auto;
+    box-shadow: 0 12px 28px rgba(125, 84, 22, 0.12);
+}
+
+.taf-category-card strong {
+    margin-top: 14px;
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+.taf-category-card small {
+    margin-top: 6px;
+    color: #817568;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.taf-home-products {
+    background: #ffffff;
+    padding: 58px 0 76px;
+}
+
+.taf-product-section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    border-top: 1px solid #eef0f5;
+    padding-top: 34px;
+    margin-bottom: 34px;
+}
+
+.taf-product-section-head span {
+    color: #536680;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+}
+
+.taf-product-section-head h2 {
+    margin: 14px 0 0;
+    color: #111827;
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    font-weight: 500;
+    line-height: 1.04;
+}
+
+.taf-product-section-head p {
+    margin: 0 0 12px;
+    color: #0f172a;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.taf-product-section-head p span {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #8fa0b8;
+    margin: 0 10px 3px;
+}
+
+.taf-product-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 30px 28px;
+}
+
+.taf-product-card {
+    display: flex;
+    min-width: 0;
+    min-height: 100%;
+    flex-direction: column;
+    overflow: visible;
+    border: 1px solid #e8ebf0;
+    border-radius: 24px;
+    background: #ffffff;
+    padding: 18px 18px 20px;
+    box-shadow: 0 18px 34px rgba(15, 23, 42, 0.06);
+}
+
+.taf-product-card span,
+.taf-product-card strong,
+.taf-product-card small {
+    margin: 0;
+    text-transform: none;
+}
+
+.taf-product-media {
+    position: relative;
+    display: grid;
+    width: 100%;
+    aspect-ratio: 1 / 1.22;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #eef1f4;
+}
+
+.taf-product-media img,
+.taf-product-card .taf-product-media img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+}
+
+.taf-product-placeholder {
+    color: #8b95a3;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.taf-product-discount {
+    position: absolute;
+    top: 22px;
+    left: 20px;
+    z-index: 2;
+    border-radius: 999px;
+    background: #ff3040;
+    color: #ffffff;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.taf-product-tools {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 2;
+    display: grid;
+    gap: 10px;
+}
+
+.taf-product-tools span {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #40516a;
+    font-size: 24px;
+    font-weight: 900;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+}
+
+.taf-customize-btn {
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    left: 18px;
+    z-index: 2;
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #ff2735;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.taf-product-info {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    padding: 18px 6px 0;
+    color: #111827;
+    text-align: center;
+}
+
+.taf-product-info small {
+    display: none;
+}
+
+.taf-product-info strong {
+    display: block;
+    min-height: 24px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.25;
+}
+
+.taf-product-price {
+    color: #ff2735;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.taf-product-price del {
+    color: #9aa6b8;
+    margin-left: 6px;
+    font-size: 14px;
+}
+
+.taf-color-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.taf-color-dots span {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    background: #ffffff;
+    border: 1px solid #ff3040;
+}
+
+.taf-color-dots span:nth-child(2) {
+    background: #173cff;
+    border-color: #173cff;
+}
+
+.taf-color-dots span:nth-child(3) {
+    background: #ff0d1f;
+    border-color: #ff0d1f;
+}
+
+.taf-color-dots span:nth-child(4) {
+    background: #000000;
+    border-color: #000000;
+}
+
+@media (max-width: 1020px) {
+    .taf-category-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .taf-product-section-head {
+        display: block;
+    }
+
+    .taf-product-section-head p {
+        margin-top: 18px;
+        white-space: normal;
+    }
+
+    .taf-product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .taf-category-head {
+        display: block;
+    }
+
+    .taf-category-head > a {
+        display: inline-block;
+        margin-top: 14px;
+    }
+
+    .taf-category-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .taf-category-media {
+        width: min(118px, 100%);
+    }
+
+    .taf-product-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -26,8 +26,6 @@ use App\Http\Controllers\Admin\HomePageContentController;
 use App\Models\SliderImage;
 use App\Models\BlogPost;
 use App\Models\SiteSetting;
-use App\Models\Service;
-use App\Models\WorkCategory;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -52,43 +50,39 @@ Route::get('/', function () {
         ? SiteSetting::contactSettings()
         : SiteSetting::defaultContactSettings();
 
-    $workCategories = Schema::hasTable('work_categories')
-        ? WorkCategory::where('is_active', true)->orderBy('sort_order')->orderByDesc('created_at')->get()
+    $mainMenuItems = Schema::hasTable('site_settings')
+        ? SiteSetting::mainMenuItems()
+        : SiteSetting::defaultMainMenuItems();
+
+    $homepageSubCategories = Schema::hasTable('product_categories')
+        ? ProductCategory::withCount(['products' => fn ($products) => $products->where('is_active', true)])
+            ->whereNotNull('parent_id')
+            ->when(
+                Schema::hasColumn('product_categories', 'menu_sort_order'),
+                fn ($query) => $query->orderBy('menu_sort_order')
+            )
+            ->orderBy('name')
+            ->get()
         : collect();
 
-    $services = Schema::hasTable('services')
-        ? Service::where('is_active', true)->orderBy('id')->get()
-        : collect();
-
-    $featuredProducts = collect([
-        ['cat' => 'Apparel', 'name' => 'Custom T-Shirts', 'price' => '1,200', 'image' => asset('images/aurix-tshirt-category.png')],
-        ['cat' => 'Apparel', 'name' => 'Custom Hoodies', 'price' => '2,800', 'image' => asset('images/aurix-hoodie-category.png')],
-        ['cat' => 'Corporate', 'name' => 'Polo T-Shirts', 'price' => '1,800', 'image' => asset('images/aurix-polo-category.png')],
-        ['cat' => 'Print', 'name' => 'Business Cards', 'price' => '45', 'image' => asset('images/aurix-business-cards.png')],
-    ]);
-
+    $homepageProducts = collect();
     if (Schema::hasTable('products')) {
-        $activeProducts = Product::query()
+        $legacyBrand = 'Nai'.' Prints';
+
+        $homepageProducts = Product::query()
             ->where('is_active', true)
+            ->with('category')
+            ->where(function ($products) use ($legacyBrand) {
+                $products->whereNull('category_name')
+                    ->orWhere('category_name', 'not like', '%'.$legacyBrand.'%');
+            })
+            ->where('name', 'not like', '%'.$legacyBrand.'%')
             ->orderByDesc('updated_at')
-            ->get(['name', 'price']);
-
-        $featuredProducts = $featuredProducts->map(function ($featuredProduct) use ($activeProducts) {
-            $matchingProduct = $activeProducts->first(
-                fn (Product $product) => Product::comparableName($product->name) === Product::comparableName($featuredProduct['name'])
-            );
-
-            if ($matchingProduct) {
-                $featuredProduct['price'] = number_format((float) $matchingProduct->price, 0);
-            }
-
-            return $featuredProduct;
-        });
+            ->take(8)
+            ->get();
     }
 
-    $featuredProducts = $featuredProducts->all();
-
-    return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'contactSettings', 'workCategories', 'services', 'featuredProducts'));
+    return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'contactSettings', 'mainMenuItems', 'homepageSubCategories', 'homepageProducts'));
 });
 
 Route::get('/embroidery', function () {
