@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\WorkCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -45,6 +46,37 @@ class HomepageProductsTest extends TestCase
         $response->assertOk();
         $response->assertSee('Corporate Uniforms');
         $response->assertSee('12 items');
+        $response->assertDontSee('No dashboard categories have been added yet.');
+    }
+
+    public function test_homepage_displays_product_categories_when_work_categories_are_empty(): void
+    {
+        ProductCategory::create([
+            'name' => 'Headwear',
+        ]);
+
+        $response = $this->get('/');
+
+        $response->assertOk();
+        $response->assertSee('Headwear');
+        $response->assertDontSee('No dashboard categories have been added yet.');
+    }
+
+    public function test_homepage_derives_categories_from_dashboard_products(): void
+    {
+        Product::create([
+            'name' => 'Executive Gift Box',
+            'slug' => 'executive-gift-box',
+            'price' => 1800,
+            'category_name' => 'Corporate Gifts',
+            'is_active' => false,
+        ]);
+
+        $response = $this->get('/');
+
+        $response->assertOk();
+        $response->assertSee('Corporate Gifts');
+        $response->assertSee('1 item');
         $response->assertDontSee('No dashboard categories have been added yet.');
     }
 }

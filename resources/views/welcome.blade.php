@@ -155,10 +155,10 @@
                 <div class="taf-wrap">
                     <div class="taf-product-section-head">
                         <div>
-                            <span>Featured prints</span>
-                            <h2>Best sellers right now</h2>
+                            <span>Featured products</span>
+                            <h2>Latest products</h2>
                         </div>
-                        <p>Weekly drops <span></span> Limited runs</p>
+                        <p>Custom branding <span></span> Ready to order</p>
                     </div>
 
                     <div class="taf-product-grid">

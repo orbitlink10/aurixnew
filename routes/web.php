@@ -55,12 +55,30 @@ Route::get('/', function () {
         ? SiteSetting::mainMenuItems()
         : SiteSetting::defaultMainMenuItems();
 
-    $homepageCategories = Schema::hasTable('work_categories')
-        ? WorkCategory::where('is_active', true)
+    $homepageCategories = collect();
+
+    if (Schema::hasTable('work_categories')) {
+        $homepageCategories = WorkCategory::where('is_active', true)
             ->orderBy('sort_order')
             ->orderByDesc('created_at')
-            ->get()
-        : collect();
+            ->get();
+    }
+
+    if ($homepageCategories->isEmpty() && Schema::hasTable('product_categories')) {
+        $homepageCategories = ProductCategory::query()
+            ->withCount('products')
+            ->when(
+                Schema::hasColumn('product_categories', 'show_in_menu'),
+                fn ($query) => $query->where('show_in_menu', true)
+            )
+            ->when(
+                Schema::hasColumn('product_categories', 'menu_sort_order'),
+                fn ($query) => $query->orderBy('menu_sort_order')
+            )
+            ->orderBy('name')
+            ->take(8)
+            ->get();
+    }
 
     $homepageProducts = collect();
     if (Schema::hasTable('products')) {
@@ -69,6 +87,30 @@ Route::get('/', function () {
             ->orderByDesc('updated_at')
             ->take(8)
             ->get();
+
+        if ($homepageCategories->isEmpty()) {
+            $categoryNames = Product::query()
+                ->get(['category_name', 'subcategory_name'])
+                ->flatMap(fn ($product) => [$product->subcategory_name, $product->category_name])
+                ->filter()
+                ->map(fn ($name) => trim($name))
+                ->filter()
+                ->unique(fn ($name) => (string) str($name)->slug())
+                ->values()
+                ->take(8);
+
+            $homepageCategories = $categoryNames->map(function ($name) {
+                return (object) [
+                    'name' => $name,
+                    'slug' => (string) str($name)->slug(),
+                    'image_url' => null,
+                    'item_count' => Product::query()
+                        ->where('category_name', $name)
+                        ->orWhere('subcategory_name', $name)
+                        ->count(),
+                ];
+            });
+        }
     }
 
     return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'contactSettings', 'mainMenuItems', 'homepageCategories', 'homepageProducts'));
