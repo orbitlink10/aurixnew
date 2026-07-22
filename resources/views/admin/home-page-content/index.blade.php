@@ -128,6 +128,56 @@
 <div class="card p-4 rounded-xl">
     <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div class="md:max-w-xl">
+            <h2 class="text-lg font-semibold text-slate-900">Homepage Hero Video</h2>
+            <p class="text-sm text-slate-500 mt-1">Paste the YouTube video URL shown in the right side of the first homepage section.</p>
+            @if($heroVideoEmbedUrl)
+                <div class="mt-3 overflow-hidden rounded-lg border border-slate-200 bg-slate-950">
+                    <iframe
+                        class="aspect-video w-full"
+                        src="{{ $heroVideoEmbedUrl }}"
+                        title="Homepage hero video preview"
+                        loading="lazy"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+            @else
+                <p class="text-sm text-slate-500 mt-3">No homepage video has been added yet.</p>
+            @endif
+        </div>
+        <form action="{{ route('admin.home-page-content.hero-video.update') }}" method="POST" class="w-full md:max-w-lg space-y-3">
+            @csrf
+            <div>
+                <label class="text-sm font-semibold text-slate-800" for="heroVideoUrl">YouTube Video URL</label>
+                <input
+                    id="heroVideoUrl"
+                    type="text"
+                    name="hero_video_url"
+                    value="{{ old('hero_video_url', $heroVideoUrl) }}"
+                    class="w-full bg-white border border-slate-200 rounded px-3 py-2"
+                    placeholder="https://www.youtube.com/watch?v=..."
+                >
+                @error('hero_video_url')
+                    <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <button type="submit" class="px-5 py-2 rounded bg-sky-600 text-white font-semibold hover:bg-sky-500">Save Hero Video</button>
+                @if($heroVideoUrl)
+                    <button
+                        type="button"
+                        class="px-5 py-2 rounded border border-rose-200 text-rose-600 font-semibold hover:bg-rose-50"
+                        onclick="if (confirm('Remove the homepage hero video?')) { document.getElementById('heroVideoUrl').value = ''; this.form.submit(); }"
+                    >Remove Video</button>
+                @endif
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card p-4 rounded-xl">
+    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        <div class="md:max-w-xl">
             <h2 class="text-lg font-semibold text-slate-900">Homepage Contact Details</h2>
             <p class="text-sm text-slate-500 mt-1">Edit the phone and WhatsApp details shown in the homepage header, hero, and footer.</p>
         </div>

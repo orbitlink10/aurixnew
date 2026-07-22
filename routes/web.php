@@ -43,6 +43,14 @@ Route::get('/', function () {
         ? SiteSetting::heroImageUrls()
         : [];
 
+    $heroVideoUrl = Schema::hasTable('site_settings')
+        ? SiteSetting::heroVideoUrl()
+        : null;
+
+    $heroVideoEmbedUrl = Schema::hasTable('site_settings')
+        ? SiteSetting::heroVideoEmbedUrl()
+        : null;
+
     $logoUrl = Schema::hasTable('site_settings')
         ? SiteSetting::logoUrl()
         : null;
@@ -158,7 +166,7 @@ Route::get('/', function () {
             ->values();
     }
 
-    return view('welcome', compact('slides', 'heroImageUrls', 'logoUrl', 'contactSettings', 'mainMenuItems', 'homepageCategories', 'homepageProducts'));
+    return view('welcome', compact('slides', 'heroImageUrls', 'heroVideoUrl', 'heroVideoEmbedUrl', 'logoUrl', 'contactSettings', 'mainMenuItems', 'homepageCategories', 'homepageProducts'));
 });
 
 Route::get('/embroidery', function () {
@@ -352,6 +360,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('home-page-content', [HomePageContentController::class, 'index'])->name('home-page-content.index');
+    Route::post('home-page-content/hero-video', [HomePageContentController::class, 'updateHeroVideo'])->name('home-page-content.hero-video.update');
     Route::post('home-page-content/contact', [HomePageContentController::class, 'updateContact'])->name('home-page-content.contact.update');
     Route::post('home-page-content/main-menu', [HomePageContentController::class, 'updateMainMenu'])->name('home-page-content.main-menu.update');
     Route::get('home-page-content/main-menu/create', [HomePageContentController::class, 'createMenuItem'])->name('home-page-content.main-menu.create');

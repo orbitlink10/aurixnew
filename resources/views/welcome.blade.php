@@ -36,6 +36,8 @@
                     $liveAssetBase.'/uploads/hero/eD51M2yJAWvr4Nwq9iUCBneEHgcgMmw2IRsRzf8S.png',
                     $liveAssetBase.'/uploads/hero/9Q85zFlSCcrIuGxinlAFvcYG9QPvGwHV175BCOxg.jpg',
                 ];
+            $homepageHeroVideoEmbedUrl = $heroVideoEmbedUrl ?? null;
+            $homepageHeroFallbackImage = $homepageHeroImages[0] ?? asset('images/aurix-branding-collage.png');
             $contact = $contactSettings ?? \App\Models\SiteSetting::defaultContactSettings();
             $whatsappPhone = '254700816670';
             $whatsappUrl = 'https://wa.me/'.$whatsappPhone.'?text='.rawurlencode($contact['whatsapp_message']);
@@ -93,59 +95,59 @@
             <section class="taf-hero" aria-labelledby="home-hero-title">
                 <div class="taf-wrap taf-hero-grid">
                     <div class="taf-hero-copy">
-                        <span class="taf-eyebrow">Branding, print & embroidery</span>
-                        <h1 id="home-hero-title">Custom branded products made for teams, events, and growing businesses.</h1>
-                        <p>Produce apparel, promotional merchandise, business stationery, packaging, and signage with clean artwork setup, reliable print quality, and nationwide delivery.</p>
+                        <span class="taf-eyebrow">Same day custom printing</span>
+                        <h1 id="home-hero-title">Same day <span>T-shirt printing</span></h1>
+                        <p>Order custom tees, uniforms, event merchandise, branded gifts, packaging, signage, and business print with sharp artwork setup and reliable production support.</p>
+                        <div class="taf-hero-offer" aria-label="Order highlights">
+                            <strong>No minimum order</strong>
+                            <span>Single pieces, bulk staff kits, event runs, and repeat business orders.</span>
+                        </div>
                         <div class="taf-hero-services" aria-label="Printing and branding services">
-                            <span>Screen printing</span>
+                            <span>DTF transfers</span>
                             <span>Embroidery</span>
-                            <span>DTF & vinyl</span>
+                            <span>Screen printing</span>
+                            <span>Vinyl names</span>
                             <span>Signage</span>
-                            <span>Packaging</span>
                         </div>
                         <div class="taf-hero-actions">
-                            <a href="{{ route('public.products.index') }}" class="taf-primary-btn">Browse Products</a>
+                            <a href="{{ route('public.products.index', ['q' => 't-shirt']) }}" class="taf-primary-btn">Order T-Shirts Now</a>
                             <a href="{{ $whatsappUrl }}" class="taf-link-btn">Request a Quote</a>
                         </div>
                         <div class="taf-hero-proof-row" aria-label="Production highlights">
                             <div>
-                                <strong>Artwork ready</strong>
-                                <span>Logo cleanup and print setup</span>
+                                <strong>Fast setup</strong>
+                                <span>Logo cleanup, sizing, and placement checks</span>
                             </div>
                             <div>
-                                <strong>Bulk friendly</strong>
-                                <span>Uniforms, events, teams, and staff kits</span>
+                                <strong>Print options</strong>
+                                <span>DTF, screen print, embroidery, and vinyl</span>
                             </div>
                             <div>
-                                <strong>Delivery support</strong>
+                                <strong>Delivery ready</strong>
                                 <span>Nairobi pickup and countrywide dispatch</span>
                             </div>
                         </div>
                     </div>
-                    <div class="taf-hero-visual" style="--hero-slide-count: {{ count($homepageHeroImages) }};">
-                        <div class="taf-hero-showcase">
-                            @foreach(array_slice($homepageHeroImages, 0, 3) as $index => $heroImageUrl)
-                                <img
-                                    src="{{ $heroImageUrl }}"
-                                    alt=""
-                                    style="--hero-slide-index: {{ $index }};"
-                                    @class([
-                                        'taf-hero-image',
-                                        'taf-hero-image-primary' => $index === 0,
-                                        'taf-hero-image-secondary' => $index === 1,
-                                        'taf-hero-image-tertiary' => $index === 2,
-                                    ])
-                                >
-                            @endforeach
-                            <div class="taf-hero-print-card">
-                                <span>Print methods</span>
-                                <strong>Embroidery / DTF / Screen print / Vinyl</strong>
-                            </div>
-                            <div class="taf-hero-quality-card">
-                                <strong>Sharp logo reproduction</strong>
-                                <span>Consistent color, placement, and finishing.</span>
-                            </div>
-                            <div class="taf-hero-badge">Custom orders</div>
+                    <div class="taf-hero-video-panel" aria-label="Aurix Branding production video">
+                        <div class="taf-hero-video-frame">
+                            @if($homepageHeroVideoEmbedUrl)
+                                <iframe
+                                    src="{{ $homepageHeroVideoEmbedUrl }}"
+                                    title="Aurix Branding custom printing video"
+                                    loading="lazy"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen
+                                ></iframe>
+                            @else
+                                <img src="{{ $homepageHeroFallbackImage }}" alt="Aurix Branding custom printing preview">
+                                <span class="taf-hero-play" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="taf-hero-video-bar">
+                            <span>Watch our print process</span>
+                            <strong>Branding, embroidery, apparel, and signage</strong>
                         </div>
                     </div>
                 </div>

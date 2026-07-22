@@ -16,6 +16,14 @@ class HomePageContentController extends Controller
             ? SiteSetting::heroImageUrls()
             : [];
 
+        $heroVideoUrl = Schema::hasTable('site_settings')
+            ? SiteSetting::heroVideoUrl()
+            : null;
+
+        $heroVideoEmbedUrl = Schema::hasTable('site_settings')
+            ? SiteSetting::heroVideoEmbedUrl()
+            : null;
+
         $logoUrl = Schema::hasTable('site_settings')
             ? SiteSetting::logoUrl()
             : null;
@@ -37,7 +45,25 @@ class HomePageContentController extends Controller
             $editingCategory = WorkCategory::find($request->integer('edit'));
         }
 
-        return view('admin.home-page-content.index', compact('heroImageUrls', 'logoUrl', 'contactSettings', 'mainMenuItems', 'workCategories', 'editingCategory'));
+        return view('admin.home-page-content.index', compact('heroImageUrls', 'heroVideoUrl', 'heroVideoEmbedUrl', 'logoUrl', 'contactSettings', 'mainMenuItems', 'workCategories', 'editingCategory'));
+    }
+
+    public function updateHeroVideo(Request $request)
+    {
+        $data = $request->validate([
+            'hero_video_url' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $videoUrl = trim((string) ($data['hero_video_url'] ?? ''));
+        if ($videoUrl !== '' && ! SiteSetting::youtubeVideoId($videoUrl)) {
+            return back()
+                ->withErrors(['hero_video_url' => 'Enter a valid YouTube video URL or video ID.'])
+                ->withInput();
+        }
+
+        SiteSetting::setHeroVideoUrl($videoUrl ?: null);
+
+        return redirect()->route('admin.home-page-content.index')->with('success', 'Homepage video updated.');
     }
 
     public function updateContact(Request $request)

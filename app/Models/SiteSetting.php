@@ -82,6 +82,70 @@ class SiteSetting extends Model
         return $urls[0] ?? null;
     }
 
+    public static function heroVideoUrl(): ?string
+    {
+        return static::getValue('home_hero_video_url');
+    }
+
+    public static function setHeroVideoUrl(?string $url): void
+    {
+        static::setValue('home_hero_video_url', $url ? trim($url) : null);
+    }
+
+    public static function heroVideoEmbedUrl(): ?string
+    {
+        $videoId = static::youtubeVideoId(static::heroVideoUrl());
+
+        return $videoId ? 'https://www.youtube.com/embed/'.$videoId.'?rel=0&modestbranding=1' : null;
+    }
+
+    public static function youtubeVideoId(?string $url): ?string
+    {
+        $url = trim((string) $url);
+
+        if ($url === '') {
+            return null;
+        }
+
+        if (preg_match('/^[A-Za-z0-9_-]{11}$/', $url)) {
+            return $url;
+        }
+
+        $parts = parse_url($url);
+        if (! is_array($parts)) {
+            return null;
+        }
+
+        $host = strtolower($parts['host'] ?? '');
+        $path = trim($parts['path'] ?? '', '/');
+
+        if (str_contains($host, 'youtu.be')) {
+            $segment = explode('/', $path)[0] ?? '';
+            return preg_match('/^[A-Za-z0-9_-]{11}$/', $segment) ? $segment : null;
+        }
+
+        if (! str_contains($host, 'youtube.com') && ! str_contains($host, 'youtube-nocookie.com')) {
+            return null;
+        }
+
+        parse_str($parts['query'] ?? '', $query);
+        if (! empty($query['v']) && preg_match('/^[A-Za-z0-9_-]{11}$/', $query['v'])) {
+            return $query['v'];
+        }
+
+        $segments = explode('/', $path);
+        foreach (['embed', 'shorts', 'live', 'v'] as $prefix) {
+            $position = array_search($prefix, $segments, true);
+            $candidate = $position !== false ? ($segments[$position + 1] ?? '') : '';
+
+            if (preg_match('/^[A-Za-z0-9_-]{11}$/', $candidate)) {
+                return $candidate;
+            }
+        }
+
+        return null;
+    }
+
     public static function logoPath(): ?string
     {
         return static::getValue('site_logo_path');
