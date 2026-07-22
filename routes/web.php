@@ -352,6 +352,11 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('home-page-content', [HomePageContentController::class, 'index'])->name('home-page-content.index');
     Route::post('home-page-content/contact', [HomePageContentController::class, 'updateContact'])->name('home-page-content.contact.update');
     Route::post('home-page-content/main-menu', [HomePageContentController::class, 'updateMainMenu'])->name('home-page-content.main-menu.update');
+    Route::get('home-page-content/main-menu/create', [HomePageContentController::class, 'createMenuItem'])->name('home-page-content.main-menu.create');
+    Route::post('home-page-content/main-menu/items', [HomePageContentController::class, 'storeMenuItem'])->name('home-page-content.main-menu.store');
+    Route::get('home-page-content/main-menu/{index}/edit', [HomePageContentController::class, 'editMenuItem'])->whereNumber('index')->name('home-page-content.main-menu.edit');
+    Route::put('home-page-content/main-menu/{index}', [HomePageContentController::class, 'updateMenuItem'])->whereNumber('index')->name('home-page-content.main-menu.item.update');
+    Route::delete('home-page-content/main-menu/{index}', [HomePageContentController::class, 'destroyMenuItem'])->whereNumber('index')->name('home-page-content.main-menu.destroy');
 
     Route::resource('services', ServiceController::class);
     Route::get('sub-categories', [ProductCategoryController::class, 'subcategories'])->name('sub-categories.index');

@@ -24,9 +24,9 @@ class HomePageContentController extends Controller
             ? SiteSetting::contactSettings()
             : SiteSetting::defaultContactSettings();
 
-        $mainMenuText = Schema::hasTable('site_settings')
-            ? SiteSetting::mainMenuText()
-            : collect(SiteSetting::defaultMainMenuItems())->map(fn ($item) => $item['label'].' | '.$item['url'])->implode("\n");
+        $mainMenuItems = Schema::hasTable('site_settings')
+            ? collect(SiteSetting::mainMenuItems())->values()
+            : collect(SiteSetting::defaultMainMenuItems())->values();
 
         $workCategories = Schema::hasTable('work_categories')
             ? WorkCategory::orderBy('sort_order')->orderByDesc('created_at')->get()
@@ -37,7 +37,7 @@ class HomePageContentController extends Controller
             $editingCategory = WorkCategory::find($request->integer('edit'));
         }
 
-        return view('admin.home-page-content.index', compact('heroImageUrls', 'logoUrl', 'contactSettings', 'mainMenuText', 'workCategories', 'editingCategory'));
+        return view('admin.home-page-content.index', compact('heroImageUrls', 'logoUrl', 'contactSettings', 'mainMenuItems', 'workCategories', 'editingCategory'));
     }
 
     public function updateContact(Request $request)
@@ -67,5 +67,90 @@ class HomePageContentController extends Controller
         SiteSetting::setMainMenuFromText($data['main_menu_items'] ?? null);
 
         return redirect()->route('admin.home-page-content.index')->with('success', 'Main menu updated.');
+    }
+
+    public function createMenuItem()
+    {
+        return view('admin.home-page-content.menu-form', [
+            'isEditing' => false,
+            'menuIndex' => null,
+            'menuItem' => ['label' => '', 'url' => ''],
+        ]);
+    }
+
+    public function storeMenuItem(Request $request)
+    {
+        $items = $this->storedMainMenuItems();
+        $items[] = $this->validatedMenuItem($request);
+
+        $this->saveMainMenuItems($items);
+
+        return redirect()->route('admin.home-page-content.index')->with('success', 'Menu item added.');
+    }
+
+    public function editMenuItem(int $index)
+    {
+        $items = $this->storedMainMenuItems();
+        abort_unless(isset($items[$index]), 404);
+
+        return view('admin.home-page-content.menu-form', [
+            'isEditing' => true,
+            'menuIndex' => $index,
+            'menuItem' => $items[$index],
+        ]);
+    }
+
+    public function updateMenuItem(Request $request, int $index)
+    {
+        $items = $this->storedMainMenuItems();
+        abort_unless(isset($items[$index]), 404);
+
+        $items[$index] = $this->validatedMenuItem($request);
+        $this->saveMainMenuItems($items);
+
+        return redirect()->route('admin.home-page-content.index')->with('success', 'Menu item updated.');
+    }
+
+    public function destroyMenuItem(int $index)
+    {
+        $items = $this->storedMainMenuItems();
+        abort_unless(isset($items[$index]), 404);
+
+        unset($items[$index]);
+        $this->saveMainMenuItems(array_values($items));
+
+        return redirect()->route('admin.home-page-content.index')->with('success', 'Menu item removed.');
+    }
+
+    private function validatedMenuItem(Request $request): array
+    {
+        $data = $request->validate([
+            'label' => ['required', 'string', 'max:80'],
+            'url' => ['required', 'string', 'max:255'],
+        ]);
+
+        return [
+            'label' => trim($data['label']),
+            'url' => trim($data['url']),
+        ];
+    }
+
+    private function storedMainMenuItems(): array
+    {
+        return array_values(SiteSetting::mainMenuItems());
+    }
+
+    private function saveMainMenuItems(array $items): void
+    {
+        $cleanItems = collect($items)
+            ->map(fn ($item) => [
+                'label' => trim((string) ($item['label'] ?? '')),
+                'url' => trim((string) ($item['url'] ?? '')),
+            ])
+            ->filter(fn ($item) => $item['label'] !== '' && $item['url'] !== '')
+            ->values()
+            ->all();
+
+        SiteSetting::setValue('main_menu_items', count($cleanItems) ? json_encode($cleanItems) : null);
     }
 }

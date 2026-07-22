@@ -8,21 +8,57 @@
     </div>
 </div>
 
-<div class="card p-4 rounded-xl">
-    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-        <div class="md:max-w-xl">
+<div class="card rounded-xl overflow-hidden">
+    <div class="flex flex-col gap-3 border-b border-slate-200 bg-white px-4 py-4 md:flex-row md:items-center md:justify-between">
+        <div>
             <h2 class="text-lg font-semibold text-slate-900">Main Website Menu</h2>
-            <p class="text-sm text-slate-500 mt-1">Edit the black menu shown on the homepage and shop page. Use one item per line in this format: <strong>Label | URL</strong>.</p>
-            <p class="text-xs text-slate-500 mt-2">Example: <code>Home | /</code> or <code>Women | /products?category=women</code></p>
+            <p class="text-sm text-slate-500 mt-1">Manage the black menu shown on the homepage and shop page.</p>
         </div>
-        <form action="{{ route('admin.home-page-content.main-menu.update') }}" method="POST" class="w-full md:max-w-2xl space-y-3">
-            @csrf
-            <textarea name="main_menu_items" rows="12" class="w-full bg-white border border-slate-200 rounded px-3 py-2 font-mono text-sm" placeholder="Shop | /products">{{ old('main_menu_items', $mainMenuText) }}</textarea>
-            @error('main_menu_items')
-                <p class="text-sm text-rose-600">{{ $message }}</p>
-            @enderror
-            <button type="submit" class="px-5 py-2 rounded bg-sky-600 text-white font-semibold hover:bg-sky-500">Save Main Menu</button>
-        </form>
+        <a href="{{ route('admin.home-page-content.main-menu.create') }}" class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700">
+            <i class="fa-solid fa-plus"></i> Add Menu
+        </a>
+    </div>
+    <div class="p-4">
+        <div class="overflow-hidden rounded-lg border border-slate-200 bg-white">
+            <div class="px-4 py-3">
+                <h3 class="text-base font-semibold text-slate-950">Menu List</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse text-left">
+                    <thead>
+                        <tr class="border-y border-slate-200 bg-slate-50 text-xs font-bold uppercase tracking-[0.22em] text-slate-500">
+                            <th class="w-20 px-4 py-3">#</th>
+                            <th class="px-4 py-3">Name</th>
+                            <th class="px-4 py-3">URL</th>
+                            <th class="w-56 px-4 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                        @forelse($mainMenuItems as $index => $menuItem)
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-4 text-slate-700">{{ $index + 1 }}</td>
+                                <td class="px-4 py-4 font-medium text-slate-950">{{ $menuItem['label'] ?? '' }}</td>
+                                <td class="px-4 py-4 text-slate-700">{{ $menuItem['url'] ?? '' }}</td>
+                                <td class="px-4 py-4">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <a href="{{ route('admin.home-page-content.main-menu.edit', $index) }}" class="inline-flex items-center rounded-full border border-blue-500 px-3 py-1.5 text-sm font-semibold text-blue-600 hover:bg-blue-50">Edit</a>
+                                        <form action="{{ route('admin.home-page-content.main-menu.destroy', $index) }}" method="POST" onsubmit="return confirm('Delete this menu item?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="inline-flex items-center rounded-full border border-rose-400 px-3 py-1.5 text-sm font-semibold text-rose-500 hover:bg-rose-50">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-4 py-8 text-center text-slate-500">No menu items created.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
