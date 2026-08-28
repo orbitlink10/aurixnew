@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ProductController;
@@ -35,22 +36,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 
 Route::get('/', function () {
-    $slides = Schema::hasTable('slider_images')
-        ? SliderImage::where('is_active', true)->orderBy('sort_order')->orderByDesc('created_at')->get()
-        : collect();
-
-    $heroImageUrls = Schema::hasTable('site_settings')
-        ? SiteSetting::heroImageUrls()
-        : [];
-
-    $heroVideoUrl = Schema::hasTable('site_settings')
-        ? SiteSetting::heroVideoUrl()
-        : null;
-
-    $heroVideoEmbedUrl = Schema::hasTable('site_settings')
-        ? SiteSetting::heroVideoEmbedUrl()
-        : null;
-
     $logoUrl = Schema::hasTable('site_settings')
         ? SiteSetting::logoUrl()
         : null;
@@ -59,114 +44,60 @@ Route::get('/', function () {
         ? SiteSetting::contactSettings()
         : SiteSetting::defaultContactSettings();
 
-    $mainMenuItems = Schema::hasTable('site_settings')
-        ? SiteSetting::mainMenuItems()
-        : SiteSetting::defaultMainMenuItems();
+    $heroImageUrls = Schema::hasTable('site_settings')
+        ? SiteSetting::heroImageUrls()
+        : [];
 
+    $heroImage = $heroImageUrls[0] ?? null;
+
+    $heroVideoEmbedUrl = Schema::hasTable('site_settings')
+        ? SiteSetting::heroVideoEmbedUrl()
+        : null;
+
+    // Featured branding categories — only those with active, published products.
     $homepageCategories = collect();
 
-    if (Schema::hasTable('work_categories')) {
-        $homepageCategories = WorkCategory::where('is_active', true)
-            ->orderBy('sort_order')
-            ->orderByDesc('created_at')
-            ->get();
-    }
-
-    if ($homepageCategories->isEmpty() && Schema::hasTable('product_categories')) {
+    if (Schema::hasTable('product_categories')) {
         $homepageCategories = ProductCategory::query()
-            ->withCount('products')
+            ->withCount(['products' => fn ($q) => $q->where('is_active', true)])
+            ->when(
+                Schema::hasColumn('product_categories', 'show_in_menu'),
+                fn ($q) => $q->where('show_in_menu', true)
+            )
             ->when(
                 Schema::hasColumn('product_categories', 'menu_sort_order'),
-                fn ($query) => $query->orderBy('menu_sort_order')
+                fn ($q) => $q->orderBy('menu_sort_order')
             )
             ->orderBy('name')
-            ->take(8)
-            ->get();
-    }
-
-    $homepageProducts = collect();
-    if (Schema::hasTable('products')) {
-        $homepageProducts = Product::query()
-            ->with('category')
-            ->orderByDesc('updated_at')
-            ->take(8)
-            ->get();
-
-        if ($homepageCategories->isEmpty()) {
-            $categoryNames = Product::query()
-                ->with('category')
-                ->get(['product_category_id', 'category_name', 'subcategory_name'])
-                ->flatMap(fn ($product) => [
-                    $product->subcategory_name,
-                    $product->category?->name,
-                    $product->category_name,
-                ])
-                ->filter()
-                ->map(fn ($name) => trim($name))
-                ->filter()
-                ->unique(fn ($name) => (string) str($name)->slug())
-                ->values()
-                ->take(8);
-
-            $homepageCategories = $categoryNames->map(function ($name) {
-                return (object) [
-                    'name' => $name,
-                    'slug' => (string) str($name)->slug(),
-                    'image_url' => null,
-                    'item_count' => Product::query()
-                        ->where(function ($products) use ($name) {
-                            $products->where('category_name', $name)
-                                ->orWhere('subcategory_name', $name)
-                                ->orWhereHas('category', fn ($category) => $category->where('name', $name));
-                        })
-                        ->count(),
-                ];
-            });
-        }
-    }
-
-    if ($homepageCategories->isEmpty()) {
-        $homepageCategories = collect($mainMenuItems)
-            ->map(function ($item) {
-                $label = trim((string) ($item['label'] ?? ''));
-                $rawUrl = trim((string) ($item['url'] ?? ''));
-
-                if ($label === '') {
-                    return null;
-                }
-
-                $itemCount = null;
-                if (Schema::hasTable('products')) {
-                    $matchedProducts = Product::query()
-                        ->where(function ($products) use ($label) {
-                            $products->where('category_name', $label)
-                                ->orWhere('subcategory_name', $label)
-                                ->orWhereHas('category', fn ($category) => $category->where('name', $label));
-                        })
-                        ->count();
-
-                    $itemCount = $matchedProducts > 0 ? $matchedProducts : null;
-                }
-
-                return (object) [
-                    'name' => $label,
-                    'slug' => (string) str($label)->slug(),
-                    'href' => $rawUrl === ''
-                        ? route('public.products.index', ['category' => str($label)->slug()])
-                        : ($rawUrl === '/'
-                            ? url('/')
-                            : (str($rawUrl)->startsWith(['http://', 'https://', '#']) ? $rawUrl : url($rawUrl))),
-                    'image_url' => null,
-                    'item_count' => $itemCount,
-                ];
-            })
-            ->filter()
-            ->reject(fn ($category) => in_array((string) str($category->name)->lower(), ['home', 'shop'], true))
-            ->take(8)
+            ->get()
+            ->filter(fn ($category) => $category->products_count > 0)
+            ->take(6)
             ->values();
     }
 
-    return view('welcome', compact('slides', 'heroImageUrls', 'heroVideoUrl', 'heroVideoEmbedUrl', 'logoUrl', 'contactSettings', 'mainMenuItems', 'homepageCategories', 'homepageProducts'));
+    // Portfolio / recent work — admin managed "work categories".
+    $portfolio = collect();
+
+    if (Schema::hasTable('work_categories')) {
+        $portfolio = WorkCategory::where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderByDesc('created_at')
+            ->take(6)
+            ->get();
+    }
+
+    // A small selection of featured products (no pricing shown publicly).
+    $homepageProducts = collect();
+    if (Schema::hasTable('products')) {
+        $homepageProducts = Product::query()
+            ->where('is_active', true)
+            ->with('category')
+            ->orderByDesc('updated_at')
+            ->take(4)
+            ->get();
+    }
+
+    return view('welcome', compact('logoUrl', 'contactSettings', 'heroImage', 'heroImageUrls', 'heroVideoEmbedUrl', 'homepageCategories', 'portfolio', 'homepageProducts'));
 });
 
 Route::get('/embroidery', function () {
@@ -264,7 +195,6 @@ Route::get('/blog-posts/{slug}', function (string $slug) {
 });
 
 Route::get('/products', function () {
-    $shopCategories = ['All', 'Design', 'Designs', 'Hoodie', 'Kids', 'Men', 'Onesis', 'Polo T-shirt', 'Sport', 'T-shirt', 'Weekly', 'Women'];
     $logoUrl = Schema::hasTable('site_settings')
         ? SiteSetting::logoUrl()
         : null;
@@ -276,7 +206,7 @@ Route::get('/products', function () {
         $products = new LengthAwarePaginator([], 0, 12);
         $categories = collect();
 
-        return view('products.index', compact('products', 'categories', 'shopCategories', 'logoUrl', 'contactSettings'));
+        return view('products.index', compact('products', 'categories', 'logoUrl', 'contactSettings'));
     }
 
     $legacyBrand = 'Nai'.' Prints';
@@ -319,39 +249,54 @@ Route::get('/products', function () {
         }
     }
 
-    if (request()->filled('min_price')) {
-        $query->where('price', '>=', (float) request('min_price'));
-    }
-
-    if (request()->filled('max_price')) {
-        $query->where('price', '<=', (float) request('max_price'));
-    }
-
-    match (request('sort', 'popular')) {
-        'price_low' => $query->orderBy('price'),
-        'price_high' => $query->orderByDesc('price'),
-        'newest' => $query->orderByDesc('created_at'),
+    match (request('sort', 'newest')) {
+        'name' => $query->orderBy('name'),
+        'popular' => $query->orderByDesc('updated_at'),
         default => $query->orderByDesc('created_at'),
     };
 
     $products = $query->paginate(12)->withQueryString();
 
+    // Only show categories that contain at least one active product.
     $categories = Schema::hasTable('product_categories')
         ? ProductCategory::with('children')
             ->withCount(['products' => fn ($products) => $products->where('is_active', true)])
             ->parents()
             ->orderBy('name')
             ->get()
+            ->filter(fn ($category) => $category->products_count > 0)
         : collect();
 
-    return view('products.index', compact('products', 'categories', 'shopCategories', 'logoUrl', 'contactSettings'));
+    return view('products.index', compact('products', 'categories', 'logoUrl', 'contactSettings'));
 })->name('public.products.index');
 
 Route::get('/products/{product:slug}', function (Product $product) {
     $product->load(['category', 'images']);
 
-    return view('products.show', compact('product'));
+    $contactSettings = Schema::hasTable('site_settings')
+        ? SiteSetting::contactSettings()
+        : SiteSetting::defaultContactSettings();
+
+    $relatedProducts = Product::query()
+        ->where('is_active', true)
+        ->where('id', '!=', $product->id)
+        ->where(function ($query) use ($product) {
+            if ($product->product_category_id) {
+                $query->where('product_category_id', $product->product_category_id);
+            } elseif ($product->category_name) {
+                $query->where('category_name', $product->category_name);
+            }
+        })
+        ->with('category')
+        ->orderByDesc('updated_at')
+        ->take(4)
+        ->get();
+
+    return view('products.show', compact('product', 'contactSettings', 'relatedProducts'));
 })->name('public.products.show');
+
+Route::get('/quote', [QuoteController::class, 'show'])->name('public.quote');
+Route::post('/quote', [QuoteController::class, 'store'])->name('public.quote.store');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);

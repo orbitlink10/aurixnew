@@ -7,12 +7,12 @@
     <meta name="description" content="{{ $post->meta_description ?? '' }}">
     <style>
         :root {
-            --aurix-ink: #172342;
+            --aurix-ink: #111827;
             --aurix-body: #191b23;
             --aurix-muted: #4b5563;
-            --aurix-line: #e7e9ef;
-            --aurix-purple: #421983;
-            --aurix-orange: #ff642d;
+            --aurix-line: #e5e7eb;
+            --aurix-purple: #111827;
+            --aurix-orange: #c9942f;
         }
 
         * {
@@ -195,7 +195,7 @@
             color: #fff;
             font-size: 16px;
             line-height: 22px;
-            font-weight: 800;
+            font-weight: 700;
             text-decoration: none;
         }
 
@@ -560,11 +560,11 @@
         }
 
         .footer-services a:hover {
-            color: #ffad3d;
+            color: #e2b04a;
         }
 
         .footer-icon {
-            color: #ff8800;
+            color: #c9942f;
             flex: 0 0 auto;
             margin-top: 1px;
             font-weight: 800;
@@ -583,7 +583,7 @@
             border-radius: 6px;
             display: grid;
             place-items: center;
-            background: #ff8800;
+            background: #c9942f;
             color: #fff;
             font-size: 12px;
             font-weight: 800;
@@ -613,7 +613,7 @@
             border: 0;
             border-radius: 0 6px 6px 0;
             padding: 8px 14px;
-            background: #ff8800;
+            background: #c9942f;
             color: #fff;
             font-size: 16px;
             line-height: 24px;

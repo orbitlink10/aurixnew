@@ -12,7 +12,7 @@ class ProductDisplayTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_products_index_cards_only_show_image_and_product_name(): void
+    public function test_products_index_cards_show_name_category_and_quote_without_pricing(): void
     {
         Storage::fake('uploads');
         Storage::disk('uploads')->put('products/cap.jpg', 'image');
@@ -32,11 +32,11 @@ class ProductDisplayTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Custom Caps, Hats, and Beanies');
-        $response->assertSee('object-fit: contain', false);
-        $response->assertDontSee('Corporate Apparel & Uniforms');
-        $response->assertDontSee('Casual & Event Teamwear Printing');
+        $response->assertSee('Corporate Apparel & Uniforms');
+        $response->assertSee('Request Quote');
         $response->assertDontSee('KSh 200');
         $response->assertDontSee('Star 4.8');
+        $response->assertDontSee('Add to Cart');
     }
 
     public function test_product_detail_uses_uploaded_gallery_images_for_thumbnails(): void
@@ -74,5 +74,27 @@ class ProductDisplayTest extends TestCase
         $response->assertSee('products/letterhead-main.jpg');
         $response->assertSee('products/letterhead-side.jpg');
         $response->assertSee('products/letterhead-close.jpg');
+    }
+
+    public function test_product_detail_does_not_display_prices(): void
+    {
+        Storage::fake('uploads');
+
+        Product::create([
+            'name' => 'Custom T-Shirt',
+            'slug' => 'custom-t-shirt',
+            'price' => 850,
+            'marked_price' => 1200,
+            'quantity' => 10,
+            'is_active' => true,
+        ]);
+
+        $response = $this->get('/products/custom-t-shirt');
+
+        $response->assertOk();
+        $response->assertDontSee('KSh');
+        $response->assertDontSee('850');
+        $response->assertDontSee('Starting at');
+        $response->assertSee('Request a Quote');
     }
 }

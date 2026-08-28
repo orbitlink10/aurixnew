@@ -12,26 +12,7 @@ class HomepageProductsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_homepage_displays_dashboard_products(): void
-    {
-        Product::create([
-            'name' => 'Dashboard Branded Hoodie',
-            'slug' => 'dashboard-branded-hoodie',
-            'price' => 2500,
-            'marked_price' => 3000,
-            'category_name' => 'Nai Prints',
-            'is_active' => false,
-        ]);
-
-        $response = $this->get('/');
-
-        $response->assertOk();
-        $response->assertSee('Dashboard Branded Hoodie');
-        $response->assertSee('KSh 2,500');
-        $response->assertDontSee('No dashboard products have been added yet.');
-    }
-
-    public function test_homepage_displays_dashboard_work_categories(): void
+    public function test_homepage_shows_work_categories_in_portfolio(): void
     {
         WorkCategory::create([
             'name' => 'Corporate Uniforms',
@@ -45,48 +26,51 @@ class HomepageProductsTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Corporate Uniforms');
-        $response->assertSee('12 items');
-        $response->assertDontSee('No dashboard categories have been added yet.');
     }
 
-    public function test_homepage_displays_product_categories_when_work_categories_are_empty(): void
+    public function test_homepage_shows_non_empty_product_categories(): void
     {
-        ProductCategory::create([
-            'name' => 'Headwear',
-        ]);
+        $category = ProductCategory::create(['name' => 'Branded Apparel']);
 
-        $response = $this->get('/');
-
-        $response->assertOk();
-        $response->assertSee('Headwear');
-        $response->assertDontSee('No dashboard categories have been added yet.');
-    }
-
-    public function test_homepage_derives_categories_from_dashboard_products(): void
-    {
         Product::create([
-            'name' => 'Executive Gift Box',
-            'slug' => 'executive-gift-box',
-            'price' => 1800,
-            'category_name' => 'Corporate Gifts',
-            'is_active' => false,
+            'name' => 'Custom Polo Shirt',
+            'slug' => 'custom-polo-shirt',
+            'product_category_id' => $category->id,
+            'is_active' => true,
         ]);
 
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('Corporate Gifts');
-        $response->assertSee('1 item');
-        $response->assertDontSee('No dashboard categories have been added yet.');
+        $response->assertSee('Branded Apparel');
     }
 
-    public function test_homepage_uses_main_menu_items_when_no_category_data_exists(): void
+    public function test_homepage_hides_empty_product_categories(): void
     {
+        ProductCategory::create(['name' => 'Empty Category']);
+
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('Women');
-        $response->assertSee('Men');
-        $response->assertDontSee('No dashboard categories have been added yet.');
+        $response->assertDontSee('Empty Category');
+    }
+
+    public function test_homepage_does_not_display_prices(): void
+    {
+        $category = ProductCategory::create(['name' => 'Apparel']);
+
+        Product::create([
+            'name' => 'Premium Branded Hoodie',
+            'slug' => 'premium-branded-hoodie',
+            'price' => 2500,
+            'product_category_id' => $category->id,
+            'is_active' => true,
+        ]);
+
+        $response = $this->get('/');
+
+        $response->assertOk();
+        $response->assertDontSee('KSh');
+        $response->assertDontSee('2,500');
     }
 }

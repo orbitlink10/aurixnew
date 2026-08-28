@@ -18,9 +18,8 @@ class HomepageHeroVideoTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('Same day');
-        $response->assertSee('T-shirt printing');
-        $response->assertSee('Order T-Shirts Now');
+        $response->assertSee('Professional branding');
+        $response->assertSee('Request a Quote');
         $response->assertSee('youtube.com/embed/dQw4w9WgXcQ', false);
     }
 

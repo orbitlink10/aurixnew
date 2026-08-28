@@ -11,9 +11,16 @@ class Lead extends Model
 
     protected $fillable = [
         'name',
+        'company',
         'email',
         'phone',
         'service_id',
+        'product_name',
+        'quantity',
+        'customization',
+        'deadline',
+        'delivery_location',
+        'file_path',
         'budget',
         'description',
         'status',
