@@ -1,301 +1,299 @@
-@extends('layouts.public')
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Aurix Branding</title>
+        <meta name="description" content="Professional branding and printing in Kenya for custom T-shirts, uniforms, corporate gifts, signage, packaging, and nationwide delivery.">
+        <meta name="robots" content="index, follow">
+        <link rel="canonical" href="{{ url('/') }}">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="preconnect" href="https://aurixbranding.co.ke" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link rel="icon" href="{{ asset('images/aurix-branding-logo.png') }}" type="image/png">
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+    <body class="taf-page">
+        @php
+            $liveAssetBase = 'https://aurixbranding.co.ke';
+            $contact = $contactSettings ?? \App\Models\SiteSetting::defaultContactSettings();
+            $displayPhone = $contact['phone'] ?? '+254 700816670';
+            $whatsappPhone = preg_replace('/\D+/', '', $contact['whatsapp_phone'] ?? $displayPhone);
+            $whatsappPhone = $whatsappPhone ?: '254700816670';
+            $whatsappUrl = 'https://wa.me/'.$whatsappPhone.'?text='.rawurlencode($contact['whatsapp_message'] ?? 'Hello Aurix Branding, I need a quote.');
+            $quoteUrl = route('public.quote');
 
-@section('title', 'Aurix Branding — Premium Branding & Printing in Kenya')
-@section('meta_description', 'Aurix Branding provides professional corporate branding, custom apparel, embroidery, signage, promotional merchandise, and printed materials with reliable production and nationwide delivery across Kenya.')
+            $homepageCategoryRecords = isset($homepageCategories) ? collect($homepageCategories) : collect();
+            if ($homepageCategoryRecords->isEmpty() && isset($homepageSubCategories)) {
+                $homepageCategoryRecords = collect($homepageSubCategories);
+            }
+            $homepageCategoryCards = $homepageCategoryRecords->count()
+                ? $homepageCategoryRecords->map(fn ($category) => [
+                    'name' => $category->name,
+                    'image' => $category->image_url ?: asset('images/aurix-design-categories.png'),
+                    'item_count' => $category->item_count ?? $category->products_count ?? null,
+                    'href' => $category->href ?? route('public.products.index', ['category' => $category->slug ?? \Illuminate\Support\Str::slug($category->name)]),
+                ])->values()->all()
+                : [];
 
-@section('content')
-    @php
-        $whatsappPhone = '254700816670';
-        $whatsappUrl = 'https://wa.me/'.$whatsappPhone.'?text='.rawurlencode('Hello Aurix Branding, I would like a quote.');
-        $quoteUrl = route('public.quote');
+            $homepageHeroImages = !empty($heroImageUrls)
+                ? array_values($heroImageUrls)
+                : [
+                    $liveAssetBase.'/uploads/hero/qhBf5eBt8xpbCtaN8SGflOm6LCouCvo4tqJg8u5e.png',
+                    $liveAssetBase.'/uploads/hero/OFiWAkVafxQUbhec4573lMmWWBmBXQmymtI4xvUl.png',
+                    $liveAssetBase.'/uploads/hero/DHQxJoDAHuZV1tQO9UATP8wrE6EYhW2HdeDyDJ27.png',
+                    $liveAssetBase.'/uploads/hero/eD51M2yJAWvr4Nwq9iUCBneEHgcgMmw2IRsRzf8S.png',
+                    $liveAssetBase.'/uploads/hero/9Q85zFlSCcrIuGxinlAFvcYG9QPvGwHV175BCOxg.jpg',
+                ];
+            $homepageHeroVideoEmbedUrl = $heroVideoEmbedUrl ?? null;
+            $homepageHeroFallbackImage = $homepageHeroImages[0] ?? asset('images/aurix-branding-collage.png');
 
-        $heroSrc = $heroImage ?: asset('images/aurix-branding-collage.png');
+            $tickerText = 'Affordable Nationwide Delivery - Free Quotes - Premium Branding Solutions - Custom T-Shirts - Corporate Gifts - Vehicle Branding - Signage & Roll-Up Banners - Business Cards - Logo Design - High-Quality Printing - Same-Day Printing Available';
 
-        $services = [
-            ['title' => 'Corporate Branding', 'text' => 'Complete brand identity for uniforms, stationery, and workplace visibility.', 'image' => 'images/aurix-branding-collage.png', 'href' => route('public.products.index', ['category' => 'corporate'])],
-            ['title' => 'T-Shirt & Apparel Printing', 'text' => 'Custom tees, polos, and branded apparel for teams and events.', 'image' => 'images/aurix-tshirt-category.png', 'href' => route('public.products.index')],
-            ['title' => 'Embroidery', 'text' => 'Durable, premium embroidery for uniforms, caps, and corporate wear.', 'image' => 'images/aurix-embroidery-production-collage.png', 'href' => route('public.embroidery')],
-            ['title' => 'Promotional Merchandise', 'text' => 'Branded gifts and merchandise that keep your brand in front of customers.', 'image' => 'images/aurix-hoodie-category.png', 'href' => route('public.products.index')],
-            ['title' => 'Signage & Large Format', 'text' => 'Outdoor signage, roll-up banners, and large format printing.', 'image' => 'images/aurix-design-categories.png', 'href' => route('public.products.index')],
-            ['title' => 'Business Printing', 'text' => 'Business cards, stationery, and printed materials that build trust.', 'image' => 'images/aurix-business-cards.png', 'href' => route('public.products.index')],
-        ];
+            $portfolioFallback = [
+                ['title' => 'Corporate Uniforms', 'image' => asset('images/aurix-polo-category.png')],
+                ['title' => 'Embroidered Apparel', 'image' => asset('images/aurix-embroidery-production-collage.png')],
+                ['title' => 'Branded Apparel', 'image' => asset('images/aurix-tshirt-category.png')],
+            ];
+            $portfolioRecords = isset($portfolio) ? collect($portfolio) : collect();
+            $portfolioCards = $portfolioRecords->count()
+                ? $portfolioRecords->map(fn ($item) => [
+                    'title' => $item->name,
+                    'image' => $item->image_url ?: asset('images/aurix-branding-collage.png'),
+                ])->values()->all()
+                : $portfolioFallback;
 
-        $portfolioFallback = [
-            ['title' => 'Corporate Uniforms', 'image' => 'images/aurix-polo-category.png', 'href' => route('public.products.index', ['category' => 'corporate'])],
-            ['title' => 'Embroidered Apparel', 'image' => 'images/aurix-embroidery-production-collage.png', 'href' => route('public.embroidery')],
-            ['title' => 'Branded Apparel', 'image' => 'images/aurix-tshirt-category.png', 'href' => route('public.products.index')],
-            ['title' => 'Branded Merchandise', 'image' => 'images/aurix-hoodie-category.png', 'href' => route('public.products.index')],
-            ['title' => 'Signage & Banners', 'image' => 'images/aurix-design-categories.png', 'href' => route('public.products.index')],
-            ['title' => 'Business Stationery', 'image' => 'images/aurix-business-cards.png', 'href' => route('public.products.index')],
-        ];
+            $homepageProductRecords = isset($homepageProducts) ? collect($homepageProducts) : collect();
+            $homepageProductCards = $homepageProductRecords->count()
+                ? $homepageProductRecords->map(fn ($product) => [
+                    'name' => $product->name,
+                    'image' => $product->image_url ?: asset('images/aurix-branding-collage.png'),
+                    'href' => route('public.products.show', ['product' => $product->slug]),
+                ])->values()->all()
+                : [];
+        @endphp
 
-        $portfolioItems = $portfolio && $portfolio->isNotEmpty()
-            ? $portfolio->map(fn ($item) => [
-                'title' => $item->name,
-                'image' => $item->image_url ?: asset('images/aurix-branding-collage.png'),
-                'href' => route('public.products.index'),
-            ])->values()->all()
-            : $portfolioFallback;
-    @endphp
-
-    {{-- Hero ------------------------------------------------------- --}}
-    <section class="bg-white">
-        <div class="container-x grid items-center gap-12 py-14 lg:grid-cols-2 lg:py-20">
-            <div>
-                <span class="eyebrow">Premium branding &amp; printing</span>
-                <h1 class="mt-5 text-4xl font-bold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-[3.4rem]">
-                    Professional branding that makes your business stand out.
-                </h1>
-                <p class="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
-                    Aurix Branding helps businesses create professional apparel, signage, promotional merchandise, and printed materials with reliable production and nationwide delivery.
-                </p>
-                <div class="mt-9 flex flex-col gap-3 sm:flex-row">
-                    <a href="{{ $quoteUrl }}" class="btn btn-primary btn-lg">Request a Quote</a>
-                    <a href="#work" class="btn btn-outline btn-lg">Explore Our Work</a>
-                </div>
-            </div>
-            <div class="media media-4x3 media--cover rounded-2xl border border-line">
-                @if(!empty($heroVideoEmbedUrl))
-                    <iframe src="{{ $heroVideoEmbedUrl }}" title="Aurix Branding production video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>
-                @else
-                    <img src="{{ $heroSrc }}" alt="Aurix Branding custom branding and printing work" width="1200" height="900" fetchpriority="high">
-                @endif
-            </div>
-        </div>
-    </section>
-
-    {{-- Trust / value strip --------------------------------------- --}}
-    <section class="border-y border-line bg-neutral">
-        <div class="container-x grid grid-cols-2 gap-8 py-10 md:grid-cols-4">
-            @foreach([
-                ['Quality Branding', 'Sharp, durable production'],
-                ['Fast Turnaround', 'Reliable delivery timelines'],
-                ['Bulk & Custom Orders', 'From single pieces to large runs'],
-                ['Nationwide Delivery', 'Serving all of Kenya'],
-            ] as $item)
-                <div class="flex items-start gap-4">
-                    <span class="mt-1 inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent-soft text-accent-deep">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
-                    </span>
-                    <div>
-                        <div class="font-semibold text-ink">{{ $item[0] }}</div>
-                        <div class="text-sm text-ink-soft">{{ $item[1] }}</div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </section>
-
-    {{-- Services --------------------------------------------------- --}}
-    <section id="services" class="section bg-white">
-        <div class="container-x">
-            <div class="section-head">
-                <span class="eyebrow">What we do</span>
-                <h2 class="section-title">Branding and printing services</h2>
-                <p class="section-sub">Six core services, one dependable production partner for your brand.</p>
-            </div>
-
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                @foreach($services as $service)
-                    <a href="{{ $service['href'] }}" class="card group flex flex-col overflow-hidden transition-shadow hover:shadow-lg">
-                        <div class="media media-4x3 media--cover">
-                            <img src="{{ asset($service['image']) }}" alt="{{ $service['title'] }}" loading="lazy" width="800" height="600">
-                        </div>
-                        <div class="flex flex-1 flex-col p-6">
-                            <h3 class="text-lg font-semibold text-ink">{{ $service['title'] }}</h3>
-                            <p class="mt-2 text-sm leading-relaxed text-ink-soft">{{ $service['text'] }}</p>
-                            <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-deep">
-                                Explore Service
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                            </span>
-                        </div>
-                    </a>
+        <div class="taf-marquee" aria-label="Aurix branding services">
+            <div class="taf-marquee-track">
+                @foreach(range(1, 3) as $repeat)
+                    <span>{{ $tickerText }}</span>
                 @endforeach
             </div>
         </div>
-    </section>
 
-    {{-- Featured categories ---------------------------------------- --}}
-    @if($homepageCategories && $homepageCategories->isNotEmpty())
-        <section class="section bg-cream">
-            <div class="container-x">
-                <div class="section-head">
-                    <span class="eyebrow">Browse by category</span>
-                    <h2 class="section-title">Featured branding categories</h2>
-                    <p class="section-sub">Start from a category and request a tailored quotation.</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-                    @foreach($homepageCategories as $category)
-                        <a href="{{ route('public.products.index', ['category' => $category->slug]) }}" class="card group overflow-hidden text-center">
-                            <div class="media media-square media--contain p-4">
-                                @if($category->image_url)
-                                    <img src="{{ $category->image_url }}" alt="{{ $category->name }}" loading="lazy" width="400" height="400">
-                                @else
-                                    <img src="{{ asset('images/aurix-design-categories.png') }}" alt="{{ $category->name }}" loading="lazy" width="400" height="400">
-                                @endif
-                            </div>
-                            <div class="px-3 pb-5">
-                                <div class="text-sm font-semibold text-ink">{{ $category->name }}</div>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
-
-    {{-- Portfolio / our work --------------------------------------- --}}
-    <section id="work" class="section bg-white">
-        <div class="container-x">
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                <div class="section-head mb-0">
-                    <span class="eyebrow">Our work</span>
-                    <h2 class="section-title">Recent branding projects</h2>
-                    <p class="section-sub">Visual proof of what we produce for businesses across Kenya.</p>
-                </div>
-                <a href="{{ $quoteUrl }}" class="btn btn-outline shrink-0">View Our Work</a>
-            </div>
-
-            <div class="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-3" data-lightbox-gallery>
-                @foreach($portfolioItems as $item)
-                    <button type="button" class="media media-4x3 media--cover group relative overflow-hidden rounded-xl text-left" data-lightbox-trigger data-lightbox-src="{{ $item['image'] }}" data-lightbox-title="{{ $item['title'] }}">
-                        <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy" width="800" height="600" class="transition-transform duration-300 group-hover:scale-105">
-                        <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                            <span class="text-sm font-semibold text-white">{{ $item['title'] }}</span>
-                        </span>
+        <header class="taf-header">
+            <div class="taf-wrap taf-header-main">
+                <a href="{{ url('/') }}" class="taf-brand" aria-label="Aurix Branding home">
+                    <img src="{{ $logoUrl ?: asset('images/aurix-branding-logo.png') }}" alt="Aurix Branding logo">
+                    <span>Aurix Branding</span>
+                </a>
+                <form class="taf-search" action="{{ route('public.products.index') }}" method="get">
+                    <input name="q" type="search" placeholder="Search apparel, branding, signage" aria-label="Search apparel, branding, signage">
+                    <button type="submit" aria-label="Search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 21-4.35-4.35m0 0A7.5 7.5 0 1 0 6 16.65a7.5 7.5 0 0 0 10.65 0Z"/></svg>
                     </button>
-                @endforeach
+                </form>
+                <div class="taf-phone">
+                    <span>{{ $contact['support_label'] ?? 'For support call' }}</span>
+                    <strong>{{ $displayPhone }}</strong>
+                </div>
             </div>
-        </div>
-    </section>
+            <nav class="taf-nav" aria-label="Product categories">
+                <div class="taf-wrap">
+                    @include('partials.public-main-menu')
+                </div>
+            </nav>
+        </header>
 
-    {{-- Why Aurix Branding ----------------------------------------- --}}
-    <section id="about" class="section bg-cream">
-        <div class="container-x grid items-center gap-12 lg:grid-cols-2">
-            <div class="media media-4x3 media--cover rounded-2xl border border-line">
-                <img src="{{ asset('images/aurix-branding-collage.png') }}" alt="Aurix Branding production quality" loading="lazy" width="1200" height="900">
-            </div>
-            <div>
-                <span class="eyebrow">Why Aurix Branding</span>
-                <h2 class="section-title">A production partner you can trust</h2>
-                <p class="mt-5 text-lg leading-relaxed text-ink-soft">
-                    We combine clean design, careful material selection, and dependable production to deliver branding that feels premium and lasts. From corporates and SMEs to schools, events, and institutions.
-                </p>
-                <ul class="mt-7 grid gap-4">
-                    @foreach([
-                        'One point of contact from artwork to delivery.',
-                        'Quotation-based pricing matched to your quantity and materials.',
-                        'Quality checks on every order before dispatch.',
-                        'Artwork and design support when you need it.',
-                    ] as $point)
-                        <li class="flex items-start gap-3">
-                            <span class="mt-0.5 inline-flex h-6 w-6 flex-none items-center justify-center rounded-full bg-accent-soft text-accent-deep">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
-                            </span>
-                            <span class="text-ink-soft">{{ $point }}</span>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    {{-- How it works ------------------------------------------------ --}}
-    <section class="section bg-white">
-        <div class="container-x">
-            <div class="section-head section-head--center">
-                <span class="eyebrow">Simple process</span>
-                <h2 class="section-title">How it works</h2>
-            </div>
-
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                @foreach([
-                    ['01', 'Share Your Requirements', 'Tell us what you need branded, quantities, and timeline.'],
-                    ['02', 'Approve Design & Quote', 'We send a design proof and a tailored quotation.'],
-                    ['03', 'We Produce Your Order', 'Your order is produced with careful quality control.'],
-                    ['04', 'Pickup or Delivery', 'Collect in Nairobi or we deliver nationwide.'],
-                ] as $step)
-                    <div class="card p-6">
-                        <div class="text-2xl font-bold text-accent">{{ $step[0] }}</div>
-                        <h3 class="mt-3 text-base font-semibold text-ink">{{ $step[1] }}</h3>
-                        <p class="mt-2 text-sm leading-relaxed text-ink-soft">{{ $step[2] }}</p>
+        <main>
+            <section class="taf-hero" aria-labelledby="home-hero-title">
+                <div class="taf-wrap taf-hero-grid">
+                    <div class="taf-hero-copy">
+                        <span class="taf-eyebrow">Same day custom printing</span>
+                        <h1 id="home-hero-title">Same day <span>T-shirt printing</span></h1>
+                        <p>Order custom tees, uniforms, event merchandise, branded gifts, packaging, signage, and business print with sharp artwork setup and reliable production support.</p>
+                        <div class="taf-hero-offer" aria-label="Order highlights">
+                            <strong>No minimum order</strong>
+                            <span>Single pieces, bulk staff kits, event runs, and repeat business orders.</span>
+                        </div>
+                        <div class="taf-hero-services" aria-label="Printing and branding services">
+                            <span>DTF transfers</span>
+                            <span>Embroidery</span>
+                            <span>Screen printing</span>
+                            <span>Vinyl names</span>
+                            <span>Signage</span>
+                        </div>
+                        <div class="taf-hero-actions">
+                            <a href="{{ route('public.products.index', ['q' => 't-shirt']) }}" class="taf-primary-btn">Order T-Shirts Now</a>
+                            <a href="{{ $quoteUrl }}" class="taf-link-btn">Request a Quote</a>
+                        </div>
                     </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
+                    <div class="taf-hero-video-panel" aria-label="Aurix Branding production video">
+                        <div class="taf-hero-video-frame">
+                            @if($homepageHeroVideoEmbedUrl)
+                                <iframe
+                                    src="{{ $homepageHeroVideoEmbedUrl }}"
+                                    title="Aurix Branding custom printing video"
+                                    loading="lazy"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen
+                                ></iframe>
+                            @else
+                                <img src="{{ $homepageHeroFallbackImage }}" alt="Aurix Branding custom printing preview" width="1200" height="750" fetchpriority="high">
+                                <span class="taf-hero-play" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-    {{-- Client trust ------------------------------------------------ --}}
-    <section class="section bg-cream">
-        <div class="container-x">
-            <div class="section-head section-head--center">
-                <span class="eyebrow">Who we serve</span>
-                <h2 class="section-title">Trusted by businesses across Kenya</h2>
-                <p class="section-sub">We handle branding and printing for organisations of every size and sector.</p>
-            </div>
+            <section class="taf-section taf-category-section">
+                <div class="taf-wrap">
+                    <div class="taf-category-head">
+                        <div>
+                            <span class="taf-category-kicker">Shop by category</span>
+                            <h2>Design categories</h2>
+                        </div>
+                        <a href="{{ route('public.products.index') }}">View all categories <span aria-hidden="true">&#8599;</span></a>
+                    </div>
+                    <div class="taf-category-row">
+                        @forelse($homepageCategoryCards as $category)
+                            <a href="{{ $category['href'] }}" class="taf-category-card">
+                                <span class="taf-category-media">
+                                    <img src="{{ $category['image'] }}" alt="{{ $category['name'] }}" loading="lazy">
+                                </span>
+                                <strong>{{ $category['name'] }}</strong>
+                                <small>
+                                    @if($category['item_count'] !== null)
+                                        {{ $category['item_count'] }} {{ $category['item_count'] == 1 ? 'item' : 'items' }}
+                                    @else
+                                        Custom orders
+                                    @endif
+                                </small>
+                            </a>
+                        @empty
+                            <p class="taf-dashboard-empty">No dashboard categories have been added yet.</p>
+                        @endforelse
+                    </div>
+                </div>
+            </section>
 
-            <div class="flex flex-wrap justify-center gap-3">
-                @foreach(['Corporates', 'SMEs', 'Schools', 'Events', 'Restaurants', 'Hotels', 'Institutions', 'Startups'] as $audience)
-                    <span class="rounded-full border border-line bg-white px-5 py-2.5 text-sm font-semibold text-ink">{{ $audience }}</span>
-                @endforeach
-            </div>
-        </div>
-    </section>
+            <section id="work" class="taf-section taf-work-section">
+                <div class="taf-wrap">
+                    <div class="taf-category-head">
+                        <div>
+                            <span class="taf-category-kicker">Our work</span>
+                            <h2>Recent branding projects</h2>
+                        </div>
+                        <a href="{{ $quoteUrl }}">Request a Quote <span aria-hidden="true">&#8599;</span></a>
+                    </div>
+                    <div class="taf-work-grid">
+                        @foreach($portfolioCards as $item)
+                            <article class="taf-work-card">
+                                <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
+                                <strong>{{ $item['title'] }}</strong>
+                            </article>
+                        @endforeach
+                    </div>
+                </div>
+            </section>
 
-    {{-- Final CTA --------------------------------------------------- --}}
-    <section id="contact" class="section bg-brand text-white">
-        <div class="container-x text-center">
-            <h2 class="mx-auto max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl">Ready to bring your brand to life?</h2>
-            <p class="mx-auto mt-5 max-w-2xl text-lg text-gray-300">
-                Tell us what you're branding and we'll help you choose the right materials, printing method, and finishing.
-            </p>
-            <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <a href="{{ $quoteUrl }}" class="btn btn-accent btn-lg">Request a Quote</a>
-                <a href="{{ $whatsappUrl }}" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg">WhatsApp Us</a>
-            </div>
-        </div>
-    </section>
-@endsection
+            <section class="taf-section taf-home-products">
+                <div class="taf-wrap">
+                    <div class="taf-product-section-head">
+                        <div>
+                            <span>Featured products</span>
+                            <h2>Latest products</h2>
+                        </div>
+                        <p>Custom branding <span></span> Ready to quote</p>
+                    </div>
 
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const triggers = document.querySelectorAll('[data-lightbox-trigger]');
-            if (!triggers.length) return;
+                    <div class="taf-product-grid">
+                        @forelse($homepageProductCards as $product)
+                            <a href="{{ $product['href'] }}" class="taf-product-card">
+                                <span class="taf-product-media">
+                                    @if($product['image'])
+                                        <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" loading="lazy">
+                                    @else
+                                        <span class="taf-product-placeholder">No image</span>
+                                    @endif
+                                    <span class="taf-customize-btn">Customize Now</span>
+                                </span>
+                                <span class="taf-product-info">
+                                    <strong>{{ $product['name'] }}</strong>
+                                    <span class="taf-product-quote">Request a tailored quote</span>
+                                    <span class="taf-color-dots" aria-hidden="true">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </span>
+                                </span>
+                            </a>
+                        @empty
+                            <p class="taf-dashboard-empty">No dashboard products have been added yet.</p>
+                        @endforelse
+                    </div>
+                </div>
+            </section>
+        </main>
 
-            const overlay = document.createElement('div');
-            overlay.setAttribute('role', 'dialog');
-            overlay.setAttribute('aria-modal', 'true');
-            overlay.setAttribute('aria-label', 'Image viewer');
-            overlay.style.cssText = 'position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(17,24,39,0.9);padding:24px;';
-            overlay.innerHTML = '<button data-lightbox-close aria-label="Close" style="position:absolute;top:16px;right:20px;color:#fff;font-size:2rem;line-height:1;background:none;border:0;cursor:pointer;">&times;</button><figure style="max-width:min(920px,100%);text-align:center;"><img data-lightbox-image src="" alt="" style="max-height:78vh;width:auto;max-width:100%;border-radius:12px;object-fit:contain;"><figcaption data-lightbox-caption style="color:#fff;margin-top:14px;font-size:1rem;font-weight:600;"></figcaption></figure>';
-            document.body.appendChild(overlay);
+        <footer class="taf-site-footer">
+            <section class="taf-footer-main">
+                <div class="taf-footer-container">
+                    <div class="taf-footer-grid">
+                        <div>
+                            <h2 class="taf-footer-title">Contact Us</h2>
+                            <a class="taf-footer-brand" href="{{ url('/') }}"><img src="{{ asset('images/aurix-branding-logo.png') }}" alt="Aurix Branding logo"></a>
+                            <ul class="taf-footer-contact">
+                                <li><span class="taf-footer-icon">&#8250;</span><span>{{ $displayPhone }}</span></li>
+                                @if(!empty($contact['email']))
+                                    <li><span class="taf-footer-icon">&#8250;</span><span>{{ $contact['email'] }}</span></li>
+                                @endif
+                                <li><span class="taf-footer-icon">&#8250;</span><span>Mon-Fri: 8am - 5pm</span></li>
+                                <li><span class="taf-footer-icon">&#8250;</span><span>Sat: 8am - 12pm</span></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h2 class="taf-footer-title">Our Services</h2>
+                            <ul class="taf-footer-services">
+                                <li><span class="taf-footer-icon">&#8250;</span><a href="{{ route('public.products.index') }}">Printed Products</a></li>
+                                <li><span class="taf-footer-icon">&#8250;</span><a href="{{ route('public.products.index', ['category' => 'signage']) }}">Signage</a></li>
+                                <li><span class="taf-footer-icon">&#8250;</span><a href="{{ route('public.products.index', ['category' => 'uniforms']) }}">Uniform Branding</a></li>
+                                <li><span class="taf-footer-icon">&#8250;</span><a href="{{ route('public.embroidery') }}">Embroidery</a></li>
+                                <li><span class="taf-footer-icon">&#8250;</span><a href="{{ $quoteUrl }}">Quote Request</a></li>
+                                <li><span class="taf-footer-icon">&#8250;</span><a href="{{ url('/') }}">Aurix Branding</a></li>
+                            </ul>
+                            <h2 class="taf-footer-title">Our Office Address</h2>
+                            <div class="taf-footer-address"><span class="taf-footer-icon">&#8250;</span><span>{{ $contact['address'] ?: 'Nairobi, Kenya. Branding and printing support available across Kenya.' }}</span></div>
+                        </div>
+                        <div>
+                            <h2 class="taf-footer-title">Find Us On Social Media</h2>
+                            <div class="taf-footer-social">
+                                <a href="#" aria-label="Facebook">f</a>
+                                <a href="#" aria-label="Twitter">x</a>
+                                <a href="#" aria-label="Instagram">ig</a>
+                                <a href="#" aria-label="LinkedIn">in</a>
+                            </div>
+                            <h2 class="taf-footer-title">Signup To Our Newsletter</h2>
+                            <form class="taf-footer-newsletter" action="{{ url('/') }}" method="get">
+                                <input type="email" name="email" placeholder="Email Address..." aria-label="Email Address">
+                                <button type="submit">Subscribe!</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="taf-footer-copy">&copy; {{ now()->year }} Aurix Branding. Branding, printing, signage, uniforms, packaging, and promotional products across Kenya.</div>
+                </div>
+            </section>
+        </footer>
 
-            const image = overlay.querySelector('[data-lightbox-image]');
-            const caption = overlay.querySelector('[data-lightbox-caption]');
-
-            const open = (trigger) => {
-                image.src = trigger.dataset.lightboxSrc;
-                image.alt = trigger.dataset.lightboxTitle || '';
-                caption.textContent = trigger.dataset.lightboxTitle || '';
-                overlay.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            };
-
-            const close = () => {
-                overlay.style.display = 'none';
-                document.body.style.overflow = '';
-            };
-
-            triggers.forEach((trigger) => trigger.addEventListener('click', () => open(trigger)));
-            overlay.querySelector('[data-lightbox-close]').addEventListener('click', close);
-            overlay.addEventListener('click', (event) => {
-                if (event.target === overlay) close();
-            });
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape') close();
-            });
-        });
-    </script>
-@endpush
+        <a class="taf-whatsapp-float" href="{{ $whatsappUrl }}" target="_blank" rel="noopener" aria-label="Chat with Aurix Branding on WhatsApp">
+            <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M16.02 3.2c-7.06 0-12.8 5.68-12.8 12.68 0 2.24.6 4.42 1.74 6.34L3.1 29l6.98-1.82a12.9 12.9 0 0 0 5.94 1.46c7.06 0 12.8-5.68 12.8-12.68S23.08 3.2 16.02 3.2Zm0 23.28c-1.9 0-3.76-.5-5.38-1.44l-.38-.22-4.14 1.08 1.1-4.02-.24-.42a10.35 10.35 0 0 1-1.6-5.58c0-5.8 4.78-10.52 10.64-10.52s10.64 4.72 10.64 10.52-4.78 10.6-10.64 10.6Zm5.82-7.88c-.32-.16-1.9-.94-2.2-1.04-.3-.12-.52-.16-.74.16-.22.32-.84 1.04-1.04 1.26-.18.22-.38.24-.7.08-.32-.16-1.36-.5-2.58-1.58-.96-.84-1.6-1.88-1.78-2.2-.18-.32-.02-.5.14-.66.14-.14.32-.38.48-.56.16-.18.22-.32.32-.54.1-.22.06-.4-.02-.56-.08-.16-.74-1.78-1.02-2.44-.26-.64-.54-.56-.74-.56h-.64c-.22 0-.56.08-.86.4-.3.32-1.14 1.1-1.14 2.68s1.18 3.12 1.34 3.34c.16.22 2.32 3.52 5.62 4.94.78.34 1.4.54 1.88.7.8.24 1.52.2 2.08.12.64-.1 1.9-.78 2.16-1.52.26-.74.26-1.38.18-1.52-.08-.14-.28-.22-.6-.38Z"/>
+            </svg>
+        </a>
+    </body>
+</html>
