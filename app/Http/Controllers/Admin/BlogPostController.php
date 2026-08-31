@@ -22,7 +22,10 @@ class BlogPostController extends Controller
      */
     public function index()
     {
-        $posts = BlogPost::with(['category', 'tags'])->orderByDesc('created_at')->paginate(15);
+        $posts = BlogPost::with(['category', 'tags'])
+            ->orderByDesc('created_at')
+            ->paginate(20)
+            ->withQueryString();
 
         return view('admin.blog.index', compact('posts'));
     }

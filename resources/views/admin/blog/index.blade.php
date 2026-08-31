@@ -20,6 +20,33 @@
         </div>
 
         <div class="page-card-body">
+            <div class="pagination-bar">
+                <div class="pagination-summary">
+                    @if($posts->total())
+                        Showing {{ $posts->firstItem() }}-{{ $posts->lastItem() }} of {{ $posts->total() }} pages
+                    @else
+                        No pages found
+                    @endif
+                </div>
+                @if($posts->hasPages())
+                    <nav class="pagination-actions" aria-label="Pages pagination">
+                        @if($posts->onFirstPage())
+                            <span class="pagination-btn is-disabled" aria-disabled="true">Previous</span>
+                        @else
+                            <a class="pagination-btn" href="{{ $posts->previousPageUrl() }}" rel="prev">Previous</a>
+                        @endif
+
+                        <span class="pagination-page">Page {{ $posts->currentPage() }} of {{ $posts->lastPage() }}</span>
+
+                        @if($posts->hasMorePages())
+                            <a class="pagination-btn" href="{{ $posts->nextPageUrl() }}" rel="next">Next</a>
+                        @else
+                            <span class="pagination-btn is-disabled" aria-disabled="true">Next</span>
+                        @endif
+                    </nav>
+                @endif
+            </div>
+
             <form action="{{ route('admin.blog-posts.bulk') }}" method="POST" id="bulk-action-form">
                 @csrf
                 <div class="bulk-actions">
@@ -98,7 +125,11 @@
                 </form>
             @endforeach
 
-            <div class="pagination-wrap">{{ $posts->links() }}</div>
+            @if($posts->hasPages())
+                <div class="pagination-wrap">
+                    {{ $posts->onEachSide(1)->links() }}
+                </div>
+            @endif
         </div>
     </div>
 </section>
@@ -159,6 +190,59 @@
     .page-card-body {
         padding: 18px;
         background: #ffffff;
+    }
+
+    .pagination-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 14px;
+        border: 1px solid #dbeafe;
+        border-radius: 10px;
+        background: #f8fbff;
+        padding: 10px 12px;
+    }
+
+    .pagination-summary {
+        color: #475569;
+        font-size: 0.88rem;
+        font-weight: 600;
+    }
+
+    .pagination-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+    }
+
+    .pagination-page {
+        color: #64748b;
+        font-size: 0.84rem;
+        font-weight: 600;
+    }
+
+    .pagination-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 36px;
+        border: 1px solid #2563eb;
+        border-radius: 999px;
+        background: #2563eb;
+        color: #ffffff;
+        padding: 0 14px;
+        font-size: 0.84rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .pagination-btn.is-disabled {
+        border-color: #cbd5e1;
+        background: #e2e8f0;
+        color: #64748b;
+        cursor: not-allowed;
     }
 
     .bulk-actions {
@@ -299,18 +383,26 @@
     }
 
     .pagination-wrap {
-        margin-top: 16px;
+        margin-top: 18px;
+        overflow-x: auto;
     }
 
     @media (max-width: 640px) {
         .page-card-header,
         .page-heading,
+        .pagination-bar,
         .bulk-actions {
             align-items: stretch;
             flex-direction: column;
         }
 
+        .pagination-actions {
+            justify-content: space-between;
+            white-space: normal;
+        }
+
         .page-add-btn,
+        .pagination-btn,
         .bulk-apply {
             justify-content: center;
         }
