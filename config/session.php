@@ -2,6 +2,14 @@
 
 use Illuminate\Support\Str;
 
+$sessionDomain = env('SESSION_DOMAIN');
+
+// Host-only cookies work locally and after deploying a copied local .env file.
+// Browsers reject cookies scoped to a loopback domain on a public hostname.
+if (in_array($sessionDomain, ['localhost', '127.0.0.1', '::1'], true)) {
+    $sessionDomain = null;
+}
+
 return [
 
     /*
@@ -156,7 +164,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN'),
+    'domain' => $sessionDomain,
 
     /*
     |--------------------------------------------------------------------------
