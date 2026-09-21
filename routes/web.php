@@ -75,15 +75,46 @@ Route::get('/', function () {
             ->values();
     }
 
-    // Portfolio / recent work — admin managed "work categories".
+    // Recent products with their saved photos, falling back to uploaded work.
     $portfolio = collect();
 
-    if (Schema::hasTable('work_categories')) {
-        $portfolio = WorkCategory::where('is_active', true)
+    if (Schema::hasTable('products')) {
+        $portfolio = Product::query()
+            ->where('is_active', true)
+            ->with('images')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->lazy(50)
+            ->map(function (Product $product) {
+                $image = $product->image_url
+                    ?: $product->images->map(fn ($image) => $image->image_url)->first(fn ($url) => filled($url));
+
+                return [
+                    'title' => $product->name,
+                    'image' => $image,
+                    'href' => route('public.products.show', ['product' => $product->slug]),
+                ];
+            })
+            ->filter(fn ($item) => filled($item['image']))
+            ->take(6)
+            ->collect();
+    }
+
+    if ($portfolio->isEmpty() && Schema::hasTable('work_categories')) {
+        $portfolio = WorkCategory::query()
+            ->where('is_active', true)
             ->orderBy('sort_order')
             ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->lazy(50)
+            ->map(fn (WorkCategory $work) => [
+                'title' => $work->name,
+                'image' => $work->image_url,
+                'href' => route('public.quote'),
+            ])
+            ->filter(fn ($item) => filled($item['image']))
             ->take(6)
-            ->get();
+            ->collect();
     }
 
     // A small selection of featured products (no pricing shown publicly).

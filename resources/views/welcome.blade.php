@@ -51,19 +51,6 @@
 
             $tickerText = 'Affordable Nationwide Delivery - Free Quotes - Premium Branding Solutions - Custom T-Shirts - Corporate Gifts - Vehicle Branding - Signage & Roll-Up Banners - Business Cards - Logo Design - High-Quality Printing - Same-Day Printing Available';
 
-            $portfolioFallback = [
-                ['title' => 'Corporate Uniforms', 'image' => asset('images/aurix-polo-category.png')],
-                ['title' => 'Embroidered Apparel', 'image' => asset('images/aurix-embroidery-production-collage.png')],
-                ['title' => 'Branded Apparel', 'image' => asset('images/aurix-tshirt-category.png')],
-            ];
-            $portfolioRecords = isset($portfolio) ? collect($portfolio) : collect();
-            $portfolioCards = $portfolioRecords->count()
-                ? $portfolioRecords->map(fn ($item) => [
-                    'title' => $item->name,
-                    'image' => $item->image_url ?: asset('images/aurix-branding-collage.png'),
-                ])->values()->all()
-                : $portfolioFallback;
-
             $homepageProductRecords = isset($homepageProducts) ? collect($homepageProducts) : collect();
             $homepageProductCards = $homepageProductRecords->count()
                 ? $homepageProductRecords->map(fn ($product) => [
@@ -191,12 +178,14 @@
                         <a href="{{ $quoteUrl }}">Request a Quote <span aria-hidden="true">&#8599;</span></a>
                     </div>
                     <div class="taf-work-grid">
-                        @foreach($portfolioCards as $item)
-                            <article class="taf-work-card">
+                        @forelse($portfolio ?? [] as $item)
+                            <a href="{{ $item['href'] }}" class="taf-work-card">
                                 <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" loading="lazy">
                                 <strong>{{ $item['title'] }}</strong>
-                            </article>
-                        @endforeach
+                            </a>
+                        @empty
+                            <p class="taf-dashboard-empty">Recent branding projects will be added soon.</p>
+                        @endforelse
                     </div>
                 </div>
             </section>
