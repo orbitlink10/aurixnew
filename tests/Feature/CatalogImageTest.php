@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -141,5 +142,24 @@ class CatalogImageTest extends TestCase
             ->assertOk()
             ->assertSee('src="https://catalog.example/images/aurix-branding-collage.png"', false)
             ->assertDontSee('uploads/products/missing');
+    }
+
+    public function test_admin_shows_saved_paths_when_image_files_are_unavailable(): void
+    {
+        $product = Product::create([
+            'name' => 'Official Corporate Letterheads',
+            'slug' => 'official-corporate-letterheads',
+            'image_path' => 'products/missing-letterhead.webp',
+            'is_active' => true,
+        ]);
+        $product->images()->create(['image_path' => 'products/missing-gallery.webp']);
+
+        $this->actingAs(User::factory()->create())
+            ->get('/admin/products/'.$product->id.'/edit')
+            ->assertOk()
+            ->assertSee('This saved image is unavailable.')
+            ->assertSee('products/missing-letterhead.webp')
+            ->assertSee('products/missing-gallery.webp')
+            ->assertDontSee('<img src=""', false);
     }
 }

@@ -95,6 +95,11 @@
                         <div class="current-image">
                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
                         </div>
+                    @elseif($isEditing && $product->image_path)
+                        <p class="form-hint" role="status">
+                            This saved image is unavailable. Restore the original file or choose a new image and submit.
+                            Saved path: <code>{{ $product->image_path }}</code>
+                        </p>
                     @endif
                 </div>
 
@@ -110,7 +115,11 @@
                         <div class="current-gallery">
                             @foreach($galleryImages as $galleryImage)
                                 <label class="gallery-thumb">
-                                    <img src="{{ $galleryImage->image_url }}" alt="{{ $product->name }} gallery image">
+                                    @if($galleryImage->image_url)
+                                        <img src="{{ $galleryImage->image_url }}" alt="{{ $product->name }} gallery image">
+                                    @else
+                                        <span class="form-hint">Image unavailable. Saved path: <code>{{ $galleryImage->image_path }}</code></span>
+                                    @endif
                                     <span>
                                         <input type="checkbox" name="remove_gallery_images[]" value="{{ $galleryImage->id }}">
                                         Remove

@@ -56,6 +56,11 @@
                 <div class="current-image">
                     <img src="{{ $category->image_url }}" alt="{{ $category->name }}">
                 </div>
+            @elseif($isEditing && $category->image_path)
+                <p class="field-help" role="status">
+                    This saved image is unavailable. Restore the original file or choose a new photo and save.
+                    Saved path: <code>{{ $category->image_path }}</code>
+                </p>
             @endif
         </div>
 
