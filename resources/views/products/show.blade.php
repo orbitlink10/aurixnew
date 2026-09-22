@@ -24,7 +24,7 @@
         "description": "{{ $product->meta_description ?: Str::limit(strip_tags($product->description ?? ''), 155) }}",
         "url": "{{ route('public.products.show', ['product' => $product->slug]) }}",
         "brand": {"@@type": "Brand", "name": "{{ config('app.name') }}"},
-        @if($product->image_url)"image": "{{ $product->image_url }}",@endif
+        @if($product->display_image_url)"image": "{{ $product->display_image_url }}",@endif
         "category": "{{ $product->category?->name ?: $product->category_name ?: 'Custom Branding' }}"
     }
     </script>
@@ -220,7 +220,7 @@
                     @foreach($relatedProducts as $related)
                         <article class="card group flex flex-col overflow-hidden">
                             <a href="{{ route('public.products.show', ['product' => $related->slug]) }}" class="media media-square media--contain p-4">
-                                <img src="{{ $related->image_url ?: asset('images/aurix-branding-collage.png') }}" alt="{{ $related->name }}" loading="lazy" width="500" height="500">
+                                <img src="{{ $related->display_image_url ?: asset('images/aurix-branding-collage.png') }}" alt="{{ $related->name }}" loading="lazy" width="500" height="500">
                             </a>
                             <div class="flex flex-1 flex-col p-5">
                                 <h3 class="text-sm font-semibold leading-snug text-ink">

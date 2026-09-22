@@ -82,8 +82,8 @@ class HomepageProductsTest extends TestCase
         $this->assertSame(2, substr_count($section, 'class="taf-work-card"'));
         $this->assertStringContainsString('Employee Badge', $section);
         $this->assertStringContainsString('Branded Pen', $section);
-        $this->assertStringContainsString('src="'.Storage::disk('uploads')->url('products/badge.jpg').'"', $section);
-        $this->assertStringContainsString('src="'.Storage::disk('uploads')->url('products/pen.jpg').'"', $section);
+        $this->assertStringContainsString('src="'.asset('uploads/products/badge.jpg').'"', $section);
+        $this->assertStringContainsString('src="'.asset('uploads/products/pen.jpg').'"', $section);
         $this->assertStringContainsString('href="'.route('public.products.show', $pen->slug).'"', $section);
         $this->assertLessThan(strpos($section, 'Branded Pen'), strpos($section, 'Employee Badge'));
         $this->assertStringNotContainsString('badge-alternate.jpg', $section);

@@ -86,12 +86,9 @@ Route::get('/', function () {
             ->orderByDesc('id')
             ->lazy(50)
             ->map(function (Product $product) {
-                $image = $product->image_url
-                    ?: $product->images->map(fn ($image) => $image->image_url)->first(fn ($url) => filled($url));
-
                 return [
                     'title' => $product->name,
-                    'image' => $image,
+                    'image' => $product->display_image_url,
                     'href' => route('public.products.show', ['product' => $product->slug]),
                 ];
             })
@@ -122,7 +119,7 @@ Route::get('/', function () {
     if (Schema::hasTable('products')) {
         $homepageProducts = Product::query()
             ->where('is_active', true)
-            ->with('category')
+            ->with(['category', 'images'])
             ->orderByDesc('updated_at')
             ->take(4)
             ->get();
@@ -244,7 +241,7 @@ Route::get('/products', function () {
 
     $query = Product::query()
         ->where('is_active', true)
-        ->with('category')
+        ->with(['category', 'images'])
         ->where(function ($products) use ($legacyBrand) {
             $products->whereNull('category_name')
                 ->orWhere('category_name', 'not like', '%'.$legacyBrand.'%');
@@ -318,7 +315,7 @@ Route::get('/products/{product:slug}', function (Product $product) {
                 $query->where('category_name', $product->category_name);
             }
         })
-        ->with('category')
+        ->with(['category', 'images'])
         ->orderByDesc('updated_at')
         ->take(4)
         ->get();

@@ -58,11 +58,7 @@
                             @endphp
                             <article class="card group flex flex-col overflow-hidden">
                                 <a href="{{ route('public.products.show', ['product' => $product->slug]) }}" class="media media-square media--contain p-4">
-                                    @if($product->image_url)
-                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy" width="500" height="500">
-                                    @else
-                                        <img src="{{ asset('images/aurix-branding-collage.png') }}" alt="{{ $product->name }}" loading="lazy" width="500" height="500">
-                                    @endif
+                                    <img src="{{ $product->display_image_url ?: asset('images/aurix-branding-collage.png') }}" alt="{{ $product->name }}" loading="lazy" width="500" height="500">
                                 </a>
                                 <div class="flex flex-1 flex-col p-5">
                                     <span class="text-xs font-semibold uppercase tracking-wider text-accent-deep">{{ $categoryLabel }}</span>

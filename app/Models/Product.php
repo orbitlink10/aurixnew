@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Support\UploadedImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Product extends Model
@@ -54,28 +54,18 @@ class Product extends Model
 
     public function getImageUrlAttribute(): ?string
     {
-        if (!$this->image_path) {
-            return null;
+        return UploadedImage::url($this->image_path);
+    }
+
+    public function getDisplayImageUrlAttribute(): ?string
+    {
+        if ($url = $this->image_url) {
+            return $url;
         }
 
-        $uploads = Storage::disk('uploads');
-        if ($uploads->exists($this->image_path)) {
-            return $uploads->url($this->image_path);
-        }
-
-        $public = Storage::disk('public');
-        if ($public->exists($this->image_path)) {
-            try {
-                if (!$uploads->exists($this->image_path)) {
-                    $uploads->put($this->image_path, $public->get($this->image_path));
-                }
-                return $uploads->url($this->image_path);
-            } catch (\Throwable $e) {
-                return asset('storage/'.$this->image_path);
-            }
-        }
-
-        return null;
+        return $this->images
+            ->map(fn (ProductImage $image) => $image->image_url)
+            ->first(fn ($url) => filled($url));
     }
 
     public function category()

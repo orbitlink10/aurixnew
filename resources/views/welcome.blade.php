@@ -55,7 +55,7 @@
             $homepageProductCards = $homepageProductRecords->count()
                 ? $homepageProductRecords->map(fn ($product) => [
                     'name' => $product->name,
-                    'image' => $product->image_url ?: asset('images/aurix-branding-collage.png'),
+                    'image' => $product->display_image_url ?: asset('images/aurix-branding-collage.png'),
                     'href' => route('public.products.show', ['product' => $product->slug]),
                 ])->values()->all()
                 : [];
