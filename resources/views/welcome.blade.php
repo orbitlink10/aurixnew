@@ -51,7 +51,7 @@
         <div class="taf-wrap taf-hero-grid">
             <div class="taf-hero-copy">
                 <span class="taf-eyebrow">Same day custom printing</span>
-                <h1 id="home-hero-title">Branding and Printing Services in Nairobi, Kenya</h1>
+                <h1 id="home-hero-title">Branding and <span>Printing Services</span> in Nairobi, Kenya</h1>
                 <p>Custom tees, uniforms, event merchandise, branded gifts, signage, and business print with sharp artwork setup and reliable production support across Kenya.</p>
                 <div class="taf-hero-offer" aria-label="Order highlights">
                     <strong>Quotation-based pricing</strong>
