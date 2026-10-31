@@ -1002,7 +1002,7 @@
         max-width: 680px;
         margin: 12px 0 0;
         color: #20232c;
-        font-size: clamp(3rem, 5.6vw, 6rem);
+        font-size: clamp(3.4rem, 6.6vw, 7.1rem);
         font-weight: 900;
         letter-spacing: 0;
         line-height: 1.08;
@@ -1647,7 +1647,7 @@
         }
 
         .taf-hero-copy h1 {
-            font-size: clamp(2.7rem, 5.4vw, 4.3rem);
+            font-size: clamp(3.1rem, 6.3vw, 5rem);
         }
 
         .taf-hero-image-frame {
@@ -1709,7 +1709,7 @@
         }
 
         .taf-hero-copy h1 {
-            font-size: 2.6rem;
+            font-size: 3rem;
         }
 
         .taf-hero-video-frame img {
