@@ -4,6 +4,7 @@ const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduc
 
 document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
+    initHeroImages();
     initScrollReveal();
     initQuoteForms();
 });
@@ -72,5 +73,20 @@ function initQuoteForms() {
                 button.innerHTML = original;
             }, 8000);
         });
+    });
+}
+
+function initHeroImages() {
+    if (prefersReducedMotion) return;
+    document.querySelectorAll('[data-hero-images]').forEach((frame) => {
+        const images = Array.from(frame.querySelectorAll('img'));
+        if (images.length < 2) return;
+        let current = 0;
+        window.setInterval(() => {
+            if (document.hidden) return;
+            images[current].hidden = true;
+            current = (current + 1) % images.length;
+            images[current].hidden = false;
+        }, 3000);
     });
 }

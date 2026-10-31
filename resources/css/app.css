@@ -1076,13 +1076,13 @@
         color: #20232c;
     }
 
-    .taf-hero-video-panel {
+    .taf-hero-image-panel {
         display: grid;
         align-self: stretch;
         align-content: center;
     }
 
-    .taf-hero-video-frame {
+    .taf-hero-image-frame {
         position: relative;
         overflow: hidden;
         aspect-ratio: 16 / 10;
@@ -1092,37 +1092,19 @@
         box-shadow: 0 34px 70px rgba(51, 35, 45, 0.22);
     }
 
-    .taf-hero-video-frame iframe,
-    .taf-hero-video-frame img {
+    .taf-hero-image-frame img {
         display: block;
         width: 100%;
         height: 100%;
         border: 0;
     }
 
-    .taf-hero-video-frame img {
+    .taf-hero-image-frame img[hidden] {
+        display: none;
+    }
+
+    .taf-hero-image-frame img {
         object-fit: cover;
-    }
-
-    .taf-hero-play {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        display: grid;
-        width: 82px;
-        height: 82px;
-        place-items: center;
-        transform: translate(-50%, -50%);
-        border-radius: 999px;
-        background: rgba(223, 36, 113, 0.92);
-        color: #ffffff;
-        box-shadow: 0 18px 44px rgba(19, 17, 23, 0.26);
-    }
-
-    .taf-hero-play svg {
-        width: 38px;
-        height: 38px;
-        margin-left: 4px;
     }
 
     .taf-section {
@@ -1642,7 +1624,7 @@
             font-size: clamp(3.1rem, 6.3vw, 5rem);
         }
 
-        .taf-hero-video-frame {
+        .taf-hero-image-frame {
             border-width: 10px;
             border-radius: 28px;
         }
@@ -1722,7 +1704,7 @@
             width: 100%;
         }
 
-        .taf-hero-video-frame {
+        .taf-hero-image-frame {
             aspect-ratio: 16 / 9;
             border-width: 8px;
             border-radius: 24px;
@@ -1785,6 +1767,269 @@
         .taf-whatsapp-float svg {
             width: 32px;
             height: 32px;
+        }
+    }
+}
+
+@layer components {
+    /* Shared header navigation (taf theme) */
+    .taf-nav-links {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+    }
+
+    .taf-nav .nav-toggle {
+        display: none;
+        width: 44px;
+        height: 44px;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 8px;
+        background: transparent;
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+    .taf-nav .nav-toggle svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .taf-nav-cta {
+        display: inline-flex;
+        align-items: center;
+        min-height: 38px;
+        border-radius: 999px;
+        background: var(--taf-gold);
+        color: #111111 !important;
+        padding: 0 16px;
+        font-weight: 900;
+    }
+
+    .taf-nav-cta:hover {
+        color: #111111 !important;
+    }
+
+    .taf-footer-about {
+        margin-top: 14px;
+        color: rgba(255, 250, 241, 0.72);
+        font-size: 15px;
+        line-height: 1.65;
+    }
+
+    .taf-footer-contact a {
+        color: inherit;
+    }
+
+    /* Generic page sections used on services/about/portfolio pages */
+    .taf-page-hero {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(120deg, #0c0c0c 0%, #17140f 55%, #2b2518 100%);
+        color: #fffaf1;
+        padding: clamp(40px, 7vw, 72px) 0;
+    }
+
+    .taf-page-hero .taf-eyebrow {
+        color: var(--taf-gold-light);
+    }
+
+    .taf-page-hero h1 {
+        margin: 18px 0 0;
+        font-size: clamp(2.25rem, 4.5vw, 3.6rem);
+        font-weight: 900;
+        line-height: 1.05;
+        color: #fffaf1;
+    }
+
+    .taf-page-hero p {
+        max-width: 720px;
+        margin: 20px 0 0;
+        color: rgba(255, 250, 241, 0.82);
+        font-size: 18px;
+        line-height: 1.65;
+    }
+
+    .taf-page-hero .taf-hero-actions {
+        margin-top: 28px;
+    }
+
+    .taf-prose {
+        color: var(--taf-muted);
+        line-height: 1.75;
+    }
+
+    .taf-prose h2 {
+        margin: 34px 0 14px;
+        color: var(--taf-ink);
+        font-size: 26px;
+        font-weight: 800;
+        line-height: 1.15;
+    }
+
+    .taf-prose h3 {
+        margin: 26px 0 10px;
+        color: var(--taf-ink);
+        font-size: 20px;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    .taf-prose p {
+        margin-bottom: 14px;
+    }
+
+    .taf-prose ul,
+    .taf-prose ol {
+        margin: 0 0 16px;
+        padding-left: 22px;
+    }
+
+    .taf-prose li {
+        margin-bottom: 8px;
+    }
+
+    .taf-prose a {
+        color: var(--taf-gold);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+
+    .taf-content-card {
+        border: 1px solid var(--taf-line);
+        border-radius: 14px;
+        background: #fffaf1;
+        padding: clamp(22px, 3vw, 32px);
+        box-shadow: 0 16px 40px rgba(23, 20, 15, 0.05);
+    }
+
+    .taf-breadcrumb {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 16px 0 8px;
+        color: var(--taf-muted);
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .taf-breadcrumb a {
+        color: var(--taf-gold);
+    }
+
+    /* Quote form (taf theme) */
+    .taf-form {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .taf-form-field {
+        display: grid;
+        gap: 8px;
+        color: var(--taf-ink);
+        font-weight: 700;
+    }
+
+    .taf-form-field.full {
+        grid-column: 1 / -1;
+    }
+
+    .taf-form-field label {
+        font-size: 14px;
+    }
+
+    .taf-form-field input,
+    .taf-form-field textarea,
+    .taf-form-field select {
+        width: 100%;
+        border: 1px solid rgba(23, 20, 15, 0.16);
+        border-radius: 10px;
+        background: #ffffff;
+        color: var(--taf-ink);
+        padding: 13px 14px;
+        font: inherit;
+        font-size: 15px;
+        outline: 0;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .taf-form-field textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .taf-form-field input:focus,
+    .taf-form-field textarea:focus,
+    .taf-form-field select:focus {
+        border-color: var(--taf-gold);
+        box-shadow: 0 0 0 3px rgba(201, 148, 47, 0.15);
+    }
+
+    .taf-form-alert {
+        grid-column: 1 / -1;
+        border-radius: 10px;
+        padding: 14px 16px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .taf-form-alert.success {
+        border: 1px solid rgba(22, 101, 52, 0.2);
+        background: #ecfdf5;
+        color: #166534;
+    }
+
+    .taf-form-alert.error {
+        border: 1px solid rgba(185, 28, 28, 0.2);
+        background: #fef2f2;
+        color: #991b1b;
+    }
+
+    .taf-form-error {
+        color: #991b1b;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .taf-form-submit {
+        grid-column: 1 / -1;
+        justify-self: start;
+        min-height: 54px;
+        border: 0;
+        border-radius: 10px;
+        background: var(--taf-gold);
+        padding: 0 28px;
+        color: #111111;
+        font-weight: 900;
+        cursor: pointer;
+    }
+
+    @media (max-width: 760px) {
+        .taf-nav .taf-wrap {
+            gap: 12px;
+            align-items: center;
+        }
+
+        .taf-nav .nav-toggle {
+            display: inline-flex;
+        }
+
+        .taf-nav-links {
+            display: none;
+        }
+
+        .taf-form {
+            grid-template-columns: 1fr;
+        }
+
+        .taf-form-field.full,
+        .taf-form-alert,
+        .taf-form-submit {
+            grid-column: auto;
         }
     }
 }
