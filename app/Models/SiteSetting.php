@@ -190,18 +190,13 @@ class SiteSetting extends Model
     {
         return [
             ['label' => 'Home', 'url' => '/'],
-            ['label' => 'Shop', 'url' => '/products'],
-            ['label' => 'Women', 'url' => '/products?category=women'],
-            ['label' => 'Men', 'url' => '/products?category=men'],
-            ['label' => 'Outerwear', 'url' => '/products?category=outerwear'],
-            ['label' => 'Headwear', 'url' => '/products?category=headwear'],
-            ['label' => 'Uniforms', 'url' => '/products?category=uniforms'],
-            ['label' => 'Youth', 'url' => '/products?category=youth'],
-            ['label' => 'Gifts', 'url' => '/products?category=gifts'],
-            ['label' => 'Infant & Toddler', 'url' => '/products?category=infant-toddler'],
+            ['label' => 'Products', 'url' => '/products'],
+            ['label' => 'Services', 'url' => '/services'],
+            ['label' => 'Corporate Branding', 'url' => '/corporate-branding'],
             ['label' => 'Embroidery', 'url' => '/embroidery'],
-            ['label' => 'Create Design', 'url' => '/create-design'],
-            ['label' => 'Brands', 'url' => '/products?category=brands'],
+            ['label' => 'Portfolio', 'url' => '/portfolio'],
+            ['label' => 'About', 'url' => '/about'],
+            ['label' => 'Contact', 'url' => '/contact'],
         ];
     }
 
@@ -251,8 +246,13 @@ class SiteSetting extends Model
     {
         return match ((string) str($label)->lower()) {
             'home' => '/',
-            'shop' => '/products',
+            'shop', 'products' => '/products',
+            'services' => '/services',
+            'corporate branding' => '/corporate-branding',
             'embroidery' => '/embroidery',
+            'portfolio' => '/portfolio',
+            'about' => '/about',
+            'contact' => '/contact',
             'create design' => '/create-design',
             default => '/products?category='.str($label)->slug(),
         };

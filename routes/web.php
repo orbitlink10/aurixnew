@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ProductController;
@@ -103,7 +104,7 @@ Route::get('/', function () {
             ->map(fn (WorkCategory $work) => [
                 'title' => $work->name,
                 'image' => $work->image_url,
-                'href' => route('public.quote'),
+                'href' => route('public.portfolio'),
             ])
             ->filter(fn ($item) => filled($item['image']))
             ->take(6)
@@ -301,26 +302,89 @@ Route::get('/products/{product:slug}', function (Product $product) {
         ? SiteSetting::contactSettings()
         : SiteSetting::defaultContactSettings();
 
+    $genericCategories = ['product', 'all', 'general', 'uncategorised', 'uncategorized'];
+
     $relatedProducts = Product::query()
         ->where('is_active', true)
         ->where('id', '!=', $product->id)
-        ->where(function ($query) use ($product) {
+        ->with(['category', 'images'])
+        ->where(function ($query) use ($product, $genericCategories) {
             if ($product->product_category_id) {
                 $query->where('product_category_id', $product->product_category_id);
-            } elseif ($product->category_name) {
+            } elseif ($product->subcategory_name && trim((string) $product->subcategory_name) !== '') {
+                $query->where('subcategory_name', $product->subcategory_name);
+            } elseif ($product->category_name && ! in_array(strtolower(trim($product->category_name)), $genericCategories, true)) {
                 $query->where('category_name', $product->category_name);
+            } else {
+                $query->whereRaw('1 = 0');
             }
         })
-        ->with(['category', 'images'])
         ->orderByDesc('updated_at')
         ->take(4)
         ->get();
+
+    if ($relatedProducts->isEmpty() && $product->subcategory_name) {
+        $relatedProducts = Product::query()
+            ->where('is_active', true)
+            ->where('id', '!=', $product->id)
+            ->where('subcategory_name', $product->subcategory_name)
+            ->with(['category', 'images'])
+            ->orderByDesc('updated_at')
+            ->take(4)
+            ->get();
+    }
 
     return view('products.show', compact('product', 'contactSettings', 'relatedProducts'));
 })->name('public.products.show');
 
 Route::get('/quote', [QuoteController::class, 'show'])->name('public.quote');
 Route::post('/quote', [QuoteController::class, 'store'])->name('public.quote.store');
+
+Route::get('/services', function () {
+    $contactSettings = Schema::hasTable('site_settings')
+        ? SiteSetting::contactSettings()
+        : SiteSetting::defaultContactSettings();
+
+    return view('services', compact('contactSettings'));
+})->name('public.services');
+
+Route::get('/corporate-branding', function () {
+    $contactSettings = Schema::hasTable('site_settings')
+        ? SiteSetting::contactSettings()
+        : SiteSetting::defaultContactSettings();
+
+    return view('corporate-branding', compact('contactSettings'));
+})->name('public.corporate-branding');
+
+Route::get('/about', function () {
+    $contactSettings = Schema::hasTable('site_settings')
+        ? SiteSetting::contactSettings()
+        : SiteSetting::defaultContactSettings();
+
+    return view('about', compact('contactSettings'));
+})->name('public.about');
+
+Route::get('/contact', function () {
+    $contactSettings = Schema::hasTable('site_settings')
+        ? SiteSetting::contactSettings()
+        : SiteSetting::defaultContactSettings();
+
+    return view('contact', compact('contactSettings'));
+})->name('public.contact');
+
+Route::get('/portfolio', function () {
+    $contactSettings = Schema::hasTable('site_settings')
+        ? SiteSetting::contactSettings()
+        : SiteSetting::defaultContactSettings();
+
+    $works = Schema::hasTable('work_categories')
+        ? WorkCategory::where('is_active', true)->orderBy('sort_order')->orderByDesc('created_at')->get()
+        : collect();
+
+    return view('portfolio', compact('contactSettings', 'works'));
+})->name('public.portfolio');
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('public.sitemap');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);

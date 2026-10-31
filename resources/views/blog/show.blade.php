@@ -757,15 +757,16 @@
         <div class="menu-bar">
             <a class="brand" href="{{ url('/') }}" rel="home" aria-label="Aurix Branding home">AURIX</a>
             <div class="primary-links" aria-label="Service menu">
-                <a class="menu-link" href="{{ url('/products') }}">Products</a>
-                <a class="menu-link menu-link--dropdown" href="{{ url('/#services') }}">Services</a>
+                <a class="menu-link" href="{{ route('public.products.index') }}">Products</a>
+                <a class="menu-link menu-link--dropdown" href="{{ route('public.services') }}">Services</a>
+                <a class="menu-link" href="{{ route('public.portfolio') }}">Portfolio</a>
                 <a class="menu-link" href="{{ url('/blog/'.$post->slug) }}">Blog</a>
             </div>
             <a class="call-link" href="tel:{{ preg_replace('/\D+/', '', $phone) }}">Call <strong>{{ $phone }}</strong></a>
             <div class="audience-toggle" aria-label="Quick action">
                 <a class="audience-link" href="{{ $quoteUrl }}">Get Quote</a>
             </div>
-            <a class="menu-icon" href="{{ url('/#contact') }}" title="Menu" aria-label="Open menu"><span></span><span></span><span></span></a>
+            <a class="menu-icon" href="{{ route('public.contact') }}" title="Menu" aria-label="Open menu"><span></span><span></span><span></span></a>
         </div>
     </nav>
 
@@ -861,11 +862,11 @@
                     <div>
                         <h2 class="footer-title">Our Services</h2>
                         <ul class="footer-services">
-                            <li><span class="footer-icon">›</span><a href="{{ url('/products') }}">Printed Products</a></li>
-                            <li><span class="footer-icon">›</span><a href="{{ url('/#services') }}">Brand Strategy</a></li>
-                            <li><span class="footer-icon">›</span><a href="{{ url('/#services') }}">Signage</a></li>
-                            <li><span class="footer-icon">›</span><a href="{{ url('/#services') }}">Uniform Branding</a></li>
-                            <li><span class="footer-icon">›</span><a href="{{ url('/#services') }}">Packaging</a></li>
+                            <li><span class="footer-icon">›</span><a href="{{ route('public.products.index') }}">Printed Products</a></li>
+                            <li><span class="footer-icon">›</span><a href="{{ route('public.corporate-branding') }}">Corporate Branding</a></li>
+                            <li><span class="footer-icon">›</span><a href="{{ route('public.services') }}">Signage</a></li>
+                            <li><span class="footer-icon">›</span><a href="{{ route('public.services') }}">Uniform Branding</a></li>
+                            <li><span class="footer-icon">›</span><a href="{{ route('public.embroidery') }}">Embroidery</a></li>
                             <li><span class="footer-icon">›</span><a href="{{ $quoteUrl }}">Quote Request</a></li>
                             <li><span class="footer-icon">›</span><a href="{{ url('/blog/'.$post->slug) }}">Branding Guides</a></li>
                             <li><span class="footer-icon">›</span><a href="{{ url('/') }}">Aurix Branding</a></li>

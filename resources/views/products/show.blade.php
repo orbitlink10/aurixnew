@@ -1,4 +1,4 @@
-@extends('layouts.public')
+@extends('layouts.taf')
 
 @section('title', $product->name . ' — Aurix Branding')
 @section('meta_description', $product->meta_description ?: Str::limit(strip_tags($product->description ?? ''), 155))
@@ -42,193 +42,141 @@
             ->unique()
             ->values();
 
-        $whatsappPhone = '254700816670';
+        $contact = \Illuminate\Support\Facades\Schema::hasTable('site_settings')
+            ? \App\Models\SiteSetting::contactSettings()
+            : \App\Models\SiteSetting::defaultContactSettings();
+        $whatsappPhone = preg_replace('/\D+/', '', $contact['whatsapp_phone'] ?? '254700816670') ?: '254700816670';
         $whatsappMessage = 'Hello Aurix Branding, I would like a quotation for '.$product->name.'. Quantity: [QUANTITY].';
         $whatsappUrl = 'https://wa.me/'.$whatsappPhone.'?text='.rawurlencode($whatsappMessage);
         $quoteUrl = route('public.quote', ['product' => $product->name]);
 
         $faqs = [
-            ['q' => 'How do I get a quotation?', 'a' => 'Click "Request a Quote" or message us on WhatsApp with your product, quantity, and any customization. We respond with a tailored quotation.'],
+            ['q' => 'How do I get a quotation for '.$product->name.'?', 'a' => 'Click "Request a Quote" or message us on WhatsApp with your quantity and customization. We respond with a tailored quotation.'],
             ['q' => 'Do you support bulk orders?', 'a' => 'Yes. Bulk orders are quoted based on quantity, material, printing method, and finishing.'],
             ['q' => 'Can I order before my artwork is ready?', 'a' => 'Yes. Send your details and our design team can help you finalize artwork after quote confirmation.'],
             ['q' => 'Do you deliver nationwide?', 'a' => 'Yes. We deliver across Kenya with pickup available in Nairobi.'],
         ];
     @endphp
 
-    <section class="section-tight bg-white">
-        <div class="container-x">
-            <nav class="mb-8 flex flex-wrap items-center gap-2 text-sm text-ink-soft" aria-label="Breadcrumb">
-                <a href="{{ url('/') }}" class="hover:text-ink">Home</a>
-                <span aria-hidden="true">/</span>
-                <a href="{{ route('public.products.index') }}" class="hover:text-ink">Products</a>
-                <span aria-hidden="true">/</span>
-                <span class="text-ink">{{ $product->name }}</span>
+    <section class="taf-page-hero">
+        <div class="taf-wrap">
+            <nav class="taf-breadcrumb" aria-label="Breadcrumb">
+                <a href="{{ url('/') }}">Home</a><span aria-hidden="true">/</span><a href="{{ route('public.products.index') }}">Products</a><span aria-hidden="true">/</span><span>{{ $product->name }}</span>
             </nav>
+        </div>
+    </section>
 
-            <div class="grid gap-10 lg:grid-cols-2">
-                {{-- Gallery ----------------------------------------- --}}
+    <section class="taf-section" style="padding-top:24px;">
+        <div class="taf-wrap">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,0.8fr);gap:34px;align-items:start;">
                 <div>
-                    <div class="media media-square media--contain overflow-hidden rounded-2xl border border-line bg-white p-6">
-                        <img id="productMainImage" src="{{ $galleryImages->first() ?: asset('images/aurix-branding-collage.png') }}" alt="{{ $product->name }}" width="800" height="800" fetchpriority="high">
+                    <div class="taf-content-card" style="padding:18px;">
+                        <img id="productMainImage" src="{{ $galleryImages->first() ?: asset('images/aurix-branding-collage.png') }}" alt="{{ $product->name }}" width="800" height="800" fetchpriority="high" style="width:100%;aspect-ratio:1/1;object-fit:contain;border-radius:10px;">
                     </div>
                     @if($galleryImages->count() > 1)
-                        <div class="mt-4 flex gap-3 overflow-x-auto pb-1">
+                        <div style="display:flex;gap:10px;margin-top:14px;overflow-x:auto;padding-bottom:4px;">
                             @foreach($galleryImages as $imageUrl)
-                                <button type="button" class="media media-square media--contain h-20 w-20 flex-none overflow-hidden rounded-lg border-2 {{ $loop->first ? 'border-accent' : 'border-line' }} bg-white p-1" data-gallery-thumb data-gallery-src="{{ $imageUrl }}" aria-label="View image {{ $loop->iteration }}">
-                                    <img src="{{ $imageUrl }}" alt="{{ $product->name }} thumbnail {{ $loop->iteration }}" loading="lazy">
+                                <button type="button" data-gallery-thumb data-gallery-src="{{ $imageUrl }}" aria-label="View image {{ $loop->iteration }}" style="flex:0 0 84px;width:84px;height:84px;border:2px solid {{ $loop->first ? 'var(--taf-gold)' : 'var(--taf-line)' }};border-radius:10px;background:#fff;padding:4px;cursor:pointer;">
+                                    <img src="{{ $imageUrl }}" alt="{{ $product->name }} thumbnail {{ $loop->iteration }}" loading="lazy" style="width:100%;height:100%;object-fit:contain;">
                                 </button>
                             @endforeach
                         </div>
                     @endif
                 </div>
 
-                {{-- Details ----------------------------------------- --}}
-                <div>
-                    <span class="eyebrow">{{ $categoryName }}</span>
-                    <h1 class="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-4xl">{{ $product->name }}</h1>
-                    <p class="mt-4 leading-relaxed text-ink-soft">{{ Str::limit($summary, 220) }}</p>
+                <div class="taf-content-card">
+                    <span class="taf-category-kicker">{{ $categoryName }}</span>
+                    <h1 style="margin:12px 0 14px;font-size:clamp(1.8rem,3vw,2.6rem);line-height:1.1;">{{ $product->name }}</h1>
+                    <p style="color:var(--taf-muted);line-height:1.7;">{{ Str::limit($summary, 220) }}</p>
 
-                    <dl class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
-                        <div class="card p-4">
-                            <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Minimum Qty</dt>
-                            <dd class="mt-1 font-semibold text-ink">{{ $minimumQty ? $minimumQty.' pieces' : 'No minimum' }}</dd>
+                    <dl style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:20px;">
+                        <div style="border:1px solid var(--taf-line);border-radius:10px;padding:12px;">
+                            <dt style="font-size:12px;font-weight:800;color:var(--taf-muted);">Minimum Qty</dt>
+                            <dd style="margin:4px 0 0;font-weight:900;">{{ $minimumQty ? $minimumQty.' pieces' : 'No minimum' }}</dd>
                         </div>
-                        <div class="card p-4">
-                            <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Category</dt>
-                            <dd class="mt-1 font-semibold text-ink">{{ $categoryName }}</dd>
-                        </div>
-                        <div class="card p-4">
-                            <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Delivery</dt>
-                            <dd class="mt-1 font-semibold text-ink">Nationwide</dd>
+                        <div style="border:1px solid var(--taf-line);border-radius:10px;padding:12px;">
+                            <dt style="font-size:12px;font-weight:800;color:var(--taf-muted);">Category</dt>
+                            <dd style="margin:4px 0 0;font-weight:900;">{{ $categoryName }}</dd>
                         </div>
                     </dl>
 
-                    <div class="mt-6">
-                        <h2 class="text-sm font-semibold text-ink">Available customization</h2>
-                        <ul class="mt-3 grid gap-2 sm:grid-cols-2">
-                            @foreach(['Sizes & quantities', 'Printing method', 'Material & finishing', 'Design & artwork support'] as $option)
-                                <li class="flex items-center gap-2 text-sm text-ink-soft">
-                                    <span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent-soft text-accent-deep">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
-                                    </span>
-                                    {{ $option }}
-                                </li>
-                            @endforeach
-                        </ul>
+                    <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px;">
+                        <a href="{{ $quoteUrl }}" class="taf-primary-btn" style="width:100%;">Request a Quote</a>
+                        <a href="{{ $whatsappUrl }}" target="_blank" rel="noopener" class="taf-link-btn" style="width:100%;">WhatsApp Us</a>
                     </div>
-
-                    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-                        <a href="{{ $quoteUrl }}" class="btn btn-primary btn-lg flex-1">Request a Quote</a>
-                        <a href="{{ $whatsappUrl }}" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg flex-1">WhatsApp Us</a>
-                    </div>
-                    <p class="mt-3 text-sm text-ink-faint">Pricing is quotation-based depending on quantity, material, printing method, finishing, and delivery.</p>
+                    <p style="margin-top:14px;font-size:13px;color:var(--taf-muted);">Pricing is quotation-based depending on quantity, material, printing method, finishing, and delivery.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    {{-- Long-form content ------------------------------------------- --}}
-    <section class="section-tight bg-cream">
-        <div class="container-x grid gap-8 lg:grid-cols-[1fr_320px]">
-            <div class="space-y-8">
-                <div class="card p-6 sm:p-8">
-                    <h2 class="text-2xl font-bold text-ink">Overview</h2>
-                    <div class="prose-clean mt-4">
-                        @if($product->description)
-                            {!! $product->description !!}
-                        @else
-                            <p>{{ $product->name }} is produced for professional brand visibility, customer engagement, events, retail packaging, and promotional campaigns. Our team will guide the right material, finish, and delivery plan for your project.</p>
-                        @endif
-                    </div>
-                </div>
+    <section class="taf-section" style="padding-top:20px;">
+        <div class="taf-wrap">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start;">
+                <div class="taf-prose" style="max-width:760px;">
+                    <h2>Overview</h2>
+                    @if($product->description)
+                        {!! $product->description !!}
+                    @else
+                        <p>{{ $product->name }} is produced for professional brand visibility, customer engagement, events, retail packaging, and promotional campaigns. Our team will guide the right material, finish, and delivery plan for your project.</p>
+                    @endif
 
-                <div class="card p-6 sm:p-8">
-                    <h2 class="text-2xl font-bold text-ink">Artwork requirements</h2>
-                    <ul class="mt-4 grid gap-3 text-ink-soft">
-                        <li class="flex gap-3"><span class="mt-1 text-accent-deep">&#8226;</span>Upload your finished artwork, a logo, or request a fresh design.</li>
-                        <li class="flex gap-3"><span class="mt-1 text-accent-deep">&#8226;</span>We check sizing, resolution, placement, and bleed before production.</li>
-                        <li class="flex gap-3"><span class="mt-1 text-accent-deep">&#8226;</span>Accepted files: PDF, PNG, JPG, SVG, and AI.</li>
+                    <h2>Artwork requirements</h2>
+                    <ul>
+                        <li>Upload your finished artwork, a logo, or request a fresh design.</li>
+                        <li>We check sizing, resolution, placement, and bleed before production.</li>
+                        <li>Accepted files: PDF, PNG, JPG, SVG, and AI.</li>
                     </ul>
+
+                    <h2>Frequently asked questions</h2>
+                    @foreach($faqs as $faq)
+                        <h3>{{ $faq['q'] }}</h3>
+                        <p>{{ $faq['a'] }}</p>
+                    @endforeach
                 </div>
 
-                <div class="card p-6 sm:p-8">
-                    <h2 class="text-2xl font-bold text-ink">Production process</h2>
-                    <ol class="mt-4 grid gap-3">
-                        @foreach(['Share requirements', 'Approve design & quote', 'We produce your order', 'Pickup or delivery'] as $index => $step)
-                            <li class="flex items-start gap-3">
-                                <span class="inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">{{ $index + 1 }}</span>
-                                <span class="pt-0.5 text-ink-soft">{{ $step }}</span>
-                            </li>
-                        @endforeach
-                    </ol>
-                </div>
-
-                <div class="card p-6 sm:p-8">
-                    <h2 class="text-2xl font-bold text-ink">Frequently asked questions</h2>
-                    <div class="mt-4 divide-y divide-line">
-                        @foreach($faqs as $faq)
-                            <details class="group py-4">
-                                <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-ink">
-                                    {{ $faq['q'] }}
-                                    <span class="text-accent-deep transition-transform group-open:rotate-45">+</span>
-                                </summary>
-                                <p class="mt-3 text-ink-soft">{{ $faq['a'] }}</p>
-                            </details>
-                        @endforeach
+                <aside>
+                    <div class="taf-content-card">
+                        <h2 style="margin-top:0;font-size:18px;">Specifications</h2>
+                        <dl style="margin:0;font-size:14px;">
+                            @foreach([
+                                'Product' => $product->name,
+                                'Category' => $categoryName,
+                                'Subcategory' => ($subcategory ?: 'Custom print'),
+                                'Minimum Quantity' => ($minimumQty ? $minimumQty.' pieces' : 'No minimum'),
+                                'Artwork' => 'Upload or design online',
+                                'Delivery' => 'Nationwide',
+                            ] as $label => $value)
+                                <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--taf-line);">
+                                    <dt style="color:var(--taf-muted);">{{ $label }}</dt>
+                                    <dd style="margin:0;text-align:right;font-weight:700;">{{ $value }}</dd>
+                                </div>
+                            @endforeach
+                        </dl>
+                        <a href="{{ $quoteUrl }}" class="taf-primary-btn" style="width:100%;margin-top:16px;">Request a Quote</a>
                     </div>
-                </div>
+                </aside>
             </div>
-
-            <aside>
-                <div class="card p-6">
-                    <h2 class="text-base font-bold text-ink">Specifications</h2>
-                    <dl class="mt-4 divide-y divide-line text-sm">
-                        @foreach([
-                            'Product' => $product->name,
-                            'Category' => $categoryName,
-                            'Subcategory' => ($subcategory ?: 'Custom print'),
-                            'Minimum Quantity' => ($minimumQty ? $minimumQty.' pieces' : 'No minimum'),
-                            'Artwork' => 'Upload or design online',
-                            'Delivery' => 'Nationwide',
-                        ] as $label => $value)
-                            <div class="flex items-start justify-between gap-4 py-3">
-                                <dt class="text-ink-faint">{{ $label }}</dt>
-                                <dd class="text-right font-medium text-ink">{{ $value }}</dd>
-                            </div>
-                        @endforeach
-                    </dl>
-                </div>
-
-                <div class="card mt-6 p-6 bg-brand text-white">
-                    <h2 class="text-lg font-bold">Need a quote?</h2>
-                    <p class="mt-2 text-sm text-gray-300">Share your requirements and we'll send a tailored quotation.</p>
-                    <a href="{{ $quoteUrl }}" class="btn btn-accent btn-sm mt-4 w-full">Request a Quote</a>
-                </div>
-            </aside>
         </div>
     </section>
 
-    {{-- Related products -------------------------------------------- --}}
     @if($relatedProducts && $relatedProducts->isNotEmpty())
-        <section class="section-tight bg-white">
-            <div class="container-x">
-                <div class="section-head">
-                    <span class="eyebrow">Related</span>
-                    <h2 class="section-title">Related products</h2>
+        <section class="taf-section">
+            <div class="taf-wrap">
+                <div class="taf-category-head">
+                    <div><span class="taf-category-kicker">Related</span><h2>Related products</h2></div>
                 </div>
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="taf-product-grid">
                     @foreach($relatedProducts as $related)
-                        <article class="card group flex flex-col overflow-hidden">
-                            <a href="{{ route('public.products.show', ['product' => $related->slug]) }}" class="media media-square media--contain p-4">
-                                <img src="{{ $related->display_image_url ?: asset('images/aurix-branding-collage.png') }}" alt="{{ $related->name }}" loading="lazy" width="500" height="500">
-                            </a>
-                            <div class="flex flex-1 flex-col p-5">
-                                <h3 class="text-sm font-semibold leading-snug text-ink">
-                                    <a href="{{ route('public.products.show', ['product' => $related->slug]) }}" class="hover:text-accent-deep">{{ $related->name }}</a>
-                                </h3>
-                                <a href="{{ route('public.quote', ['product' => $related->name]) }}" class="btn btn-outline btn-sm mt-4 self-start">Request Quote</a>
-                            </div>
-                        </article>
+                        <a href="{{ route('public.products.show', ['product' => $related->slug]) }}" class="taf-product-card">
+                            <span class="taf-product-media">
+                                <img src="{{ $related->display_image_url ?: asset('images/aurix-branding-collage.png') }}" alt="{{ $related->name }}" loading="lazy" width="400" height="400">
+                            </span>
+                            <span class="taf-product-info">
+                                <strong>{{ $related->name }}</strong>
+                                <span class="taf-product-quote">Request Quote</span>
+                            </span>
+                        </a>
                     @endforeach
                 </div>
             </div>
@@ -244,8 +192,6 @@
                 thumb.addEventListener('click', () => {
                     if (!mainImage) return;
                     mainImage.src = thumb.dataset.gallerySrc;
-                    document.querySelectorAll('[data-gallery-thumb]').forEach((item) => item.classList.remove('border-accent'));
-                    thumb.classList.add('border-accent');
                 });
             });
         });

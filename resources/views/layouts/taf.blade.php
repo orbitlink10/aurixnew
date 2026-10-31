@@ -48,12 +48,12 @@
 
         $navItems = [
             ['label' => 'Products', 'url' => route('public.products.index'), 'path' => '/products'],
-            ['label' => 'Services', 'url' => route('public.services')],
-            ['label' => 'Corporate Branding', 'url' => route('public.corporate-branding')],
-            ['label' => 'Embroidery', 'url' => route('public.embroidery')],
-            ['label' => 'Portfolio', 'url' => route('public.portfolio')],
-            ['label' => 'About', 'url' => route('public.about')],
-            ['label' => 'Contact', 'url' => route('public.contact')],
+            ['label' => 'Services', 'url' => route('public.services'), 'path' => '/services'],
+            ['label' => 'Corporate Branding', 'url' => route('public.corporate-branding'), 'path' => '/corporate-branding'],
+            ['label' => 'Embroidery', 'url' => route('public.embroidery'), 'path' => '/embroidery'],
+            ['label' => 'Portfolio', 'url' => route('public.portfolio'), 'path' => '/portfolio'],
+            ['label' => 'About', 'url' => route('public.about'), 'path' => '/about'],
+            ['label' => 'Contact', 'url' => route('public.contact'), 'path' => '/contact'],
         ];
     @endphp
 

@@ -70,8 +70,12 @@
                 </div>
             </div>
             <div class="taf-hero-video-panel" aria-label="Aurix Branding production preview">
-                <div class="taf-hero-video-frame">
-                    @if($homepageHeroVideoEmbedUrl)
+                <div class="taf-hero-video-frame" @if(count($homepageHeroImages) > 0) data-hero-images @endif>
+                    @if(count($homepageHeroImages) > 0)
+                        @foreach($homepageHeroImages as $index => $heroImg)
+                            <img src="{{ $heroImg }}" alt="Aurix Branding custom branding and printing work" width="1200" height="750" @if($index === 0) fetchpriority="high" @endif @if($index > 0) hidden @endif>
+                        @endforeach
+                    @elseif($homepageHeroVideoEmbedUrl)
                         <iframe src="{{ $homepageHeroVideoEmbedUrl }}" title="Aurix Branding custom printing video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     @else
                         <img src="{{ $homepageHeroFallbackImage }}" alt="Aurix Branding custom branding and printing preview" width="1200" height="750" fetchpriority="high">
