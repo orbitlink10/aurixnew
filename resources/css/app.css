@@ -953,6 +953,21 @@
         padding: 44px 0 46px;
     }
 
+    .taf-hero-video-panel {
+        min-width: 0;
+        align-self: start;
+    }
+
+    .taf-hero-video-frame img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .taf-hero-video-frame img[hidden] {
+        display: none;
+    }
+
     .taf-eyebrow {
         display: inline-flex;
         width: fit-content;
