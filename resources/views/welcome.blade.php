@@ -54,17 +54,6 @@
                 <span class="taf-eyebrow">{{ $heroText['eyebrow'] }}</span>
                 <h1 id="home-hero-title">{{ $heroText['heading'] }} <span>{{ $heroText['highlight'] }}</span> {{ $heroText['ending'] }}</h1>
                 <p>{{ $heroText['description'] }}</p>
-                <div class="taf-hero-services" aria-label="Printing and branding services">
-                    <span>DTF transfers</span>
-                    <span>Embroidery</span>
-                    <span>Screen printing</span>
-                    <span>Vinyl names</span>
-                    <span>Signage</span>
-                </div>
-                <div class="taf-hero-actions">
-                    <a href="{{ route('public.products.index', ['q' => 't-shirt']) }}" class="taf-primary-btn">Browse T-Shirts</a>
-                    <a href="{{ $quoteUrl }}" class="taf-link-btn">Request a Quote</a>
-                </div>
             </div>
             <div class="taf-hero-video-panel" aria-label="Aurix Branding production preview">
                 <div class="taf-hero-video-frame" @if(count($homepageHeroImages) > 0) data-hero-images @endif>
