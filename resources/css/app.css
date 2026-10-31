@@ -946,11 +946,10 @@
 
     .taf-hero-grid {
         display: grid;
-        min-height: 590px;
-        grid-template-columns: minmax(0, 0.9fr) minmax(380px, 1.1fr);
-        align-items: center;
-        gap: clamp(28px, 4vw, 58px);
-        padding: 44px 0 46px;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: start;
+        gap: clamp(24px, 3vw, 40px);
+        padding: 24px 0;
     }
 
     .taf-hero-video-panel {
@@ -958,10 +957,17 @@
         align-self: start;
     }
 
+    .taf-hero-video-frame {
+        overflow: hidden;
+        border-radius: 16px;
+    }
+
     .taf-hero-video-frame img {
         display: block;
         width: 100%;
-        height: auto;
+        height: clamp(320px, 52vh, 460px);
+        object-fit: cover;
+        object-position: center;
     }
 
     .taf-hero-video-frame img[hidden] {
@@ -994,12 +1000,12 @@
 
     .taf-hero-copy h1 {
         max-width: 680px;
-        margin: 18px 0 0;
+        margin: 12px 0 0;
         color: #20232c;
-        font-size: clamp(3.4rem, 6.6vw, 7.1rem);
+        font-size: clamp(2rem, 3vw, 3rem);
         font-weight: 900;
         letter-spacing: 0;
-        line-height: 0.92;
+        line-height: 1.08;
         text-transform: uppercase;
     }
 
@@ -1010,22 +1016,22 @@
 
     .taf-hero-copy p {
         max-width: 680px;
-        margin: 22px 0 0;
+        margin: 12px 0 0;
         color: #4a4550;
-        font-size: 18px;
-        line-height: 1.68;
+        font-size: 16px;
+        line-height: 1.5;
     }
 
     .taf-hero-offer {
         display: grid;
-        gap: 8px;
+        gap: 5px;
         max-width: 620px;
-        margin-top: 28px;
+        margin-top: 16px;
     }
 
     .taf-hero-offer strong {
         color: #20232c;
-        font-size: clamp(1.4rem, 2.7vw, 2.65rem);
+        font-size: 20px;
         font-weight: 900;
         letter-spacing: 0;
         line-height: 1;
@@ -1042,8 +1048,8 @@
     .taf-hero-services {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 26px;
+        gap: 8px;
+        margin-top: 16px;
     }
 
     .taf-hero-services span {
@@ -1064,7 +1070,14 @@
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
-        margin-top: 28px;
+        margin-top: 18px;
+    }
+
+    .taf-hero .taf-primary-btn,
+    .taf-hero .taf-link-btn {
+        min-height: 44px;
+        padding: 0 20px;
+        font-size: 13px;
     }
 
     .taf-primary-btn,
@@ -1629,13 +1642,12 @@
         }
 
         .taf-hero-grid {
-            min-height: 560px;
-            grid-template-columns: minmax(0, 0.92fr) minmax(340px, 1fr);
-            gap: 28px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
         }
 
         .taf-hero-copy h1 {
-            font-size: clamp(3.1rem, 6.3vw, 5rem);
+            font-size: clamp(2rem, 3.5vw, 2.5rem);
         }
 
         .taf-hero-image-frame {
@@ -1693,11 +1705,16 @@
         .taf-hero-grid {
             min-height: auto;
             grid-template-columns: 1fr;
-            padding: 42px 0 34px;
+            padding: 24px 0;
         }
 
         .taf-hero-copy h1 {
-            font-size: 3rem;
+            font-size: clamp(1.8rem, 7vw, 2.4rem);
+        }
+
+        .taf-hero-video-frame img {
+            height: auto;
+            max-height: 420px;
         }
 
         .taf-hero-copy p {
