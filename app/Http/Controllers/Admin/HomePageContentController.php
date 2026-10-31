@@ -16,6 +16,13 @@ class HomePageContentController extends Controller
             ? SiteSetting::heroImageUrls()
             : [];
 
+        $heroImages = Schema::hasTable('site_settings')
+            ? collect(SiteSetting::heroImagePaths())->map(fn ($path) => [
+                'path' => $path,
+                'url' => \App\Support\UploadedImage::url($path),
+            ])->all()
+            : [];
+
         $logoUrl = Schema::hasTable('site_settings')
             ? SiteSetting::logoUrl()
             : null;
@@ -37,7 +44,7 @@ class HomePageContentController extends Controller
             $editingCategory = WorkCategory::find($request->integer('edit'));
         }
 
-        return view('admin.home-page-content.index', compact('heroImageUrls', 'logoUrl', 'contactSettings', 'mainMenuItems', 'workCategories', 'editingCategory'));
+        return view('admin.home-page-content.index', compact('heroImages', 'heroImageUrls', 'logoUrl', 'contactSettings', 'mainMenuItems', 'workCategories', 'editingCategory'));
     }
 
     public function updateContact(Request $request)

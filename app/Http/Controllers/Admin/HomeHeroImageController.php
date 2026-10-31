@@ -29,8 +29,22 @@ class HomeHeroImageController extends Controller
         return back()->with('success', 'Homepage hero images uploaded.');
     }
 
-    public function destroy(): RedirectResponse
+    public function destroy(Request $request): RedirectResponse
     {
+        if ($request->exists('image_path')) {
+            $data = $request->validate([
+                'image_path' => ['required', 'string', \Illuminate\Validation\Rule::in(SiteSetting::heroImagePaths())],
+            ]);
+            $path = $data['image_path'];
+            SiteSetting::setHeroImagePaths(array_values(array_filter(
+                SiteSetting::heroImagePaths(), fn ($savedPath) => $savedPath !== $path
+            )));
+            Storage::disk('uploads')->delete($path);
+            Storage::disk('public')->delete($path);
+
+            return back()->with('success', 'Homepage hero image removed.');
+        }
+
         foreach (SiteSetting::heroImagePaths() as $path) {
             Storage::disk('uploads')->delete($path);
             Storage::disk('public')->delete($path); // legacy clean-up

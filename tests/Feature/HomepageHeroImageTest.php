@@ -13,6 +13,50 @@ class HomepageHeroImageTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_one_hero_image_can_be_deleted_without_removing_the_others(): void
+    {
+        Storage::fake('uploads');
+        Storage::fake('public');
+        foreach (['hero/first.jpg', 'hero/second.jpg'] as $path) {
+            Storage::disk('uploads')->put($path, 'image');
+        }
+        SiteSetting::setHeroImagePaths(['hero/first.jpg', 'hero/second.jpg']);
+        $this->actingAs(User::factory()->create());
+        $this->get(route('admin.home-page-content.index'))->assertOk()
+            ->assertSee('Delete Image')->assertSee('hero/first.jpg');
+
+        $this->delete(route('admin.site-settings.home-hero-image.destroy'), [
+            'image_path' => 'hero/first.jpg',
+        ])->assertSessionHasNoErrors();
+
+        $this->assertSame(['hero/second.jpg'], SiteSetting::heroImagePaths());
+        $this->assertSame('hero/second.jpg', SiteSetting::getValue('home_hero_image_path'));
+        Storage::disk('uploads')->assertMissing('hero/first.jpg');
+        Storage::disk('uploads')->assertExists('hero/second.jpg');
+
+        $this->delete(route('admin.site-settings.home-hero-image.destroy'), [
+            'image_path' => 'hero/second.jpg',
+        ])->assertSessionHasNoErrors();
+        $this->assertSame([], SiteSetting::heroImagePaths());
+        $this->get('/')->assertOk()->assertSee(asset('images/aurix-branding-collage.png'), false);
+    }
+
+    public function test_invalid_single_image_deletion_keeps_saved_images(): void
+    {
+        Storage::fake('uploads');
+        Storage::disk('uploads')->put('hero/keep.jpg', 'image');
+        SiteSetting::setHeroImagePaths(['hero/keep.jpg']);
+        $this->actingAs(User::factory()->create());
+
+        foreach (['hero/unknown.jpg', '', '../.env'] as $path) {
+            $this->delete(route('admin.site-settings.home-hero-image.destroy'), [
+                'image_path' => $path,
+            ])->assertSessionHasErrors('image_path');
+            $this->assertSame(['hero/keep.jpg'], SiteSetting::heroImagePaths());
+            Storage::disk('uploads')->assertExists('hero/keep.jpg');
+        }
+    }
+
     public function test_logo_and_hero_uploads_use_the_current_host_with_stale_disk_urls(): void
     {
         Storage::fake('uploads', ['url' => 'http://127.0.0.1:8000/uploads']);

@@ -835,9 +835,10 @@
     }
 
     .taf-brand img {
-        width: 54px;
-        height: 54px;
-        flex: 0 0 54px;
+        width: 100%;
+        max-width: 230px;
+        height: 70px;
+        flex: 0 1 230px;
         border-radius: 2px;
         object-fit: contain;
     }
@@ -1605,9 +1606,7 @@
         }
 
         .taf-brand img {
-            width: 48px;
-            height: 48px;
-            flex-basis: 48px;
+            height: 64px;
         }
 
         .taf-phone strong {

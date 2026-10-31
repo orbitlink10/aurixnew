@@ -98,10 +98,22 @@
         <div class="md:max-w-xl">
             <h2 class="text-lg font-semibold text-slate-900">Homepage Hero Visuals</h2>
             <p class="text-sm text-slate-500 mt-1">Upload one hero image, or multiple images to rotate every 3 seconds. Up to 12 images per upload, 5 MB each. Recommended size: 1200 x 750 pixels.</p>
-            @if(count($heroImageUrls))
+            @if(count($heroImages))
                 <div class="mt-3 grid grid-cols-2 md:grid-cols-3 gap-2">
-                    @foreach($heroImageUrls as $heroImageUrl)
-                        <img src="{{ $heroImageUrl }}" alt="Homepage hero visual" class="h-24 w-full rounded-lg border border-slate-200 object-cover">
+                    @foreach($heroImages as $heroImage)
+                        <div class="space-y-2">
+                            @if($heroImage['url'])
+                                <img src="{{ $heroImage['url'] }}" alt="Homepage hero visual {{ $loop->iteration }}" class="h-24 w-full rounded-lg border border-slate-200 object-cover">
+                            @else
+                                <p class="text-sm text-slate-500">Image unavailable</p>
+                            @endif
+                            <form action="{{ route('admin.site-settings.home-hero-image.destroy') }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="image_path" value="{{ $heroImage['path'] }}">
+                                <button type="submit" aria-label="Delete hero image {{ $loop->iteration }}" class="w-full px-3 py-2 rounded border border-rose-200 text-rose-600 font-semibold hover:bg-rose-50" onclick="return confirm('Delete this homepage hero image?')">Delete Image</button>
+                            </form>
+                        </div>
                     @endforeach
                 </div>
             @else
@@ -115,7 +127,7 @@
                 <input id="heroImages" type="file" name="hero_images[]" accept="image/*" multiple class="w-full bg-white border border-slate-200 rounded px-3 py-2 text-sm" required>
                 <button type="submit" class="w-full px-4 py-2 rounded bg-sky-600 text-white font-semibold hover:bg-sky-500">Upload Hero Images</button>
             </form>
-            @if(count($heroImageUrls))
+            @if(count($heroImages))
                 <form action="{{ route('admin.site-settings.home-hero-image.destroy') }}" method="POST">
                     @csrf
                     @method('DELETE')

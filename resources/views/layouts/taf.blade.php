@@ -85,8 +85,7 @@
     <header class="taf-header">
         <div class="taf-wrap taf-header-main">
             <a href="{{ url('/') }}" class="taf-brand" aria-label="Aurix Branding home">
-                <img src="{{ $siteLogo ?: asset('images/aurix-branding-logo.png') }}" alt="Aurix Branding logo" width="54" height="54">
-                <span>Aurix Branding</span>
+                <img src="{{ $siteLogo ?: asset('images/aurix-branding-logo.png') }}" alt="Aurix Branding logo" width="230" height="70">
             </a>
             <form class="taf-search" action="{{ route('public.products.index') }}" method="get" role="search">
                 <input name="q" type="search" placeholder="Search apparel, branding, signage" aria-label="Search products">
@@ -119,8 +118,7 @@
         <div class="mobile-menu__panel" role="dialog" aria-modal="true" aria-label="Menu">
             <div class="mobile-menu__head">
                 <span class="taf-brand">
-                    <img src="{{ $siteLogo ?: asset('images/aurix-branding-logo.png') }}" alt="" width="40" height="40">
-                    <span>Aurix Branding</span>
+                    <img src="{{ $siteLogo ?: asset('images/aurix-branding-logo.png') }}" alt="Aurix Branding logo" width="230" height="70">
                 </span>
                 <button class="mobile-menu__close" type="button" data-mobile-close aria-label="Close menu">&times;</button>
             </div>
