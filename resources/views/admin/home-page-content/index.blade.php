@@ -8,6 +8,28 @@
     </div>
 </div>
 
+<div class="card p-4 rounded-xl mb-6">
+    <h2 class="text-lg font-semibold text-slate-900">Homepage Hero Text</h2>
+    <p class="text-sm text-slate-500 mt-1">Edit the introduction, heading, pink highlighted text, and description.</p>
+    @php($heroText = \App\Models\SiteSetting::heroContent())
+    <form action="{{ route('admin.home-page-content.hero-text.update') }}" method="POST" class="mt-3 space-y-3">
+        @csrf
+        @foreach(['eyebrow' => 'Small introduction', 'heading' => 'Heading beginning', 'highlight' => 'Pink highlighted text', 'ending' => 'Heading ending'] as $field => $label)
+            <div>
+                <label for="hero-{{ $field }}" class="block text-sm font-semibold text-slate-800">{{ $label }}</label>
+                <input id="hero-{{ $field }}" name="{{ $field }}" value="{{ old($field, $heroText[$field]) }}" maxlength="{{ $field === 'eyebrow' ? 100 : 150 }}" class="w-full border border-slate-200 rounded px-3 py-2" @if($field !== 'ending') required @endif>
+                @error($field)<p class="text-sm text-rose-600">{{ $message }}</p>@enderror
+            </div>
+        @endforeach
+        <div>
+            <label for="hero-description" class="block text-sm font-semibold text-slate-800">Description</label>
+            <textarea id="hero-description" name="description" rows="3" maxlength="1000" required class="w-full border border-slate-200 rounded px-3 py-2">{{ old('description', $heroText['description']) }}</textarea>
+            @error('description')<p class="text-sm text-rose-600">{{ $message }}</p>@enderror
+        </div>
+        <button type="submit" class="px-4 py-2 rounded bg-sky-600 text-white font-semibold hover:bg-sky-500">Save Hero Text</button>
+    </form>
+</div>
+
 <div class="card rounded-xl overflow-hidden">
     <div class="flex flex-col gap-3 border-b border-slate-200 bg-white px-4 py-4 md:flex-row md:items-center md:justify-between">
         <div>

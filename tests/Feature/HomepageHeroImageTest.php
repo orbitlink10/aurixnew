@@ -13,6 +13,32 @@ class HomepageHeroImageTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_admin_can_edit_hero_text_and_public_output_is_escaped(): void
+    {
+        $this->actingAs(User::factory()->create());
+        $this->get(route('admin.home-page-content.index'))->assertOk()->assertSee('Save Hero Text');
+        $this->post(route('admin.home-page-content.hero-text.update'), [
+            'eyebrow' => 'Made for your business',
+            'heading' => 'Custom branding',
+            'highlight' => 'Quality printing',
+            'ending' => 'across Kenya',
+            'description' => '<script>alert(1)</script>',
+        ])->assertRedirect(route('admin.home-page-content.index'))->assertSessionHasNoErrors();
+
+        $this->get('/')->assertOk()
+            ->assertSee('Made for your business')
+            ->assertSee('Custom branding')
+            ->assertSee('<span>Quality printing</span>', false)
+            ->assertSee('across Kenya')
+            ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false)
+            ->assertDontSee('<script>alert(1)</script>', false);
+
+        $this->post(route('admin.home-page-content.hero-text.update'), [
+            'heading' => '',
+        ])->assertSessionHasErrors('heading');
+        $this->assertSame('Custom branding', SiteSetting::heroContent()['heading']);
+    }
+
     public function test_one_hero_image_can_be_deleted_without_removing_the_others(): void
     {
         Storage::fake('uploads');

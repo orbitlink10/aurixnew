@@ -48,6 +48,21 @@ class SiteSetting extends Model
         return $legacyPath ? [$legacyPath] : [];
     }
 
+    public static function heroContent(): array
+    {
+        $defaults = [
+            'eyebrow' => 'Same day custom printing',
+            'heading' => 'Branding and',
+            'highlight' => 'Printing Services',
+            'ending' => 'in Nairobi, Kenya',
+            'description' => 'Custom tees, uniforms, event merchandise, branded gifts, signage, and business print with sharp artwork setup and reliable production support across Kenya.',
+        ];
+
+        return collect($defaults)->mapWithKeys(fn ($value, $key) => [
+            $key => static::getValue('home_hero_'.$key) ?? $value,
+        ])->all();
+    }
+
     public static function setHeroImagePaths(array $paths): void
     {
         $cleaned = array_values(array_unique(array_filter($paths, fn ($path) => is_string($path) && $path !== '')));

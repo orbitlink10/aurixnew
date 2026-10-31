@@ -65,6 +65,22 @@ class HomePageContentController extends Controller
         return redirect()->route('admin.home-page-content.index')->with('success', 'Contact details updated.');
     }
 
+    public function updateHeroContent(Request $request)
+    {
+        $data = $request->validate([
+            'eyebrow' => ['required', 'string', 'max:100'],
+            'heading' => ['required', 'string', 'max:150'],
+            'highlight' => ['required', 'string', 'max:150'],
+            'ending' => ['nullable', 'string', 'max:150'],
+            'description' => ['required', 'string', 'max:1000'],
+        ]);
+        foreach ($data as $key => $value) {
+            SiteSetting::setValue('home_hero_'.$key, $value ?? '');
+        }
+
+        return redirect()->route('admin.home-page-content.index')->with('success', 'Hero text updated.');
+    }
+
     public function updateMainMenu(Request $request)
     {
         $data = $request->validate([

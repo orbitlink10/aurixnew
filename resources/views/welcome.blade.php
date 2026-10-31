@@ -50,9 +50,10 @@
     <section class="taf-hero" aria-labelledby="home-hero-title">
         <div class="taf-wrap taf-hero-grid">
             <div class="taf-hero-copy">
-                <span class="taf-eyebrow">Same day custom printing</span>
-                <h1 id="home-hero-title">Branding and <span>Printing Services</span> in Nairobi, Kenya</h1>
-                <p>Custom tees, uniforms, event merchandise, branded gifts, signage, and business print with sharp artwork setup and reliable production support across Kenya.</p>
+                @php($heroText = \App\Models\SiteSetting::heroContent())
+                <span class="taf-eyebrow">{{ $heroText['eyebrow'] }}</span>
+                <h1 id="home-hero-title">{{ $heroText['heading'] }} <span>{{ $heroText['highlight'] }}</span> {{ $heroText['ending'] }}</h1>
+                <p>{{ $heroText['description'] }}</p>
                 <div class="taf-hero-services" aria-label="Printing and branding services">
                     <span>DTF transfers</span>
                     <span>Embroidery</span>

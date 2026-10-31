@@ -394,6 +394,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('home-page-content', [HomePageContentController::class, 'index'])->name('home-page-content.index');
     Route::post('home-page-content/contact', [HomePageContentController::class, 'updateContact'])->name('home-page-content.contact.update');
+    Route::post('home-page-content/hero-text', [HomePageContentController::class, 'updateHeroContent'])->name('home-page-content.hero-text.update');
     Route::post('home-page-content/main-menu', [HomePageContentController::class, 'updateMainMenu'])->name('home-page-content.main-menu.update');
     Route::get('home-page-content/main-menu/create', [HomePageContentController::class, 'createMenuItem'])->name('home-page-content.main-menu.create');
     Route::post('home-page-content/main-menu/items', [HomePageContentController::class, 'storeMenuItem'])->name('home-page-content.main-menu.store');
