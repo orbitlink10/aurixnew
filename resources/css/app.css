@@ -954,18 +954,24 @@
 
     .taf-hero-video-panel {
         min-width: 0;
-        align-self: start;
+        align-self: stretch;
+        display: flex;
     }
 
     .taf-hero-video-frame {
+        position: relative;
+        width: 100%;
+        min-height: clamp(400px, 62vh, 600px);
         overflow: hidden;
         border-radius: 16px;
     }
 
     .taf-hero-video-frame img {
+        position: absolute;
+        inset: 0;
         display: block;
         width: 100%;
-        height: clamp(320px, 52vh, 460px);
+        height: 100%;
         object-fit: cover;
         object-position: center;
     }
@@ -1713,8 +1719,13 @@
         }
 
         .taf-hero-video-frame img {
+            position: static;
             height: auto;
             max-height: 420px;
+        }
+
+        .taf-hero-video-frame {
+            min-height: 0;
         }
 
         .taf-hero-copy p {
